@@ -1,7 +1,7 @@
 <template>
   <div class="product-list">
     <!-- Banner -->
-    <img class="banner" src="/images/Banner.png" alt="Product Banner" />
+    <img class="banner" src="@/assets/Banner.png" alt="Product Banner" />
 
     <!-- Main layout -->
     <div class="main-content">
