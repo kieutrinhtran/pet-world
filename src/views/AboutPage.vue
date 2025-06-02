@@ -11,6 +11,11 @@
         <p class="slogan">
           <span>Chất lượng vượt trội</span> – <span>Dịch vụ tận tâm</span> –
           <span>Trải nghiệm mua sắm độc đáo!</span>
+<<<<<<< Updated upstream
+=======
+          <span>Chất lượng vượt trội</span> – <span>Dịch vụ tận tâm</span> –
+          <span>Trải nghiệm mua sắm độc đáo!</span>
+>>>>>>> Stashed changes
         </p>
         <div class="cta-buttons">
           <router-link to="/products" class="cta-btn primary">Mua ngay</router-link>
@@ -20,8 +25,16 @@
       <div class="about-hero-img">
         <div class="hero-bg"></div>
         <img
+<<<<<<< Updated upstream
           src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=600&q=80"
           alt="Dog and Cat"
+=======
+         
+          src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=600&q=80"
+         
+          alt="Dog and Cat"
+       
+>>>>>>> Stashed changes
         />
         <span class="bird-icon">🕊️</span>
         <div class="paw-prints"></div>
@@ -45,6 +58,25 @@
             cưng cần – từ thực phẩm dinh dưỡng, phụ kiện thời trang, đồ chơi cho đến dịch vụ chăm
             sóc sức khỏe, spa, huấn luyện.</span
           >
+<<<<<<< Updated upstream
+=======
+    <section class="max-w-5xl mx-auto">
+      <h2 class="section-title text-primary">VỀ CHÚNG TÔI</h2>
+      <div class="space-y-6">
+        <div>
+          <b class="text-primary">Pet World </b>
+          <span>– Vì một thế giới hoàn hảo cho thú cưng</span>
+        </div>
+        <div>
+          <b class="text-primary">Pet World</b>
+          <span>
+            không chỉ là một nền tảng mua sắm, mà còn là người bạn đồng hành tin cậy trên hành trình
+            chăm sóc thú cưng của bạn. Được thành lập với niềm đam mê dành cho động vật, chúng tôi
+            mang đến một hệ sinh thái thú cưng điển hình, giúp bạn dễ dàng tìm thấy mọi thứ mà thú
+            cưng cần – từ thực phẩm dinh dưỡng, phụ kiện thời trang, đồ chơi cho đến dịch vụ chăm
+            sóc sức khỏe, spa, huấn luyện.</span
+          >
+>>>>>>> Stashed changes
         </div>
         <div>
           Với sự hợp tác từ những thương hiệu hàng đầu và các chuyên gia thú y,
@@ -237,23 +269,39 @@ const testimonials = [
     author: {
       name: 'Phạm Nhật Vượng',
       title: 'Khách hàng',
+<<<<<<< Updated upstream
       image: '/images/khachhang.png'
+=======
+      image: '/images/phamnhatvuong.png'
+>>>>>>> Stashed changes
     }
   },
   {
     text: '<b>Dịch vụ tuyệt vời!</b> Tôi rất ấn tượng với sự chuyên nghiệp và tận tâm của đội ngũ Pet World. Các sản phẩm đều chất lượng và giá cả hợp lý.',
     author: {
+<<<<<<< Updated upstream
       name: 'Nguyễn Thị A',
       title: 'Khách hàng thân thiết',
       image: '/images/khachhang.png'
+=======
+      name: 'Nguyễn Thị Phương Thảo',
+      title: 'Khách hàng thân thiết',
+      image: '/images/phuongthao.png'
+>>>>>>> Stashed changes
     }
   },
   {
     text: '<b>Mèo nhà tôi rất thích!</b> Thức ăn và đồ chơi từ Pet World luôn là lựa chọn hàng đầu của tôi. Giao hàng nhanh chóng và đóng gói cẩn thận.',
     author: {
+<<<<<<< Updated upstream
       name: 'Trần Văn B',
       title: 'Khách hàng',
       image: '/images/khachhang.png'
+=======
+      name: 'Elon musk',
+      title: 'Khách hàng',
+      image: '/images/elonmusk.png'
+>>>>>>> Stashed changes
     }
   }
 ]
