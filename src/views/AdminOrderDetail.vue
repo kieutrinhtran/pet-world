@@ -125,10 +125,10 @@
             <label>Trạng thái đơn hàng:</label>
             <select v-model="order.status" class="form-control">
               <option value="pending">Chờ xác nhận</option>
-              <option value="processing">Đang xử lý</option>
-              <option value="shipped">Đang giao hàng</option>
-              <option value="delivered">Đã nhận hàng</option>
-              <option value="cancelled">Đã hủy</option>
+              <option value="processing" :disabled="order.status !== 'pending'">Đang xử lý</option>
+              <option value="shipped" :disabled="order.status === 'pending'">Đang giao hàng</option>
+              <option value="delivered" :disabled="order.status === 'pending'">Đã nhận hàng</option>
+              <option value="cancelled" :disabled="order.status === 'pending'">Đã hủy</option>
             </select>
           </div>
           <div class="form-group">
@@ -153,26 +153,42 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
-import { API_ENDPOINTS } from '@/api/endpoints'
 import { orderService } from '@/services/api'
 
+// =====================
+// Biến trạng thái reactive
+// =====================
+// Lấy thông tin route (lấy orderId từ URL)
 const route = useRoute()
+// Đối tượng router để điều hướng
 const router = useRouter()
+// Lấy orderId từ params
 const orderId = route.params.id
-
+// Đơn hàng hiện tại
 const order = ref({})
+// Trạng thái loading khi gọi API
 const loading = ref(false)
+// Biến lưu lỗi nếu có
 const error = ref(null)
+// Hiển thị modal chỉnh sửa
 const showEditModal = ref(false)
 
+// =====================
+// Hàm điều hướng quay lại trang trước
+// =====================
 const goBack = () => {
   router.back()
 }
 
+// =====================
+// Các hàm format dữ liệu hiển thị
+// =====================
+// Định dạng ngày theo chuẩn Việt Nam
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('vi-VN')
 }
 
+// Định dạng giá tiền VND
 const formatPrice = (price) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -180,6 +196,10 @@ const formatPrice = (price) => {
   }).format(price)
 }
 
+// =====================
+// Hàm mapping trạng thái sang tiếng Việt
+// =====================
+// Chuyển trạng thái đơn hàng sang tiếng Việt
 const getStatusText = (status) => {
   const statusMap = {
     pending: 'Chờ xác nhận',
@@ -191,6 +211,7 @@ const getStatusText = (status) => {
   return statusMap[status] || status
 }
 
+// Chuyển phương thức thanh toán sang tiếng Việt
 const getPaymentMethodText = (method) => {
   const methodMap = {
     cod: 'Thanh toán khi nhận hàng',
@@ -200,6 +221,7 @@ const getPaymentMethodText = (method) => {
   return methodMap[method] || method
 }
 
+// Chuyển trạng thái thanh toán sang tiếng Việt
 const getPaymentStatusText = (status) => {
   const statusMap = {
     pending: 'Chờ thanh toán',
@@ -209,6 +231,7 @@ const getPaymentStatusText = (status) => {
   return statusMap[status] || status
 }
 
+// Chuyển phương thức vận chuyển sang tiếng Việt
 const getShippingMethodText = (method) => {
   const methodMap = {
     standard: 'Giao hàng tiêu chuẩn',
@@ -217,14 +240,17 @@ const getShippingMethodText = (method) => {
   return methodMap[method] || method
 }
 
+// =====================
+// Hàm lưu thay đổi đơn hàng
+// =====================
 const saveChanges = async () => {
   try {
     loading.value = true
+    // Gọi API cập nhật đơn hàng
     const updatedOrder = await orderService.update(orderId, {
       status: order.value.status,
       payment_status: order.value.payment_status
     })
-    
     if (updatedOrder) {
       order.value = { ...updatedOrder }
       showEditModal.value = false
@@ -237,10 +263,14 @@ const saveChanges = async () => {
   }
 }
 
+// =====================
+// Lifecycle: Khi component mounted, gọi API lấy chi tiết đơn hàng
+// =====================
 onMounted(async () => {
   try {
     loading.value = true
-    const response = await axios.get(API_ENDPOINTS.ORDERS.GET_DETAIL(orderId))
+    // Gọi API lấy chi tiết đơn hàng theo orderId
+    const response = await axios.get(`/orders/${orderId}`)
     order.value = response.data
   } catch (err) {
     error.value = 'Không thể tải thông tin đơn hàng'
