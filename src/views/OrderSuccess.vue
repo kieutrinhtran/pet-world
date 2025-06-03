@@ -1,21 +1,20 @@
 <template>
+  <!-- Trang thông báo đặt hàng thành công -->
   <div class="order-success">
+    <!-- Breadcrumb điều hướng các bước -->
     <div class="breadcrumb">
       <router-link to="/" class="text-gray-600 hover:text-orange-500">Trang chủ</router-link> &gt;
       <router-link to="/cart" class="text-gray-600 hover:text-orange-500">Giỏ hàng</router-link>
       &gt;
-      <router-link to="/shipping" class="text-gray-600 hover:text-orange-500"
-        >Vận chuyển</router-link
-      >
+      <router-link to="/shipping" class="text-gray-600 hover:text-orange-500">Vận chuyển</router-link>
       &gt;
-      <router-link to="/checkout" class="text-gray-600 hover:text-orange-500"
-        >Thanh toán</router-link
-      >
+      <router-link to="/checkout" class="text-gray-600 hover:text-orange-500">Thanh toán</router-link>
       &gt;
       <span class="text-gray-800">Thành công</span>
     </div>
 
     <div class="success-content">
+      <!-- Icon và tiêu đề thành công -->
       <div class="success-header">
         <div class="success-icon">
           <i class="fas fa-check-circle"></i>
@@ -24,6 +23,7 @@
         <p class="text-gray-600">Cảm ơn bạn đã đặt hàng tại Pet Shop!</p>
       </div>
 
+      <!-- Thông tin đơn hàng -->
       <div class="order-info">
         <div class="info-card">
           <h3 class="text-lg font-semibold mb-4">Thông tin đơn hàng</h3>
@@ -61,11 +61,12 @@
           </div>
           <div class="info-row">
             <span class="label">Phương thức vận chuyển:</span>
-            <span class="value">{{ shippingMethod }}</span>
+            <span class="value">Giao hàng tiêu chuẩn</span>
           </div>
         </div>
       </div>
 
+      <!-- Các nút thao tác sau khi đặt hàng -->
       <div class="order-actions">
         <router-link to="/" class="home-btn">
           <i class="fas fa-home mr-2"></i>
@@ -77,6 +78,7 @@
         </router-link>
       </div>
 
+      <!-- Thông tin hỗ trợ khách hàng -->
       <div class="support-info">
         <p class="text-gray-600 mb-2">Bạn cần hỗ trợ?</p>
         <div class="support-options">
@@ -99,47 +101,49 @@
 </template>
 
 <script setup>
+// Import các thư viện cần thiết
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
-import { API_ENDPOINTS } from '@/api/endpoints'
 
+// Lấy orderId từ route params
 const route = useRoute()
+const orderId = route.params.orderId
+const order = ref({})
 
-const orderId = ref('')
-const orderDate = ref('')
-const paymentMethod = ref('')
-const total = ref(0)
-const shippingInfo = ref({
+// Các biến lưu thông tin đơn hàng
+const orderDate = ref('') // Ngày đặt hàng
+const paymentMethod = ref('') // Phương thức thanh toán
+const total = ref(0) // Tổng tiền
+const shippingInfo = ref({ // Thông tin vận chuyển
   name: '',
   phone: '',
   address: ''
 })
-const shippingMethod = ref('')
 
+// Hàm lấy chi tiết đơn hàng từ API
 async function fetchOrder() {
-  const orderId = route.params.orderId
   if (orderId) {
     try {
-      const response = await axios.get(API_ENDPOINTS.ORDERS.GET_DETAIL(orderId))
-      const orderData = response.data
-      
-      orderId.value = orderData.id
-      orderDate.value = new Date(orderData.created_at).toLocaleDateString('vi-VN')
-      paymentMethod.value = getPaymentMethodText(orderData.payment_method)
-      total.value = orderData.total_amount
+      const res = await axios.get(`/orders/${orderId}`)
+      order.value = res.data
+      // Gán dữ liệu vào các biến hiển thị
+      orderId.value = order.value.id
+      orderDate.value = new Date(order.value.created_at).toLocaleDateString('vi-VN')
+      paymentMethod.value = getPaymentMethodText(order.value.payment_method)
+      total.value = order.value.total_amount
       shippingInfo.value = {
-        name: orderData.shipping_info.address.name,
-        phone: orderData.shipping_info.address.phone,
-        address: orderData.shipping_info.address.address_line
+        name: order.value.shipping_info.address.name,
+        phone: order.value.shipping_info.address.phone,
+        address: order.value.shipping_info.address.address_line
       }
-      shippingMethod.value = getShippingMethodText(orderData.shipping_info.method)
     } catch (error) {
       console.error('Error fetching order:', error)
     }
   }
 }
 
+// Hàm chuyển phương thức thanh toán sang tiếng Việt
 const getPaymentMethodText = (method) => {
   const methodMap = {
     cod: 'Thanh toán khi nhận hàng',
@@ -149,18 +153,12 @@ const getPaymentMethodText = (method) => {
   return methodMap[method] || method
 }
 
-const getShippingMethodText = (method) => {
-  const methodMap = {
-    standard: 'Giao hàng tiêu chuẩn',
-    express: 'Giao hàng nhanh'
-  }
-  return methodMap[method] || method
-}
-
+// Khi component mounted, gọi API lấy chi tiết đơn hàng
 onMounted(fetchOrder)
 </script>
 
 <style scoped>
+/* Style cho trang thông báo đặt hàng thành công */
 .order-success {
   background: #fff;
   border-radius: 16px;
