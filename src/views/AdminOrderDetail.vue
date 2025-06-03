@@ -1,12 +1,16 @@
 <template>
   <div class="admin-order-detail">
+    <!-- Hiển thị loading khi đang tải dữ liệu -->
     <div v-if="loading" class="loading">
       <div class="spinner"></div>
     </div>
+    <!-- Hiển thị lỗi nếu có -->
     <div v-else-if="error" class="error">
       {{ error }}
     </div>
+    <!-- Hiển thị chi tiết đơn hàng -->
     <div v-else class="order-detail">
+      <!-- Header với tiêu đề và các nút thao tác -->
       <div class="header">
         <h1>Chi tiết đơn hàng #{{ order.id }}</h1>
         <div class="actions">
@@ -19,7 +23,9 @@
         </div>
       </div>
 
+      <!-- Các section thông tin đơn hàng -->
       <div class="order-info">
+        <!-- Thông tin cơ bản của đơn hàng -->
         <div class="info-section">
           <h2>Thông tin đơn hàng</h2>
           <div class="info-grid">
@@ -46,6 +52,7 @@
           </div>
         </div>
 
+        <!-- Thông tin khách hàng -->
         <div class="info-section">
           <h2>Thông tin khách hàng</h2>
           <div class="info-grid">
@@ -64,6 +71,7 @@
           </div>
         </div>
 
+        <!-- Thông tin vận chuyển -->
         <div class="info-section">
           <h2>Thông tin vận chuyển</h2>
           <div class="info-grid">
@@ -82,6 +90,7 @@
           </div>
         </div>
 
+        <!-- Chi tiết sản phẩm trong đơn hàng -->
         <div class="info-section">
           <h2>Chi tiết sản phẩm</h2>
           <div class="products-table">
@@ -113,17 +122,21 @@
       </div>
     </div>
 
-    <!-- Edit Modal -->
+    <!-- Modal chỉnh sửa đơn hàng -->
     <div v-if="showEditModal" class="modal">
       <div class="modal-content">
+        <!-- Header của modal -->
         <div class="modal-header">
           <h2>Chỉnh sửa đơn hàng</h2>
           <button @click="showEditModal = false" class="close-btn">&times;</button>
         </div>
+        <!-- Body của modal -->
         <div class="modal-body">
+          <!-- Form chỉnh sửa trạng thái -->
           <div class="form-group">
             <label>Trạng thái đơn hàng:</label>
             <select v-model="order.status" class="form-control">
+              <!-- Luôn hiển thị tất cả các trạng thái, nhưng chỉ cho phép chọn từ pending sang processing -->
               <option value="pending">Chờ xác nhận</option>
               <option value="processing" :disabled="order.status !== 'pending'">Đang xử lý</option>
               <option value="shipped" :disabled="order.status === 'pending'">Đang giao hàng</option>
@@ -140,6 +153,7 @@
             </select>
           </div>
         </div>
+        <!-- Footer của modal -->
         <div class="modal-footer">
           <button @click="showEditModal = false" class="btn-cancel">Hủy</button>
           <button @click="saveChanges" class="btn-save">Lưu thay đổi</button>
@@ -150,6 +164,7 @@
 </template>
 
 <script setup>
+// Import các thư viện và component cần thiết
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
@@ -282,12 +297,14 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+/* Style cho trang chi tiết đơn hàng */
 .admin-order-detail {
   padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+/* Style cho loading spinner */
 .loading {
   display: flex;
   justify-content: center;
@@ -309,12 +326,14 @@ onMounted(async () => {
   100% { transform: rotate(360deg); }
 }
 
+/* Style cho thông báo lỗi */
 .error {
   color: #dc2626;
   text-align: center;
   padding: 24px;
 }
 
+/* Style cho header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -327,6 +346,7 @@ onMounted(async () => {
   gap: 12px;
 }
 
+/* Style cho các nút */
 .btn-back,
 .btn-edit {
   padding: 8px 16px;
@@ -356,6 +376,7 @@ onMounted(async () => {
   background: #f97316;
 }
 
+/* Style cho các section thông tin */
 .info-section {
   background: white;
   border-radius: 12px;
@@ -393,6 +414,7 @@ onMounted(async () => {
   color: #111827;
 }
 
+/* Style cho trạng thái */
 .status {
   display: inline-block;
   padding: 4px 8px;
@@ -426,11 +448,13 @@ onMounted(async () => {
   color: #991b1b;
 }
 
+/* Style cho giá tiền */
 .price {
   color: #ff813f;
   font-weight: 600;
 }
 
+/* Style cho bảng sản phẩm */
 .products-table {
   overflow-x: auto;
 }
@@ -465,6 +489,7 @@ th {
   border-radius: 4px;
 }
 
+/* Style cho modal */
 .modal {
   position: fixed;
   top: 0;
