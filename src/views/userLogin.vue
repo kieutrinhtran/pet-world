@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <img src="@/assets/logo.png" alt="Logo" class="logo" />
+    <img src="@/assets/Avatar.png" alt="Logo" class="logo" />
     <h2 class="title">ĐĂNG NHẬP</h2>
     <form @submit.prevent="login">
       <label>Tên đăng nhập</label>
