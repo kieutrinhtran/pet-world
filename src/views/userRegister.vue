@@ -76,3 +76,115 @@ function handleRegister() {
   }, 2500)
 }
 </script>
+
+<style scoped>
+/* Nền trắng, canh giữa nội dung */
+.login-container {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Logo Pet World */
+.logo {
+  max-width: 250px;
+  margin-bottom: 20px;
+}
+
+/* Tiêu đề */
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #000;
+}
+
+/* Khung form đăng nhập/đăng ký */
+.login-form {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Nhãn và input */
+label {
+  display: block;
+  font-size: 14px;
+  margin: 12px 0 5px;
+  color: #000;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #fcecd0;
+  font-size: 14px;
+}
+
+/* Nút đăng nhập/đăng ký */
+.login-button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background-color: #eb8c00;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login-button:hover {
+  background-color: #cf7a00;
+}
+
+/* Footer liên kết */
+.footer {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #000;
+  text-align: center;
+}
+
+.footer a {
+  color: #000;
+  text-decoration: underline;
+}
+
+.link-highlight {
+  color: #eb8c00;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* Thông báo lỗi */
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Popup thành công */
+.popup.success-popup {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #f57c00;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.success-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+</style>
+
