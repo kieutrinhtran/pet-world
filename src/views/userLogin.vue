@@ -65,3 +65,105 @@ function handleLogin() {
   }, 2500)
 }
 </script>
+
+<style scoped>
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #ffffff; 
+  font-family: 'Segoe UI', sans-serif;
+  color: #000;
+}
+
+.logo {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 24px;
+}
+
+.login-form {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 16px;
+  background-color: #f9ebd2; 
+}
+
+.login-button {
+  background-color: #e89206;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #cc7e03;
+}
+
+.footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.footer a {
+  color: #000;
+  text-decoration: none;
+}
+
+.link-highlight {
+  color: #e89206;
+  font-weight: 500;
+}
+
+.error-message {
+  color: red;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.popup.success-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: transparent;
+  margin-top: 30px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.success-icon {
+  color: #f57c00;
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.popup.success-popup p {
+  color: #f57c00;
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+</style>
