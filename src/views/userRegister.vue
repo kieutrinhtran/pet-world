@@ -1,18 +1,21 @@
-<template> 
-  <div class="login-container">
+<template>
+  <div class="register-container">
     <img src="@/assets/Avatar.png" alt="Logo" class="logo" />
-    <h2 class="title">ĐĂNG NHẬP</h2>
-    <form @submit.prevent="login">
+    <h2 class="title">ĐĂNG KÝ</h2>
+    <form @submit.prevent="register">
       <label>Tên đăng nhập</label>
       <input v-model="username" type="text" required />
 
       <label>Mật khẩu</label>
       <input v-model="password" type="password" required />
 
-      <button type="submit">Đăng nhập</button>
+      <label>Nhập lại mật khẩu</label>
+      <input v-model="confirmPassword" type="password" required />
+
+      <button type="submit">Đăng kí</button>
     </form>
     <div class="links">
-      <p>Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
+      <p>Đã có tài khoản? <a @click.prevent="goToLogin" href="#">Đăng nhập ngay</a></p>
     </div>
   </div>
 </template>
@@ -22,50 +25,51 @@ export default {
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      confirmPassword: ''
     };
   },
   methods: {
-    async login() {
-      if (!this.username || !this.password) {
-        alert("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
+    async register() {
+      if (this.password !== this.confirmPassword) {
+        alert("Mật khẩu không khớp!");
         return;
       }
 
+      console.log("Đăng ký:", this.username, this.password);
+
       try {
-        const response = await fetch("/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+        const response = await fetch('http://localhost:8000/user/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            user_name: this.username,
+            username: this.username,
             password: this.password
           })
         });
 
         const data = await response.json();
 
-        if (response.ok && data.user_id) {
-          // Đăng nhập thành công
-          alert(`Đăng nhập thành công. Xin chào, ${data.user_name}!`);
-          // Redirect hoặc lưu thông tin user tại đây nếu cần
-        } else if (data.error) {
-          alert(data.message || "Thiếu thông tin đăng nhập.");
+        if (response.ok && data.message === "Đăng ký thành công") {
+          alert("Đăng ký thành công! Vui lòng đăng nhập.");
+          this.$router.push('/login');
         } else {
-          alert("Tên đăng nhập hoặc mật khẩu không đúng.");
+          alert(data.message || "Đăng ký thất bại!");
         }
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
-        alert("Có lỗi xảy ra. Vui lòng thử lại sau.");
+        alert("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
       }
+    },
+    goToLogin() {
+      this.$router.push('/login');
     }
   }
 };
 </script>
 
 <style scoped>
-.login-container {
+.register-container {
   background-color: white;
   min-height: 100vh;
   display: flex;
@@ -74,31 +78,26 @@ export default {
   justify-content: center;
   padding: 2rem;
 }
-
 .logo {
   width: 180px;
   margin-bottom: 2rem;
 }
-
 .title {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 1.5rem;
 }
-
 form {
   width: 100%;
   max-width: 320px;
   display: flex;
   flex-direction: column;
 }
-
 label {
   margin-top: 1rem;
   margin-bottom: 0.25rem;
   font-weight: 500;
 }
-
 input {
   padding: 10px;
   border: 1px solid #ccc;
@@ -106,7 +105,6 @@ input {
   border-radius: 5px;
   font-size: 14px;
 }
-
 button {
   margin-top: 1.5rem;
   padding: 10px;
@@ -117,23 +115,20 @@ button {
   border-radius: 6px;
   cursor: pointer;
 }
-
 button:hover {
   background-color: #d88400;
 }
-
 .links {
   margin-top: 1rem;
   text-align: center;
   font-size: 14px;
 }
-
 .links a {
   font-weight: bold;
   color: #f49a00;
   text-decoration: none;
+  cursor: pointer;
 }
-
 .links a:hover {
   text-decoration: underline;
   color: #d88400;
