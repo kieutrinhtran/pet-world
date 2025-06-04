@@ -1,6 +1,6 @@
 <template>
   <div class="banner-wrapper">
-    <img class="banner" src="/images/Banner.png" alt="Product Banner" />
+    <img class="banner" src="@/assets/Banner.png" alt="Product Banner" />
   </div>
   <div class="product-detail-wrapper">
     <!-- Bên trái: Ảnh sản phẩm -->

@@ -11,6 +11,8 @@
         <p class="slogan">
           <span>Chất lượng vượt trội</span> – <span>Dịch vụ tận tâm</span> –
           <span>Trải nghiệm mua sắm độc đáo!</span>
+          <span>Chất lượng vượt trội</span> – <span>Dịch vụ tận tâm</span> –
+          <span>Trải nghiệm mua sắm độc đáo!</span>
         </p>
         <div class="cta-buttons">
           <router-link to="/products" class="cta-btn primary">Mua ngay</router-link>
@@ -20,8 +22,11 @@
       <div class="about-hero-img">
         <div class="hero-bg"></div>
         <img
+         
           src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=600&q=80"
+         
           alt="Dog and Cat"
+       
         />
         <span class="bird-icon">🕊️</span>
         <div class="paw-prints"></div>
@@ -43,8 +48,7 @@
             chăm sóc thú cưng của bạn. Được thành lập với niềm đam mê dành cho động vật, chúng tôi
             mang đến một hệ sinh thái thú cưng điển hình, giúp bạn dễ dàng tìm thấy mọi thứ mà thú
             cưng cần – từ thực phẩm dinh dưỡng, phụ kiện thời trang, đồ chơi cho đến dịch vụ chăm
-            sóc sức khỏe, spa, huấn luyện.</span
-          >
+            sóc sức khỏe, spa, huấn luyện.</span>
         </div>
         <div>
           Với sự hợp tác từ những thương hiệu hàng đầu và các chuyên gia thú y,
@@ -237,23 +241,23 @@ const testimonials = [
     author: {
       name: 'Phạm Nhật Vượng',
       title: 'Khách hàng',
-      image: '/images/khachhang.png'
+      image: '/images/phamnhatvuong.png'
     }
   },
   {
     text: '<b>Dịch vụ tuyệt vời!</b> Tôi rất ấn tượng với sự chuyên nghiệp và tận tâm của đội ngũ Pet World. Các sản phẩm đều chất lượng và giá cả hợp lý.',
     author: {
-      name: 'Nguyễn Thị A',
+      name: 'Nguyễn Thị Phương Thảo',
       title: 'Khách hàng thân thiết',
-      image: '/images/khachhang.png'
+      image: '/images/phuongthao.png'
     }
   },
   {
     text: '<b>Mèo nhà tôi rất thích!</b> Thức ăn và đồ chơi từ Pet World luôn là lựa chọn hàng đầu của tôi. Giao hàng nhanh chóng và đóng gói cẩn thận.',
     author: {
-      name: 'Trần Văn B',
+      name: 'Elon musk',
       title: 'Khách hàng',
-      image: '/images/khachhang.png'
+      image: '/images/elonmusk.png'
     }
   }
 ]

@@ -28,4 +28,3 @@ class OrderRouter
         $router->addRoute('GET', '/orders/statistics/all', 'OrderController', 'getAllStatistics');
     }
 }
-?>
