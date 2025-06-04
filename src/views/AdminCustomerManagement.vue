@@ -30,9 +30,7 @@
           <td>{{ customer.phone }}</td>
           <td>{{ customer.gender }}</td>
           <td class="action-buttons">
-            <button @click="editCustomer(customer.id)">✏️</button>
             <button @click="viewHistory(customer.id)">👁️</button>
-            <button title="Xóa" @click="confirmDelete(customer.id)">🗑️</button>
           </td>
         </tr>
       </tbody>
@@ -93,24 +91,11 @@ const filteredCustomers = computed(() => {
   )
 })
 
-// Điều hướng chỉnh sửa
-const editCustomer = id => {
-  router.push(`/edit/${id}`)
-}
-
 // Điều hướng lịch sử
 const viewHistory = id => {
   router.push(`/history/${id}`)
 }
-
-// Xác nhận và xóa khách hàng
-const confirmDelete = id => {
-  const confirmed = window.confirm('Bạn có chắc chắn muốn xóa thông tin khách hàng này không?')
-  if (confirmed) {
-    customers.value = customers.value.filter(c => c.id !== id)
-  }
-}
-</script>
+</script>ss
 
 <style scoped>
 .customer-page {
