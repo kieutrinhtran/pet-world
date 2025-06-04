@@ -5,11 +5,13 @@ class OrderService
 {
     private $orderModel;
     private $promotionModel;
+    private $cartModel; 
 
     public function __construct($db)
     {
         $this->orderModel = new Order($db);
         $this->promotionModel = new Promotion($db);
+        $this->cartModel = new Cart($db);
     }
 
     private function applyPromotion($promotion_id, $total_amount)
@@ -38,24 +40,32 @@ class OrderService
     }
 
     public function createOrderFromCart($data, $cart_items)
-    {
-        $promotionResult = $this->applyPromotion($data['promotion_id'], $data['total_amount']);
+{
+    $promotionResult = $this->applyPromotion($data['promotion_id'], $data['total_amount']);
 
-        if (!$promotionResult['valid']) {
-            return ['success' => false, 'message' => $promotionResult['message']];
-        }
+    if (!$promotionResult['valid']) {
+        return ['success' => false, 'message' => $promotionResult['message']];
+    }
 
-        $data['total_amount'] = $promotionResult['final_total'];
+    $data['total_amount'] = $promotionResult['final_total'];
 
-        $order_id = $this->orderModel->createOrderFromCart($data, $cart_items);
+    $order_id = $this->orderModel->createOrderFromCart($data, $cart_items);
 
-        if ($order_id && isset($promotionResult['promotion_id'])) {
+    if ($order_id) {
+        // Cập nhật số lượt dùng voucher (nếu có)
+        if (isset($promotionResult['promotion_id'])) {
             $this->promotionModel->incrementUsedVoucher($promotionResult['promotion_id']);
         }
 
-        return $order_id ? ['success' => true, 'order_id' => $order_id] :
-                           ['success' => false, 'message' => 'Tạo đơn hàng thất bại'];
+        // ✅ Xóa giỏ hàng sau khi thanh toán thành công
+        $this->cartModel->clearCartByCustomer($data['customer_id']);
+
+        return ['success' => true, 'order_id' => $order_id];
     }
+
+    return ['success' => false, 'message' => 'Tạo đơn hàng thất bại'];
+}
+
 
     public function buyNow($data, $product)
     {
@@ -86,4 +96,15 @@ class OrderService
     {
         return $this->orderModel->getOrderDetail($order_id);
     }
+
+    public function confirmOrder($order_id)
+    {
+    // Gọi tới model để cập nhật trạng thái đơn hàng
+    $updated = $this->orderModel->updateOrderStatus($order_id, 'confirmed');
+
+    return $updated
+        ? ['success' => true, 'message' => 'Đơn hàng đã được xác nhận']
+        : ['success' => false, 'message' => 'Xác nhận đơn hàng thất bại'];
+    }
+
 }

@@ -18,6 +18,7 @@ class OrderRouter
         $router->addRoute('POST', '/orders/buynow', 'OrderController', 'buyNow');
         $router->addRoute('GET', '/orders/customer/{customer_id}', 'OrderController', 'getAllOrdersByCustomer');
         $router->addRoute('GET', '/orders/{order_id}', 'OrderController', 'getOrderDetail');
+        $router->addRoute('POST', '/orders/confirm', 'OrderController', 'confirmOrder');
     }
 }
 ?>
