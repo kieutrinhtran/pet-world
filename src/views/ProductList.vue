@@ -1,7 +1,9 @@
 <template>
   <div class="product-list">
-    <!-- Banner -->
-    <img class="banner" src="@/assets/Banner.png" alt="Product Banner" />
+    <!-- Header với breadcrumb -->
+    <div class="header-section">
+      <img src="@/assets/Banner.png" alt="Banner" class="banner-image" />
+    </div>
 
     <!-- Main layout -->
     <div class="main-content">
@@ -9,8 +11,6 @@
       <div class="filter-section">
         <div class="filter-title">
           <div class="filter-title-group">
-
-            <!-- Inline SVG icon -->
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" class="icon">
               <g clip-path="url(#clip0_2200_5624)">
                 <path d="M18.3332 2.5H1.6665L8.33317 10.3833V15.8333L11.6665 17.5V10.3833L18.3332 2.5Z" stroke="#FF813F"
@@ -22,7 +22,6 @@
                 </clipPath>
               </defs>
             </svg>
-
             <span>Filter</span>
           </div>
         </div>
@@ -30,22 +29,62 @@
         <div class="filter-group">
           <h3 class="filter-heading">Danh mục sản phẩm</h3>
           <ul class="filter-list">
-            <li><input type="checkbox" id="food" value="Thức ăn" v-model="selectedCategories"><label for="food">Thức
-                ăn</label></li>
-            <li><input type="checkbox" id="toy" value="Đồ chơi" v-model="selectedCategories"><label for="toy">Đồ
-                chơi</label></li>
-            <li><input type="checkbox" id="care" value="Phụ kiện chăm sóc" v-model="selectedCategories"><label
-                for="care">Phụ kiện chăm sóc</label></li>
-            <li><input type="checkbox" id="cleaning" value="Vật dụng vệ sinh" v-model="selectedCategories"><label
-                for="cleaning">Vật dụng vệ sinh</label></li>
-            <li><input type="checkbox" id="bed" value="Chuồng và giường" v-model="selectedCategories"><label
-                for="bed">Chuồng và giường</label></li>
-            <li><input type="checkbox" id="snack" value="Snack/Bánh thưởng" v-model="selectedCategories"><label
-                for="snack">Snack/Bánh thưởng</label></li>
-            <li><input type="checkbox" id="supplement" value="Thực phẩm bổ sung" v-model="selectedCategories"><label
-                for="supplement">Thực phẩm bổ sung</label></li>
-            <li><input type="checkbox" id="fashion" value="Quần áo/Thời trang" v-model="selectedCategories"><label
-                for="fashion">Quần áo/Thời trang</label></li>
+            <li>
+              <label class="checkbox-container">
+                <input type="checkbox" value="Thức ăn" v-model="selectedCategories" />
+                <span class="checkmark"></span>
+                Thức ăn
+              </label>
+            </li>
+            <li>
+              <label class="checkbox-container">
+                <input type="checkbox" value="Đồ chơi" v-model="selectedCategories" />
+                <span class="checkmark"></span>
+                Đồ chơi
+              </label>
+            </li>
+            <li>
+              <label class="checkbox-container">
+                <input type="checkbox" value="Phụ kiện chăm sóc" v-model="selectedCategories" />
+                <span class="checkmark"></span>
+                Phụ kiện chăm sóc
+              </label>
+            </li>
+            <li>
+              <label class="checkbox-container">
+                <input type="checkbox" value="Vật dụng vệ sinh" v-model="selectedCategories" />
+                <span class="checkmark"></span>
+                Vật dụng vệ sinh
+              </label>
+            </li>
+            <li>
+              <label class="checkbox-container">
+                <input type="checkbox" value="Chuồng và giường" v-model="selectedCategories" />
+                <span class="checkmark"></span>
+                Chuồng và giường
+              </label>
+            </li>
+            <li>
+              <label class="checkbox-container">
+                <input type="checkbox" value="Snack/Bánh thưởng" v-model="selectedCategories" />
+                <span class="checkmark"></span>
+                Snack/Bánh thưởng
+              </label>
+            </li>
+            <li>
+              <label class="checkbox-container">
+                <input type="checkbox" value="Thực phẩm bổ sung" v-model="selectedCategories" />
+                <span class="checkmark"></span>
+                Thực phẩm bổ sung
+              </label>
+            </li>
+            <li>
+              <label class="checkbox-container">
+                <input type="checkbox" value="Quần áo/Thời trang" v-model="selectedCategories" />
+                <span class="checkmark"></span>
+                Quần áo/Thời trang
+              </label>
+            </li>
           </ul>
         </div>
 
@@ -54,82 +93,119 @@
         <div class="filter-group">
           <h3 class="filter-heading">Loại thú cưng</h3>
           <ul class="filter-list">
-            <li><input type="checkbox" id="dog" value="Chó" v-model="selectedPets"><label for="dog">Chó</label></li>
-            <li><input type="checkbox" id="cat" value="Mèo" v-model="selectedPets"><label for="cat">Mèo</label></li>
+            <li>
+              <label class="checkbox-container">
+                <input type="checkbox" value="Chó" v-model="selectedPets" />
+                <span class="checkmark"></span>
+                Chó
+              </label>
+            </li>
+            <li>
+              <label class="checkbox-container">
+                <input type="checkbox" value="Mèo" v-model="selectedPets" />
+                <span class="checkmark"></span>
+                Mèo
+              </label>
+            </li>
           </ul>
         </div>
 
+        <hr class="filter-divider" />
+
         <!-- Bộ lọc mức giá -->
-        <div class="price-filter">
-          <div class="slider-container">
-            <!-- Min range -->
-            <input type="range" :min="min" :max="max" v-model.number="minPrice" @input="checkMin" />
-
-            <!-- Max range -->
-            <input type="range" :min="min" :max="max" v-model.number="maxPrice" @input="checkMax" />
-
-            <!-- Track fill (optional) -->
-            <div class="slider-track" :style="trackStyle"></div>
-          </div>
-          <div class="price-values">
-            Giá từ {{ minPrice }}₫ đến {{ maxPrice }}₫
+        <div class="filter-group">
+          <h3 class="filter-heading">Mức giá</h3>
+          <div class="price-filter">
+            <div class="slider-container">
+              <input type="range" :min="min" :max="max" v-model.number="minPrice" @input="checkMin" class="range-min" />
+              <input type="range" :min="min" :max="max" v-model.number="maxPrice" @input="checkMax" class="range-max" />
+              <div class="slider-track">
+                <div class="slider-range" :style="trackStyle"></div>
+              </div>
+            </div>
+            <div class="price-values">
+              VND {{ formatPrice(minPrice) }} - {{ formatPrice(maxPrice) }}
+            </div>
           </div>
         </div>
-
-
       </div>
 
       <!-- Right: Product Cards -->
       <div class="product-section">
-        <!-- Bọc bằng div mới -->
+        <!-- Sort dropdown -->
         <div class="sort-wrapper">
           <div class="sort-dropdown">
             <button @click="toggleDropdown" class="sort-button">
               Sắp xếp
-              <span class="arrow">▼</span>
+              <span class="arrow" :class="{ 'rotated': dropdownOpen }">▼</span>
             </button>
             <div v-if="dropdownOpen" class="dropdown-menu">
               <div class="dropdown-item" v-for="(option, index) in sortOptions" :key="index"
-                @click="selectOption(option.value)">
+                @click="selectOption(option.value)" :class="{ 'selected': sortOption === option.value }">
                 {{ option.label }}
-                <span v-if="sortOption === option.value" style="float: right;">✔</span>
+                <span v-if="sortOption === option.value" class="checkmark-selected">✔</span>
               </div>
             </div>
           </div>
         </div>
 
         <div class="product-grid">
-          <div v-for="product in paginatedProducts" :key="product.id" class="product-card"
-            :class="{ active: activeProductId === product.id }" @click.stop="setActiveProduct(product.id)">
-            <img :src="product.image" :alt="product.name" class="product-img" />
-
-            <div class="overlay" v-if="activeProductId === product.id">
-              <button class="btn-cart" @click.stop>Giỏ hàng</button>
-              <button class="btn-buy" @click.stop>Mua ngay</button>
-              <button class="btn-fav" @click.stop>Yêu thích</button>
+          <router-link v-for="product in paginatedProducts" :key="product.id"
+            :to="{ name: 'ProductDetail', params: { id: product.id } }" class="product-card"
+            @mouseenter="setHoverProduct(product.id)" @mouseleave="clearHoverProduct">
+            <div class="product-image-container">
+              <img :src="product.image" :alt="product.name" class="product-img" />
+              <div class="product-overlay">
+                <button class="overlay-btn cart-btn">
+                  <i class="fas fa-shopping-cart"></i>
+                  Giỏ hàng
+                </button>
+                <button class="overlay-btn buy-btn">
+                  Mua ngay
+                </button>
+                <button class="overlay-btn favorite-btn" :class="{ 'active': product.isFavorite }">
+                  Yêu thích
+                </button>
+              </div>
+              <!-- Labels overlay -->
+              <div class="product-labels">
+                <span v-if="product.isHot" class="label hot-label">Giá hàng</span>
+                <span v-if="product.isNew" class="label new-label">Mới ngày</span>
+                <span v-if="product.isFavorite" class="label favorite-label">Yêu thích</span>
+              </div>
             </div>
 
             <div class="product-info">
-              <h3>{{ product.name }}</h3>
-              <p>{{ product.category }}</p>
-              <p>{{ formatPrice(product.price) }}</p>
+              <h3 class="product-name">{{ product.name }}</h3>
+              <p class="product-category">{{ product.category }}</p>
+              <p class="product-price">{{ formatPrice(product.price) }}</p>
             </div>
-          </div>
+          </router-link>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <button @click="goToPage(1)" :disabled="currentPage === 1" class="page-btn">
+            1
+          </button>
+          <button @click="goToPage(2)" :disabled="currentPage === 2" class="page-btn"
+            :class="{ 'active': currentPage === 2 }">
+            2
+          </button>
+          <button @click="goToPage(3)" :disabled="currentPage === 3" class="page-btn">
+            3
+          </button>
+          <button @click="goToLastPage" :disabled="currentPage === totalPages" class="page-btn">
+            Last
+          </button>
         </div>
       </div>
-    </div>
-
-    <!-- Pagination -->
-    <div class="pagination">
-      <button @click="currentPage = Math.max(currentPage - 1, 1)" :disabled="currentPage === 1">«</button>
-      <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-      <button @click="currentPage = Math.min(currentPage + 1, totalPages)"
-        :disabled="currentPage === totalPages">»</button>
     </div>
   </div>
 </template>
 
 <script>
+import { productService } from '@/services/api';
 export default {
   name: 'ProductList',
   data() {
@@ -137,20 +213,20 @@ export default {
       selectedProductIndex: null,
       min: 0,
       max: 500000,
-      minPrice: 200,
-      maxPrice: 800,
-      activeProductId: null,
+      minPrice: 0,
+      maxPrice: 500000,
+      hoveredProductId: null,
       selectedCategories: [],
       selectedPets: [],
       currentPage: 1,
-      itemsPerPage: 6,
+      itemsPerPage: 9,
       sortOption: 'priceAsc',
       dropdownOpen: false,
       sortOptions: [
         { label: 'Giá tăng dần', value: 'priceAsc' },
         { label: 'Giá giảm dần', value: 'priceDesc' },
         { label: 'Từ A đến Z', value: 'nameAsc' },
-        { label: 'Từ Z đến A', value: 'nameDesc' }
+        { label: 'Từ Z đến A', value: 'nameDesc' },
       ],
       products: [
         {
@@ -159,7 +235,10 @@ export default {
           category: 'Đồ chơi',
           price: 360000,
           petType: 'Mèo',
-          image: 'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880'
+          image: 'https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=300&h=300&fit=crop',
+          isHot: true,
+          isNew: false,
+          isFavorite: false
         },
         {
           id: 2,
@@ -167,7 +246,10 @@ export default {
           category: 'Đồ chơi',
           price: 360000,
           petType: 'Mèo',
-          image: 'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880'
+          image: 'https://images.unsplash.com/photo-1571566882372-1598d88abd90?w=300&h=300&fit=crop',
+          isHot: false,
+          isNew: true,
+          isFavorite: false
         },
         {
           id: 3,
@@ -175,7 +257,10 @@ export default {
           category: 'Đồ chơi',
           price: 350000,
           petType: 'Mèo',
-          image: 'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880'
+          image: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=300&h=300&fit=crop',
+          isHot: false,
+          isNew: false,
+          isFavorite: true
         },
         {
           id: 4,
@@ -183,7 +268,10 @@ export default {
           category: 'Thức ăn',
           price: 350000,
           petType: 'Chó',
-          image: 'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880'
+          image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
+          isHot: false,
+          isNew: false,
+          isFavorite: false
         },
         {
           id: 5,
@@ -191,7 +279,10 @@ export default {
           category: 'Thức ăn',
           price: 350000,
           petType: 'Mèo',
-          image: 'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880'
+          image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
+          isHot: false,
+          isNew: false,
+          isFavorite: false
         },
         {
           id: 6,
@@ -199,7 +290,10 @@ export default {
           category: 'Thức ăn',
           price: 350000,
           petType: 'Chó',
-          image: 'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880'
+          image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
+          isHot: false,
+          isNew: false,
+          isFavorite: false
         },
         {
           id: 7,
@@ -207,7 +301,10 @@ export default {
           category: 'Vật dụng vệ sinh',
           price: 150000,
           petType: 'Chó',
-          image: 'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880'
+          image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=300&h=300&fit=crop',
+          isHot: false,
+          isNew: false,
+          isFavorite: false
         },
         {
           id: 8,
@@ -215,7 +312,10 @@ export default {
           category: 'Thức ăn',
           price: 420000,
           petType: 'Chó',
-          image: 'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880'
+          image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
+          isHot: false,
+          isNew: false,
+          isFavorite: false
         },
         {
           id: 9,
@@ -223,43 +323,62 @@ export default {
           category: 'Thức ăn',
           price: 200000,
           petType: 'Mèo',
-          image: 'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880'
-        }
-      ]
-    }
+          image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
+          isHot: false,
+          isNew: false,
+          isFavorite: false
+        },
+      ],
+    };
   },
-
-
   mounted() {
     document.addEventListener('click', this.handleClickOutside);
-    document.addEventListener('click', this.clearSelection);
+    this.fetchProducts();
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
-    document.removeEventListener('click', this.clearSelection);
   },
 
-
   methods: {
-    formatCurrency(value) {
-      return new Intl.NumberFormat('vi-VN').format(value);
-    },
+    async fetchProducts() {
+      try {
+        this.loading = true;
+        this.error = null;
 
-    setActiveProduct(id) {
-      this.activeProductId = id;
-    },
-    handleClickOutside(event) {
-      // Nếu click ngoài card
-      if (!event.target.closest('.product-card')) {
-        this.activeProductId = null;
+        const params = {
+          // categories: this.selectedCategories, 
+          // petTypes: this.selectedPets,
+          // minPrice: this.minPrice,
+          // maxPrice: this.maxPrice,
+          // sort: this.sortOption
+        };
+        const data = await productService.getAll(params);
+        console.log(data);
+
+        if (Array.isArray(data)) {
+          this.products = data;
+
+        } else {
+          console.error('Invalid data format:', data);
+          throw new Error('Dữ liệu không hợp lệ');
+        }
+      } catch (error) {
+        this.error = error.message;
+        console.error('Error:', error);
+      } finally {
+        this.loading = false;
       }
     },
-    selectProduct(index, event) {
-      event.stopPropagation();
-      this.selectedProductIndex = index;
+    setHoverProduct(id) {
+      this.hoveredProductId = id;
     },
-    clearSelection() {
-      this.selectedProductIndex = null;
+    clearHoverProduct() {
+      this.hoveredProductId = null;
+    },
+    handleClickOutside(event) {
+      if (!event.target.closest('.sort-dropdown')) {
+        this.dropdownOpen = false;
+      }
     },
     toggleDropdown() {
       this.dropdownOpen = !this.dropdownOpen;
@@ -267,7 +386,7 @@ export default {
     selectOption(value) {
       this.sortOption = value;
       this.dropdownOpen = false;
-      this.$emit('sort-changed', value);
+      this.fetchProducts(); // Gọi lại API khi thay đổi sắp xếp
     },
     formatPrice(value) {
       return new Intl.NumberFormat('vi-VN').format(value);
@@ -281,6 +400,16 @@ export default {
       if (this.maxPrice < this.minPrice) {
         this.maxPrice = this.minPrice;
       }
+    },
+    goToPage(page) {
+      this.currentPage = page;
+    },
+    goToLastPage() {
+      this.currentPage = this.totalPages;
+    },
+    handleFiltersChange() {
+      this.currentPage = 1;
+      this.fetchProducts(); // Gọi lại API khi thay đổi bộ lọc
     }
   },
 
@@ -288,9 +417,11 @@ export default {
     filteredProducts() {
       return this.products.filter((product) => {
         const categoryMatch =
-          this.selectedCategories.length === 0 || this.selectedCategories.includes(product.category);
+          this.selectedCategories.length === 0 ||
+          this.selectedCategories.includes(product.category);
         const petMatch =
-          this.selectedPets.length === 0 || this.selectedPets.includes(product.petType);
+          this.selectedPets.length === 0 ||
+          this.selectedPets.includes(product.petType);
         const priceMatch =
           product.price >= this.minPrice && product.price <= this.maxPrice;
         return categoryMatch && petMatch && priceMatch;
@@ -327,70 +458,79 @@ export default {
       const maxPercent = ((this.maxPrice - this.min) / (this.max - this.min)) * 100;
       return {
         left: `${minPercent}%`,
-        width: `${maxPercent - minPercent}%`
+        width: `${maxPercent - minPercent}%`,
       };
     }
   },
 
-
-
   watch: {
     selectedCategories() {
-      this.currentPage = 1;
+      this.handleFiltersChange();
     },
     selectedPets() {
-      this.currentPage = 1;
+      this.handleFiltersChange();
     },
-    filteredProducts() {
-      if (this.currentPage > this.totalPages) {
-        this.currentPage = this.totalPages || 1;
-      }
+    minPrice() {
+      this.handleFiltersChange();
     },
-    sortOption() {
-      this.$emit('sort-changed', this.sortOption);
+    maxPrice() {
+      this.handleFiltersChange();
     }
-  }
-}
+  },
+};
 </script>
-
 
 <style scoped>
 .product-list {
-  text-align: center;
+  background-color: #f8f9fa;
+  min-height: 100vh;
 }
 
-.banner {
+/* Header Section */
+.header-section {
   width: 100%;
-  height: auto;
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
-/* Layout chính: 2 bên */
+/* Media queries cho responsive */
+@media (max-width: 768px) {
+  .header-section {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-section {
+    height: 150px;
+  }
+}
+
+/* Layout chính */
 .main-content {
   display: flex;
-  gap: 24px;
-  padding: 32px;
-  text-align: left;
+  gap: 32px;
+  padding: 40px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Bên trái: bộ lọc */
+/* Filter Section */
 .filter-section {
-  width: 316px;
-  height: 656px;
-  flex-shrink: 0;
-  padding: 16px;
-  border-radius: 8px;
-  overflow-y: auto;
-}
-
-.filter-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.filter-group .filter-list li {
-  margin-bottom: 12px;
+  width: 280px;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  height: fit-content;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .filter-title {
@@ -406,271 +546,576 @@ export default {
 }
 
 .filter-title-group span {
-  color: #F87537;
+  color: #ff813f;
   font-family: 'Poppins', sans-serif;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
-  line-height: 20px;
-  user-select: none;
-}
-
-.icon {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  vertical-align: middle;
-  display: inline-block;
 }
 
 .filter-heading {
   margin-bottom: 16px;
-  color: #000;
-  -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: #000;
+  color: #333;
   font-family: 'Poppins', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  line-height: 20px;
-  text-align: left;
+}
+
+.filter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filter-list li {
+  margin-bottom: 12px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+  font-family: 'Poppins', sans-serif;
+}
+
+.checkbox-container input {
+  display: none;
+}
+
+.checkmark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ddd;
+  border-radius: 3px;
+  margin-right: 12px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.checkbox-container input:checked+.checkmark {
+  background-color: #ff813f;
+  border-color: #ff813f;
+}
+
+.checkbox-container input:checked+.checkmark::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .filter-divider {
-  width: 300px;
+  width: 100%;
   height: 1px;
   border: none;
-  border-top: 2px solid #F87537;
-  flex-shrink: 0;
-  margin: 24px auto;
+  background-color: #eee;
+  margin: 24px 0;
 }
 
-/* Bên phải: danh sách sản phẩm */
-.product-section {
-  flex: 1;
-}
-
-/* Grid sản phẩm */
-.product-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 49px;
-}
-
-/* Thẻ sản phẩm */
-.product-card {
-  position: relative;
-  width: 285px;
-  height: 445px;
-  overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.product-card.active {
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
-}
-
-.product-card .overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.product-card.active .overlay {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.btn-cart,
-.btn-buy,
-.btn-fav {
-  margin: 8px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: #FF813F;
-  color: white;
-  cursor: pointer;
-}
-
-.product-card:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.product-img {
-  width: 100%;
-  height: 285px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-.product-name {
-  margin: 12px 0 4px;
-  color: #FF813F;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.product-category {
-  margin: 0;
-  color: #6C6C6C;
-  font-size: 14px;
-}
-
-.product-price {
-  margin-top: 6px;
-  color: #FF813F;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.pagination {
-  margin-top: 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  font-family: 'Poppins', sans-serif;
-}
-
-.pagination button {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 10px;
-  background-color: #FF813F;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.pagination button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.product-sort {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-  font-family: 'Poppins', sans-serif;
-}
-
-.product-sort select {
-  padding: 6px 12px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-
-.sort-dropdown {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 16px;
-  left: -50px;
-  font-family: 'Poppins', sans-serif;
-}
-
-.sort-button {
-  background-color: white;
-  border: 1px solid #FF813F;
-  border-radius: 10px;
-  padding: 8px 16px;
-  font-size: 14px;
-  color: #FF813F;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Mũi tên ▼ */
-.sort-button .arrow {
-  font-size: 12px;
-  transition: transform 0.3s ease;
-}
-
-/* Dropdown menu */
-.dropdown-menu {
-  position: absolute;
-  top: 110%;
-  left: -10px;
-  z-index: 10;
-  background-color: #fff;
-  border: 1px solid #FF813F;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  width: 180px;
-  padding: 8px 0;
-}
-
-/* Mỗi lựa chọn */
-.dropdown-item {
-  padding: 10px 16px;
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  font-family: 'Poppins', sans-serif;
-  transition: background-color 0.2s;
-}
-
-/* Hover item */
-.dropdown-item:hover {
-  background-color: #FFF0E6;
-  /* Màu cam nhạt */
-  color: #FF813F;
-}
-
-.sort-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  /* đẩy sang phải */
-  margin-bottom: 16px;
+/* Price Filter */
+.price-filter {
+  margin-top: 16px;
 }
 
 .slider-container {
   position: relative;
-  height: 36px;
+  height: 20px;
+  margin-bottom: 16px;
 }
 
-input[type="range"] {
+.slider-track {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background-color: #ddd;
+  border-radius: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.slider-range {
+  position: absolute;
+  height: 4px;
+  background-color: #ff813f;
+  border-radius: 2px;
+}
+
+input[type='range'] {
   -webkit-appearance: none;
   width: 100%;
   position: absolute;
   height: 4px;
   background: transparent;
   pointer-events: none;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #3b82f6;
-  cursor: pointer;
-  pointer-events: auto;
-  position: relative;
-  z-index: 3;
-}
-
-.slider-track {
-  position: absolute;
-  height: 4px;
-  background-color: #3b82f6;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 1;
-  border-radius: 2px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: #ff813f;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.price-values {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Product Section */
+.product-section {
+  flex: 1;
+}
+
+.sort-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 24px;
+}
+
+.sort-dropdown {
+  position: relative;
+}
+
+.sort-button {
+  background-color: white;
+  border: 2px solid #ff813f;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #ff813f;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s;
+}
+
+.sort-button:hover {
+  background-color: #ff813f;
+  color: white;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.arrow.rotated {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
+  overflow: hidden;
+}
+
+.dropdown-item {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item.selected {
+  background-color: #fff3ed;
+  color: #ff813f;
+}
+
+.checkmark-selected {
+  color: #ff813f;
+  font-weight: bold;
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+/* Responsive cho màn hình tablet */
+@media (max-width: 992px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Responsive cho màn hình mobile */
+@media (max-width: 576px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.product-card {
+  display: block;
+  text-decoration: none;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.product-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.product-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover .product-overlay {
+  opacity: 1;
+}
+
+/* Cập nhật style cho các nút */
+.overlay-btn {
+  min-width: 140px;
+  padding: 12px 24px;
+  border: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cart-btn {
+  background: #000000;
+  color: white;
+}
+
+.buy-btn {
+  background: #FF5722;
+  color: white;
+}
+
+.favorite-btn {
+  background: #8B0000;
+  color: white;
+  width: 140px;
+}
+
+.cart-btn:hover {
+  background: #333333;
+}
+
+.buy-btn:hover {
+  background: #FF7043;
+}
+
+.favorite-btn:hover {
+  background: #B71C1C;
+}
+
+/* Animation cho các nút */
+.product-card:hover .overlay-btn {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.overlay-btn {
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.product-labels {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+}
+
+.hot-label {
+  background-color: #dc3545;
+}
+
+.new-label {
+  background-color: #ff813f;
+}
+
+.favorite-label {
+  background-color: #28a745;
+}
+
+.product-info {
+  padding: 16px;
+}
+
+.product-name {
+  margin: 0 0 8px 0;
+  color: #ff813f;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+.product-category {
+  margin: 0 0 8px 0;
+  color: #666;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.product-price {
+  margin: 0;
+  color: #ff813f;
+  font-weight: 700;
+  font-size: 18px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 40px;
+}
+
+.page-btn {
+  padding: 10px 16px;
+  border: 2px solid #ff813f;
+  border-radius: 8px;
+  background-color: white;
+  color: #ff813f;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background-color: #ff813f;
+  color: white;
+}
+
+.page-btn.active {
+  background-color: #ff813f;
+  color: white;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .filter-section {
+    width: 100%;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .hero-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .hero-content {
+    margin-bottom: 24px;
+  }
+
+  .hero-title {
+    font-size: 32px;
+  }
+
+  .pet-circle {
+    width: 160px;
+    height: 160px;
+  }
+
+  .pet-img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .sort-wrapper {
+    justify-content: center;
+    margin: 16px 0;
+  }
+
+  .dropdown-menu {
+    left: 0;
+    right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-title {
+    font-size: 28px;
+  }
+
+  .breadcrumb {
+    font-size: 14px;
+  }
+
+  .filter-section {
+    padding: 16px;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+
+  .page-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .sort-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Hover effects */
+.product-card:hover .product-img {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.sort-button:active {
+  transform: scale(0.98);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+  .product-card,
+  .product-card:hover .product-img {
+    animation: none;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Focus styles */
+.sort-button:focus,
+.page-btn:focus {
+  outline: 2px solid #ff813f;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+
+  .filter-section,
+  .sort-wrapper,
+  .pagination {
+    display: none;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
 }
 </style>
