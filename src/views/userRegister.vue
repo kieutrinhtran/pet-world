@@ -1,21 +1,18 @@
-<template>
-  <div class="register-container">
+<template> 
+  <div class="login-container">
     <img src="@/assets/Avatar.png" alt="Logo" class="logo" />
-    <h2 class="title">ĐĂNG KÝ</h2>
-    <form @submit.prevent="register">
+    <h2 class="title">ĐĂNG NHẬP</h2>
+    <form @submit.prevent="login">
       <label>Tên đăng nhập</label>
       <input v-model="username" type="text" required />
 
       <label>Mật khẩu</label>
       <input v-model="password" type="password" required />
 
-      <label>Nhập lại mật khẩu</label>
-      <input v-model="confirmPassword" type="password" required />
-
-      <button type="submit">Đăng kí</button>
+      <button type="submit">Đăng nhập</button>
     </form>
     <div class="links">
-      <p>Đã có tài khoản? <a href="/login">Đăng nhập ngay</a></p>
+      <p>Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
     </div>
   </div>
 </template>
@@ -25,25 +22,50 @@ export default {
   data() {
     return {
       username: '',
-      password: '',
-      confirmPassword: ''
-    }
+      password: ''
+    };
   },
   methods: {
-    register() {
-      if (this.password !== this.confirmPassword) {
-        alert("Mật khẩu không khớp!");
+    async login() {
+      if (!this.username || !this.password) {
+        alert("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
         return;
       }
-      // Xử lý đăng ký tại đây
-      console.log("Đăng ký:", this.username, this.password);
+
+      try {
+        const response = await fetch("/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            user_name: this.username,
+            password: this.password
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.user_id) {
+          // Đăng nhập thành công
+          alert(`Đăng nhập thành công. Xin chào, ${data.user_name}!`);
+          // Redirect hoặc lưu thông tin user tại đây nếu cần
+        } else if (data.error) {
+          alert(data.message || "Thiếu thông tin đăng nhập.");
+        } else {
+          alert("Tên đăng nhập hoặc mật khẩu không đúng.");
+        }
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+        alert("Có lỗi xảy ra. Vui lòng thử lại sau.");
+      }
     }
   }
-}
+};
 </script>
 
 <style scoped>
-.register-container {
+.login-container {
   background-color: white;
   min-height: 100vh;
   display: flex;
@@ -116,5 +138,4 @@ button:hover {
   text-decoration: underline;
   color: #d88400;
 }
-
 </style>
