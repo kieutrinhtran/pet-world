@@ -1,22 +1,24 @@
-<?php
-require_once __DIR__.'/../config/database.php';
+<?php 
+class Customer
+{
+    private $conn;
+    private $table_name = "customer";
 
-class CustomerModel {
-    public static function getById($customer_id) {
-        global $conn;
-        $sql = "SELECT * FROM customer WHERE customer_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param('s', $customer_id);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+    public function __construct($db)
+    {
+        $this->conn = $db;
     }
 
-    public static function update($customer_id, $data) {
-        global $conn;
-        $sql = "UPDATE customer SET customer_name=?, email=?, phone=?, date_of_birth=?, gender=? WHERE customer_id=?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param('ssssss', $data['customer_name'], $data['email'], $data['phone'], $data['date_of_birth'], $data['gender'], $customer_id);
-        return $stmt->execute();
+    private function generateID()
+    {
+        return strtoupper(substr(bin2hex(random_bytes(5)), 0, 10));
+    }
+    public function findOne($id)
+    {
+        $query = "SELECT * FROM {$this->table_name} WHERE customer_id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
-?>
