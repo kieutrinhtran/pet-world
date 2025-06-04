@@ -19,8 +19,12 @@
     </form>
 
     <div class="links">
-      <p>Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
+      <p>
+    Chưa có tài khoản?
+    <a @click.prevent="goToRegister" href="#">Đăng ký ngay</a>
+      </p>
     </div>
+
 
     <!-- Popup đăng nhập thành công -->
     <div v-if="showSuccess" class="modal">
@@ -51,8 +55,8 @@ export default {
   methods: {
     async login() {
       const url = this.loginType === 'admin'
-        ? 'http://localhost:3000/login'
-        : 'http://localhost:3000/user/login';
+        ? 'http://localhost:8000/login'
+        : 'http://localhost:8000/user/login';
 
       const body = this.loginType === 'admin'
         ? { user_name: this.username, password: this.password }
@@ -91,10 +95,14 @@ export default {
         this.errorMessage = 'Không thể kết nối tới máy chủ';
         setTimeout(() => this.errorMessage = '', 5000);
       }
+    },
+    goToRegister() {
+      this.$router.push('/register');
     }
   }
 };
 </script>
+
 
 <style scoped>
 .login-container {
