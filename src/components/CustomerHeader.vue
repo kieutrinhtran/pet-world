@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { useCartStore } from '../store/cart'
+import { useCart } from '../store/cart'
 
 export default {
   name: 'CustomerHeader',
@@ -95,9 +95,6 @@ export default {
     isAbout() {
       return this.$route.path === '/about'
     },
-    cart() {
-      return useCartStore()
-    },
     cartItemCount() {
       return this.cart.itemCount
     }
@@ -111,6 +108,10 @@ export default {
         })
       }
     }
+  },
+  setup() {
+    const cart = useCart()
+    return { cart }
   }
 }
 </script>

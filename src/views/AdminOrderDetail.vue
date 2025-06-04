@@ -168,7 +168,73 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
-import { orderService } from '@/services/api'
+
+// Cấu hình axios instance
+const axiosInstance = axios.create({
+  baseURL: process.env.VUE_APP_API_URL || 'http://localhost:8000/api/v1',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
+})
+
+// Thêm interceptor để xử lý request
+axiosInstance.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('admin_token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
+
+// Thêm interceptor để xử lý response
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('admin_token')
+      window.location.href = '/admin/login'
+      return Promise.reject(error)
+    }
+    return Promise.reject(error)
+  }
+)
+
+// Helper function để xử lý lỗi
+const handleError = (error, defaultMessage = 'Có lỗi xảy ra') => {
+  console.error(error)
+  if (error.response?.data?.message) {
+    throw new Error(error.response.data.message)
+  }
+  throw new Error(defaultMessage)
+}
+
+// Order Service
+const orderService = {
+  getById: async (id) => {
+    try {
+      const response = await axiosInstance.get(`/orders/${id}`)
+      return response.data
+    } catch (error) {
+      handleError(error, 'Không thể tải thông tin đơn hàng')
+    }
+  },
+
+  update: async (id, data) => {
+    try {
+      const response = await axiosInstance.put(`/orders/${id}`, data)
+      return response.data
+    } catch (error) {
+      handleError(error, 'Không thể cập nhật đơn hàng')
+    }
+  }
+}
 
 // =====================
 // Biến trạng thái reactive
@@ -285,7 +351,7 @@ onMounted(async () => {
   try {
     loading.value = true
     // Gọi API lấy chi tiết đơn hàng theo orderId
-    const response = await axios.get(`/orders/${orderId}`)
+    const response = await axiosInstance.get(`/orders/${orderId}`)
     order.value = response.data
   } catch (err) {
     error.value = 'Không thể tải thông tin đơn hàng'
