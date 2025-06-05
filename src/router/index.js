@@ -6,6 +6,7 @@ import CheckoutPage from '../views/CheckoutPage.vue'
 import OrderSuccess from '../views/OrderSuccess.vue'
 import AboutPage from '../views/AboutPage.vue'
 import AdminOrderManagement from '../views/AdminOrderManagement.vue'
+import AdminCustomerManagement from '../views/AdminCustomerManagement.vue'
 import AdminOrderDetail from '../views/AdminOrderDetail.vue'
 import AdminStatistics from '../views/AdminStatistics.vue'
 import AdminLogin from '@/views/AdminLogin.vue'
@@ -103,7 +104,7 @@ const routes = [
       {
         path: 'customers',
         name: 'AdminCustomerManagement',
-        component: () => import('@/views/AdminCustomerManagement.vue')
+        component: AdminCustomerManagement
       },
       {
         path: 'customers/:id/edit',
