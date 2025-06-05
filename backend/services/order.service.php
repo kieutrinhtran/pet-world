@@ -2,18 +2,21 @@
 require_once __DIR__ . '/../model/order.model.php';
 require_once __DIR__ . '/../model/promotion.model.php';
 require_once __DIR__ . '/../model/product.model.php';
+require_once __DIR__ . '/../model/cart.model.php'; // <--- Thêm dòng này
 
 class OrderService
 {
     private $orderModel;
     private $promotionModel;
     private $productModel;
+    private $cartModel; // <--- Thêm thuộc tính
 
     public function __construct($db)
     {
         $this->orderModel = new Order($db);
         $this->promotionModel = new Promotion($db);
         $this->productModel = new Product($db);
+        $this->cartModel = new Cart($db); // <--- Khởi tạo model cart
     }
 
     private function applyPromotion($promotion_id, $total_amount)
@@ -68,7 +71,7 @@ class OrderService
             $data['status'] = 'pending';
         }
 
-       $promotionResult = $this->applyPromotion(
+        $promotionResult = $this->applyPromotion(
             !empty($data['promotion_id']) ? $data['promotion_id'] : null,
             $data['total_amount']
         );
@@ -79,8 +82,15 @@ class OrderService
 
         $order_id = $this->orderModel->createOrderFromCart($data, $cart_items);
 
-        if ($order_id && isset($promotionResult['promotion_id'])) {
-            $this->promotionModel->incrementUsedVoucher($promotionResult['promotion_id']);
+        if ($order_id) {
+            if (isset($promotionResult['promotion_id'])) {
+                $this->promotionModel->incrementUsedVoucher($promotionResult['promotion_id']);
+            }
+
+            // 🧹 Xóa giỏ hàng sau khi tạo đơn hàng thành công
+            if (!empty($data['customer_id'])) {
+                $this->cartModel->clearCartByCustomer($data['customer_id']);
+            }
         }
 
         return $order_id ? ['success' => true, 'order_id' => $order_id] :
