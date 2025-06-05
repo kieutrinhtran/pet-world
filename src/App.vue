@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import { useCartStore } from './store/cart';
+import { useCart } from './store/cart'
 
 export default {
   name: 'App',
   setup() {
-    const cart = useCartStore();
+    const cart = useCart()
     return {
       cart,
     };

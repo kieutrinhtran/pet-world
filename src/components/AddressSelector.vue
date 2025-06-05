@@ -108,13 +108,12 @@ import axios from 'axios';
 
 const emit = defineEmits(['close', 'address-selected']);
 
-const apiBaseUrl =
-  process.env.VUE_APP_API_URL || 'http://localhost:8000/api/v1';
-const addressList = ref([]);
-const selectedAddressId = ref(null);
-const loading = ref(false);
-const editingAddress = ref(null);
-const showEditForm = ref(false);
+const apiBaseUrl = process.env.VUE_APP_API_URL || 'http://localhost:8000/api/v1/'
+const addressList = ref([])
+const selectedAddressId = ref(null)
+const loading = ref(false)
+const editingAddress = ref(null)
+const showEditForm = ref(false)
 
 function close() {
   emit('close');
@@ -136,14 +135,13 @@ function editAddress(address) {
 
 async function saveEdit() {
   try {
-    await axios.put(
-      `${apiBaseUrl}/users/${editingAddress.value.customer_id}/addresses/${editingAddress.value.address_id}`,
-      editingAddress.value
-    );
-    const userId = localStorage.getItem('user_id');
-    const res = await axios.get(`${apiBaseUrl}/users/${userId}/addresses`);
-    addressList.value = res.data;
-    showEditForm.value = false;
+    await axios.put(`${apiBaseUrl}/address/update`, editingAddress.value)
+    const userId = localStorage.getItem('user_id')
+    const res = await axios.get(`${apiBaseUrl}/address`, {
+      params: { customer_id: userId }
+    })
+    addressList.value = res.data
+    showEditForm.value = false
   } catch (e) {
     alert('Cập nhật địa chỉ thất bại!');
   }
@@ -153,8 +151,10 @@ onMounted(async () => {
   loading.value = true;
   const userId = localStorage.getItem('user_id');
   try {
-    const res = await axios.get(`${apiBaseUrl}/users/${userId}/addresses`);
-    addressList.value = res.data;
+    const res = await axios.get(`${apiBaseUrl}/address`, {
+      params: { customer_id: userId }
+    })
+    addressList.value = res.data
     // Chọn mặc định nếu có
     const def = addressList.value.find((a) => a.is_default);
     if (def) selectedAddressId.value = def.address_id;
