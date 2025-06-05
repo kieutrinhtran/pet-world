@@ -149,55 +149,78 @@
           </div>
         </div>
 
-        <div class="product-grid">
-          <router-link v-for="product in paginatedProducts" :key="product.id"
-            :to="{ name: 'ProductDetail', params: { id: product.id } }" class="product-card"
-            @mouseenter="setHoverProduct(product.id)" @mouseleave="clearHoverProduct">
-            <div class="product-image-container">
-              <img :src="product.image" :alt="product.name" class="product-img" />
-              <div class="product-overlay">
-                <button class="overlay-btn cart-btn">
-                  <i class="fas fa-shopping-cart"></i>
-                  Giỏ hàng
-                </button>
-                <button class="overlay-btn buy-btn">
-                  Mua ngay
-                </button>
-                <button class="overlay-btn favorite-btn" :class="{ 'active': product.isFavorite }">
-                  Yêu thích
-                </button>
-              </div>
-              <!-- Labels overlay -->
-              <div class="product-labels">
-                <span v-if="product.isHot" class="label hot-label">Giá hàng</span>
-                <span v-if="product.isNew" class="label new-label">Mới ngày</span>
-                <span v-if="product.isFavorite" class="label favorite-label">Yêu thích</span>
-              </div>
-            </div>
-
-            <div class="product-info">
-              <h3 class="product-name">{{ product.name }}</h3>
-              <p class="product-category">{{ product.category }}</p>
-              <p class="product-price">{{ formatPrice(product.price) }}</p>
-            </div>
-          </router-link>
+        <!-- Loading State -->
+        <div v-if="loading" class="loading-container">
+          <div class="loading-spinner"></div>
+          <p>Đang tải sản phẩm...</p>
         </div>
 
-        <!-- Pagination -->
-        <div class="pagination">
-          <button @click="goToPage(1)" :disabled="currentPage === 1" class="page-btn">
-            1
-          </button>
-          <button @click="goToPage(2)" :disabled="currentPage === 2" class="page-btn"
-            :class="{ 'active': currentPage === 2 }">
-            2
-          </button>
-          <button @click="goToPage(3)" :disabled="currentPage === 3" class="page-btn">
-            3
-          </button>
-          <button @click="goToLastPage" :disabled="currentPage === totalPages" class="page-btn">
-            Last
-          </button>
+        <!-- Error State -->
+        <div v-else-if="error" class="error-container">
+          <div class="error-icon">❌</div>
+          <p class="error-message">{{ error }}</p>
+          <button @click="fetchProducts" class="retry-button">Thử lại</button>
+        </div>
+
+        <!-- Product Grid -->
+        <div v-else>
+          <!-- Empty state when no products -->
+          <div v-if="products.length === 0" class="empty-state">
+            <div class="empty-icon">🐾</div>
+            <p>Không tìm thấy sản phẩm nào phù hợp với bộ lọc của bạn</p>
+          </div>
+
+          <!-- Product Grid -->
+          <div v-else class="product-grid">
+            <router-link v-for="product in products" :key="product.product_id"
+              :to="{ name: 'ProductDetail', params: { id: product.product_id } }" class="product-card"
+              @mouseenter="setHoverProduct(product.id)" @mouseleave="clearHoverProduct">
+              <div class="product-image-container">
+                <img :src="product.image_url" :alt="product.product_name" class="product-img" />
+                <div class="product-overlay">
+                  <button class="overlay-btn cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    Giỏ hàng
+                  </button>
+                  <button class="overlay-btn buy-btn">
+                    Mua ngay
+                  </button>
+                  <button class="overlay-btn favorite-btn" :class="{ 'active': product.isFavorite }">
+                    Yêu thích
+                  </button>
+                </div>
+                <!-- Labels overlay -->
+                <div class="product-labels">
+                  <span v-if="product.isHot" class="label hot-label">Giá hàng</span>
+                  <span v-if="product.isNew" class="label new-label">Mới ngày</span>
+                  <span v-if="product.isFavorite" class="label favorite-label">Yêu thích</span>
+                </div>
+              </div>
+
+              <div class="product-info">
+                <h3 class="product-name">{{ product.product_name }}</h3>
+                <p class="product-category">{{ product.category_name }}</p>
+                <p class="product-price">{{ formatPrice(product.discount_price) }}</p>
+              </div>
+            </router-link>
+          </div>
+
+          <!-- Pagination -->
+          <div v-if="paginatedProducts.length > 0" class="pagination">
+            <button @click="goToPage(1)" :disabled="currentPage === 1" class="page-btn">
+              1
+            </button>
+            <button @click="goToPage(2)" :disabled="currentPage === 2" class="page-btn"
+              :class="{ 'active': currentPage === 2 }">
+              2
+            </button>
+            <button @click="goToPage(3)" :disabled="currentPage === 3" class="page-btn">
+              3
+            </button>
+            <button @click="goToLastPage" :disabled="currentPage === totalPages" class="page-btn">
+              Last
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -205,7 +228,8 @@
 </template>
 
 <script>
-import { productService } from '@/services/api';
+import { productService } from '@/services/api'; // Gọi API thực
+
 export default {
   name: 'ProductList',
   data() {
@@ -222,119 +246,23 @@ export default {
       itemsPerPage: 9,
       sortOption: 'priceAsc',
       dropdownOpen: false,
+      loading: false,
+      error: null,
       sortOptions: [
         { label: 'Giá tăng dần', value: 'priceAsc' },
         { label: 'Giá giảm dần', value: 'priceDesc' },
         { label: 'Từ A đến Z', value: 'nameAsc' },
         { label: 'Từ Z đến A', value: 'nameDesc' },
       ],
-      products: [
-        {
-          id: 1,
-          name: 'Nhà mèo leo',
-          category: 'Đồ chơi',
-          price: 360000,
-          petType: 'Mèo',
-          image: 'https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=300&h=300&fit=crop',
-          isHot: true,
-          isNew: false,
-          isFavorite: false
-        },
-        {
-          id: 2,
-          name: 'Nhà mèo vuông',
-          category: 'Đồ chơi',
-          price: 360000,
-          petType: 'Mèo',
-          image: 'https://images.unsplash.com/photo-1571566882372-1598d88abd90?w=300&h=300&fit=crop',
-          isHot: false,
-          isNew: true,
-          isFavorite: false
-        },
-        {
-          id: 3,
-          name: 'Nhà mèo tròn',
-          category: 'Đồ chơi',
-          price: 350000,
-          petType: 'Mèo',
-          image: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=300&h=300&fit=crop',
-          isHot: false,
-          isNew: false,
-          isFavorite: true
-        },
-        {
-          id: 4,
-          name: 'Hạt Royal Canin',
-          category: 'Thức ăn',
-          price: 350000,
-          petType: 'Chó',
-          image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
-          isHot: false,
-          isNew: false,
-          isFavorite: false
-        },
-        {
-          id: 5,
-          name: 'Hạt Whiskas',
-          category: 'Thức ăn',
-          price: 350000,
-          petType: 'Mèo',
-          image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
-          isHot: false,
-          isNew: false,
-          isFavorite: false
-        },
-        {
-          id: 6,
-          name: 'Thức ăn Pedigree',
-          category: 'Thức ăn',
-          price: 350000,
-          petType: 'Chó',
-          image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
-          isHot: false,
-          isNew: false,
-          isFavorite: false
-        },
-        {
-          id: 7,
-          name: 'Máy cắt tỉa lông',
-          category: 'Vật dụng vệ sinh',
-          price: 150000,
-          petType: 'Chó',
-          image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=300&h=300&fit=crop',
-          isHot: false,
-          isNew: false,
-          isFavorite: false
-        },
-        {
-          id: 8,
-          name: 'Royal Canin for Puppy Mini',
-          category: 'Thức ăn',
-          price: 420000,
-          petType: 'Chó',
-          image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
-          isHot: false,
-          isNew: false,
-          isFavorite: false
-        },
-        {
-          id: 9,
-          name: 'Hạt CatPy',
-          category: 'Thức ăn',
-          price: 200000,
-          petType: 'Mèo',
-          image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
-          isHot: false,
-          isNew: false,
-          isFavorite: false
-        },
-      ],
+      products: [],
     };
   },
+
   mounted() {
     document.addEventListener('click', this.handleClickOutside);
-    this.fetchProducts();
+    this.fetchProducts(); // ✅ Gọi 1 lần duy nhất
   },
+
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
   },
@@ -345,71 +273,76 @@ export default {
         this.loading = true;
         this.error = null;
 
-        const params = {
-          // categories: this.selectedCategories, 
-          // petTypes: this.selectedPets,
-          // minPrice: this.minPrice,
-          // maxPrice: this.maxPrice,
-          // sort: this.sortOption
-        };
-        const data = await productService.getAll(params);
-        console.log(data);
+        const data = await productService.getAll();
+        console.log('Fetched products from API:', data);
 
         if (Array.isArray(data)) {
           this.products = data;
-
         } else {
           console.error('Invalid data format:', data);
           throw new Error('Dữ liệu không hợp lệ');
         }
+
       } catch (error) {
-        this.error = error.message;
-        console.error('Error:', error);
+        this.error = error.message || 'Lỗi khi tải sản phẩm';
+        console.error('Error fetching products:', error);
       } finally {
         this.loading = false;
       }
     },
+
     setHoverProduct(id) {
       this.hoveredProductId = id;
     },
+
     clearHoverProduct() {
       this.hoveredProductId = null;
     },
+
     handleClickOutside(event) {
       if (!event.target.closest('.sort-dropdown')) {
         this.dropdownOpen = false;
       }
     },
+
     toggleDropdown() {
       this.dropdownOpen = !this.dropdownOpen;
     },
+
     selectOption(value) {
       this.sortOption = value;
       this.dropdownOpen = false;
-      this.fetchProducts(); // Gọi lại API khi thay đổi sắp xếp
+      this.currentPage = 1; // ✅ Cập nhật lại phân trang
+      // ❌ Không gọi lại API
     },
+
     formatPrice(value) {
       return new Intl.NumberFormat('vi-VN').format(value);
     },
+
     checkMin() {
       if (this.minPrice > this.maxPrice) {
         this.minPrice = this.maxPrice;
       }
     },
+
     checkMax() {
       if (this.maxPrice < this.minPrice) {
         this.maxPrice = this.minPrice;
       }
     },
+
     goToPage(page) {
       this.currentPage = page;
     },
+
     goToLastPage() {
       this.currentPage = this.totalPages;
     },
+
     handleFiltersChange() {
       this.currentPage = 1;
-      this.fetchProducts(); // Gọi lại API khi thay đổi bộ lọc
+      // ❌ Không gọi lại API
     }
   },
 
@@ -427,6 +360,7 @@ export default {
         return categoryMatch && petMatch && priceMatch;
       });
     },
+
     paginatedProducts() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
@@ -450,9 +384,11 @@ export default {
 
       return sortedProducts.slice(start, end);
     },
+
     totalPages() {
       return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
     },
+
     trackStyle() {
       const minPercent = ((this.minPrice - this.min) / (this.max - this.min)) * 100;
       const maxPercent = ((this.maxPrice - this.min) / (this.max - this.min)) * 100;
@@ -1117,5 +1053,107 @@ input[type='range']::-webkit-slider-thumb {
     box-shadow: none;
     border: 1px solid #ddd;
   }
+}
+
+/* Loading and Error States */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ff813f;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-container p {
+  color: #666;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #fff5f5;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.error-message {
+  color: #e53e3e;
+  font-size: 18px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  margin: 0 0 20px 0;
+}
+
+.retry-button {
+  background-color: #ff813f;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background-color: #e67e22;
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empty-state .empty-icon {
+  font-size: 64px;
+  color: #ddd;
+  margin-bottom: 20px;
+}
+
+.empty-state p {
+  color: #666;
+  font-size: 18px;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
 }
 </style>
