@@ -7,13 +7,17 @@ class OrderService
 {
     private $orderModel;
     private $promotionModel;
-    private $productModel;
+  private $productModel;
+  private $cartModel; 
+
 
     public function __construct($db)
     {
         $this->orderModel = new Order($db);
         $this->promotionModel = new Promotion($db);
-        $this->productModel = new Product($db);
+       $this->cartModel = new Cart($db);
+      $this->productModel = new Product($db);
+
     }
 
     private function applyPromotion($promotion_id, $total_amount)
@@ -46,46 +50,61 @@ class OrderService
     }
 
     public function createOrderFromCart($data, $cart_items)
-    {
-        if (empty($data['payment_method'])) {
-            return ['success' => false, 'message' => 'Vui lòng chọn hình thức thanh toán'];
+{
+    if (empty($data['payment_method'])) {
+        return ['success' => false, 'message' => 'Vui lòng chọn hình thức thanh toán'];
+    }
+
+    foreach ($cart_items as $item) {
+        $product = $this->productModel->findOne($item['product_id']);
+        if (!$product) {
+            return ['success' => false, 'message' => 'Sản phẩm không tồn tại'];
         }
-
-        foreach ($cart_items as $item) {
-            $product = $this->productModel->findOne($item['product_id']);
-            if (!$product) {
-                return ['success' => false, 'message' => 'Sản phẩm không tồn tại'];
-            }
-            if ($item['quantity'] > $product['stock']) {
-                return [
-                    'success' => false,
-                    'message' => "Sản phẩm {$product['product_name']} chỉ còn {$product['stock']} sản phẩm trong kho"
-                ];
-            }
+        if ($item['quantity'] > $product['stock']) {
+            return [
+                'success' => false,
+                'message' => "Sản phẩm {$product['product_name']} chỉ còn {$product['stock']} sản phẩm trong kho"
+            ];
         }
+    }
 
-        if (empty($data['status'])) {
-            $data['status'] = 'pending';
-        }
+    if (empty($data['status'])) {
+        $data['status'] = 'pending';
+    }
 
-       $promotionResult = $this->applyPromotion(
-            !empty($data['promotion_id']) ? $data['promotion_id'] : null,
-            $data['total_amount']
-        );
-        if (!$promotionResult['valid']) {
-            return ['success' => false, 'message' => $promotionResult['message']];
-        }
-        $data['total_amount'] = $promotionResult['final_total'];
+    $promotionResult = $this->applyPromotion(
+        !empty($data['promotion_id']) ? $data['promotion_id'] : null,
+        $data['total_amount']
+    );
 
-        $order_id = $this->orderModel->createOrderFromCart($data, $cart_items);
+    if (!$promotionResult['valid']) {
+        return ['success' => false, 'message' => $promotionResult['message']];
+    }
 
-        if ($order_id && isset($promotionResult['promotion_id'])) {
+    $data['total_amount'] = $promotionResult['final_total'];
+
+
+    $order_id = $this->orderModel->createOrderFromCart($data, $cart_items);
+
+    if ($order_id) {
+        // Cập nhật số lượt dùng voucher (nếu có)
+        if (isset($promotionResult['promotion_id'])) {
             $this->promotionModel->incrementUsedVoucher($promotionResult['promotion_id']);
         }
 
-        return $order_id ? ['success' => true, 'order_id' => $order_id] :
-            ['success' => false, 'message' => 'Tạo đơn hàng thất bại'];
+if ($order_id) {
+    // Xóa giỏ hàng sau khi thanh toán thành công
+    $this->cartModel->clearCartByCustomer($data['customer_id']);
+    return ['success' => true, 'order_id' => $order_id];
+} else {
+    return ['success' => false, 'message' => 'Tạo đơn hàng thất bại'];
+}
+
     }
+
+    return ['success' => false, 'message' => 'Tạo đơn hàng thất bại'];
+}
+
 
     public function buyNow($data, $product)
     {
@@ -135,6 +154,16 @@ class OrderService
     public function getOrderDetail($order_id)
     {
         return $this->orderModel->getOrderDetail($order_id);
+    }
+
+    public function confirmOrder($order_id)
+    {
+        // Gọi tới model để cập nhật trạng thái đơn hàng
+        $updated = $this->orderModel->updateOrderStatus($order_id, 'confirmed');
+
+        return $updated
+            ? ['success' => true, 'message' => 'Đơn hàng đã được xác nhận']
+            : ['success' => false, 'message' => 'Xác nhận đơn hàng thất bại'];
     }
 
     public function countOrders()
