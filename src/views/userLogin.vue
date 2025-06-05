@@ -100,7 +100,7 @@ export default {
     this.errorMessage = 'Không thể kết nối tới máy chủ';
     setTimeout(() => this.errorMessage = '', 5000);
   }
-}
+},
 
     goToRegister() {
       this.$router.push('/register');
