@@ -88,7 +88,7 @@ export default {
         this.showSuccess = true;
         setTimeout(() => {
           this.showSuccess = false;
-          this.$router.push('/home');
+          this.$router.push('/customers');
         }, 1500);
       } catch (error) {
         console.error('Lỗi kết nối API:', error);
