@@ -26,13 +26,13 @@
 defineProps({
   currentPage: {
     type: Number,
-    required: true
+    required: true,
   },
   totalPages: {
     type: Number,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 </script>
 
 <style scoped>

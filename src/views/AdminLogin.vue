@@ -22,25 +22,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 //import axios from 'axios'
 
-const email = ref('')
-const password = ref('')
-const error = ref('')
-const loading = ref(false)
-const router = useRouter()
+const email = ref('');
+const password = ref('');
+const error = ref('');
+const loading = ref(false);
+const router = useRouter();
 
 //const apiBaseUrl = process.env.VUE_APP_API_URL || 'http://localhost/api'
 
 const handleLogin = async () => {
-  error.value = ''
+  error.value = '';
   if (!email.value || !password.value) {
-    error.value = 'Vui lòng nhập đầy đủ thông tin.'
-    return
+    error.value = 'Vui lòng nhập đầy đủ thông tin.';
+    return;
   }
-  loading.value = true
+  loading.value = true;
   // try {
   //   const res = await axios.post(`${apiBaseUrl}/admin/login`, {
   //     email: email.value,
@@ -62,14 +62,14 @@ const handleLogin = async () => {
 
   // GIẢ LẬP: email và password cố định
   if (email.value === 'admin@petshop.com' && password.value === 'admin123') {
-    localStorage.setItem('token', 'fake-admin-token')
-    localStorage.setItem('role', 'admin')
-    router.push('/admin/orders')
+    localStorage.setItem('token', 'fake-admin-token');
+    localStorage.setItem('role', 'admin');
+    router.push('/admin/orders');
   } else {
-    error.value = 'Tài khoản hoặc mật khẩu không đúng.'
+    error.value = 'Tài khoản hoặc mật khẩu không đúng.';
   }
-  loading.value = false
-}
+  loading.value = false;
+};
 </script>
 
 <style scoped>

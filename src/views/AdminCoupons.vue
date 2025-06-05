@@ -60,7 +60,9 @@
       class="w-container mb-3 mx-auto p-3 rounded flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
     >
       <h2 class="mx-1 text-zinc-700 text-xl">Danh sách mã khuyến mãi</h2>
-      <button class="btn mx-1 custom-btn" @click="openCreatePopup">+ Thêm mã khuyến mãi</button>
+      <button class="btn mx-1 custom-btn" @click="openCreatePopup">
+        + Thêm mã khuyến mãi
+      </button>
     </div>
 
     <!-- Thanh Search -->
@@ -78,18 +80,35 @@
       <table class="table custom-table" style="width: 100%">
         <thead>
           <tr>
-            <th @click="sortBy('promotion_id')" style="cursor: pointer">ID khuyến mãi</th>
-            <th @click="sortBy('code')" style="cursor: pointer">Mã khuyến mãi</th>
-            <th @click="sortBy('discount_percent')" style="cursor: pointer">% giảm giá</th>
-            <th @click="sortBy('total_voucher')" style="cursor: pointer">Số lượng</th>
-            <th @click="sortBy('used_voucher')" style="cursor: pointer">Đã sử dụng</th>
-            <th @click="sortBy('start_date')" style="cursor: pointer">Ngày bắt đầu</th>
-            <th @click="sortBy('end_date')" style="cursor: pointer">Ngày kết thúc</th>
+            <th @click="sortBy('promotion_id')" style="cursor: pointer">
+              ID khuyến mãi
+            </th>
+            <th @click="sortBy('code')" style="cursor: pointer">
+              Mã khuyến mãi
+            </th>
+            <th @click="sortBy('discount_percent')" style="cursor: pointer">
+              % giảm giá
+            </th>
+            <th @click="sortBy('total_voucher')" style="cursor: pointer">
+              Số lượng
+            </th>
+            <th @click="sortBy('used_voucher')" style="cursor: pointer">
+              Đã sử dụng
+            </th>
+            <th @click="sortBy('start_date')" style="cursor: pointer">
+              Ngày bắt đầu
+            </th>
+            <th @click="sortBy('end_date')" style="cursor: pointer">
+              Ngày kết thúc
+            </th>
             <th class="text-center">Thao tác</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in filteredAndSortedProducts" :key="item.promotion_id">
+          <tr
+            v-for="item in filteredAndSortedProducts"
+            :key="item.promotion_id"
+          >
             <td>
               <strong>{{ item.promotion_id }}</strong>
             </td>
@@ -108,11 +127,16 @@
                 style="cursor: pointer"
               ></i>
 
-              <i class="fas fa-trash-alt action-icon" @click="deleteProduct(item.promotion_id)"></i>
+              <i
+                class="fas fa-trash-alt action-icon"
+                @click="deleteProduct(item.promotion_id)"
+              ></i>
             </td>
           </tr>
           <tr v-if="filteredAndSortedProducts.length === 0">
-            <td colspan="7" class="text-center text-muted">Không tìm thấy sản phẩm phù hợp.</td>
+            <td colspan="7" class="text-center text-muted">
+              Không tìm thấy sản phẩm phù hợp.
+            </td>
           </tr>
         </tbody>
       </table>
@@ -123,7 +147,9 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     >
       <div class="bg-white rounded p-6 w-[420px] max-w-full">
-        <h3 class="text-lg font-semibold mb-2 text-center">Thông tin mã khuyến mãi</h3>
+        <h3 class="text-lg font-semibold mb-2 text-center">
+          Thông tin mã khuyến mãi
+        </h3>
         <form @submit.prevent="saveEdit">
           <div class="mb-2">
             <label class="block font-medium text-sm">Mã khuyến mãi</label>
@@ -136,7 +162,9 @@
           </div>
 
           <div class="mb-2">
-            <label class="block mb-1 font-medium text-sm">Mô tả khuyến mãi</label>
+            <label class="block mb-1 font-medium text-sm"
+              >Mô tả khuyến mãi</label
+            >
             <textarea
               v-model="editingProduct.description"
               rows="3"
@@ -191,7 +219,9 @@
           </div>
 
           <div class="mb-2">
-            <label class="block mb-1 font-medium text-sm">Trạng thái hoạt động</label>
+            <label class="block mb-1 font-medium text-sm"
+              >Trạng thái hoạt động</label
+            >
             <div class="flex items-center gap-4">
               <label class="inline-flex items-center text-sm">
                 <input
@@ -238,7 +268,9 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     >
       <div class="bg-white rounded p-6 w-[420px] max-w-full">
-        <h3 class="text-lg font-semibold mb-4 text-center">Thêm mã khuyến mãi mới</h3>
+        <h3 class="text-lg font-semibold mb-4 text-center">
+          Thêm mã khuyến mãi mới
+        </h3>
         <form @submit.prevent="createProduct">
           <div class="mb-2">
             <label class="block mb-1 font-medium text-sm">Mã khuyến mãi</label>
@@ -251,7 +283,9 @@
           </div>
 
           <div class="mb-2">
-            <label class="block mb-1 font-medium text-sm">Mô tả khuyến mãi</label>
+            <label class="block mb-1 font-medium text-sm"
+              >Mô tả khuyến mãi</label
+            >
             <textarea
               v-model="creatingProduct.description"
               rows="3"
@@ -307,7 +341,9 @@
           </div>
 
           <div class="mb-2">
-            <label class="block mb-1 font-medium text-sm">Trạng thái hoạt động</label>
+            <label class="block mb-1 font-medium text-sm"
+              >Trạng thái hoạt động</label
+            >
             <div class="flex items-center gap-4">
               <label class="inline-flex items-center text-sm">
                 <input
@@ -362,124 +398,126 @@ export default {
       editingProduct: null,
       loading: false,
       error: null,
-      creatingProduct: null
-    }
+      creatingProduct: null,
+    };
   },
   async mounted() {
-    this.fetchProducts()
+    this.fetchProducts();
   },
   computed: {
     filteredAndSortedProducts() {
-      let filtered = this.products.filter(item =>
+      let filtered = this.products.filter((item) =>
         item.code.toLowerCase().includes(this.searchTerm.toLowerCase())
-      )
+      );
       return filtered.slice().sort((a, b) => {
-        let modifier = this.currentSortDir === 'asc' ? 1 : -1
-        let aVal = a[this.currentSort]
-        let bVal = b[this.currentSort]
+        let modifier = this.currentSortDir === 'asc' ? 1 : -1;
+        let aVal = a[this.currentSort];
+        let bVal = b[this.currentSort];
 
         if (!isNaN(parseFloat(aVal)) && !isNaN(parseFloat(bVal))) {
-          aVal = parseFloat(aVal)
-          bVal = parseFloat(bVal)
-          if (aVal < bVal) return -1 * modifier
-          if (aVal > bVal) return 1 * modifier
-          return 0
+          aVal = parseFloat(aVal);
+          bVal = parseFloat(bVal);
+          if (aVal < bVal) return -1 * modifier;
+          if (aVal > bVal) return 1 * modifier;
+          return 0;
         }
 
-        aVal = (aVal || '').toString().toLowerCase()
-        bVal = (bVal || '').toString().toLowerCase()
-        if (aVal < bVal) return -1 * modifier
-        if (aVal > bVal) return 1 * modifier
-        return 0
-      })
-    }
+        aVal = (aVal || '').toString().toLowerCase();
+        bVal = (bVal || '').toString().toLowerCase();
+        if (aVal < bVal) return -1 * modifier;
+        if (aVal > bVal) return 1 * modifier;
+        return 0;
+      });
+    },
   },
   methods: {
     getCookie(name) {
-      const value = `; ${document.cookie}`
-      const parts = value.split(`; ${name}=`)
-      if (parts.length === 2) return parts.pop().split(';').shift()
-      return null
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
     },
     async fetchProducts() {
-      this.loading = true
+      this.loading = true;
       try {
-        const res = await fetch('http://localhost:8000/api/v1/promotions')
-        if (!res.ok) throw new Error('Failed to fetch products')
-        this.products = await res.json()
+        const res = await fetch('http://localhost:8000/api/v1/promotions');
+        if (!res.ok) throw new Error('Failed to fetch products');
+        this.products = await res.json();
       } catch (err) {
-        this.error = err.message
-        console.error(err)
+        this.error = err.message;
+        console.error(err);
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
     formatCurrency(value) {
       if (typeof value === 'number') {
-        return value.toLocaleString('vi-VN') + 'đ'
+        return value.toLocaleString('vi-VN') + 'đ';
       }
-      return value
+      return value;
     },
     sortBy(column) {
       if (this.currentSort === column) {
-        this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc'
+        this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
       } else {
-        this.currentSort = column
-        this.currentSortDir = 'asc'
+        this.currentSort = column;
+        this.currentSortDir = 'asc';
       }
     },
     openEditPopup(product) {
-      this.editingProduct = { ...product }
+      this.editingProduct = { ...product };
     },
 
     closeEditPopup() {
-      this.editingProduct = null
+      this.editingProduct = null;
     },
     async saveEdit() {
-      if (!this.editingProduct) return
-      this.editingProduct.is_active = this.editingProduct.is_active ? 1 : 0
+      if (!this.editingProduct) return;
+      this.editingProduct.is_active = this.editingProduct.is_active ? 1 : 0;
 
       try {
-        this.loading = true
-        const token = this.getCookie('token')
+        this.loading = true;
+        const token = this.getCookie('token');
         const res = await fetch(
           `http://localhost:8000/api/v1/promotions/${this.editingProduct.promotion_id}`,
           {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
+              Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(this.editingProduct)
+            body: JSON.stringify(this.editingProduct),
           }
-        )
-        if (!res.ok) throw new Error('Lỗi cập nhật')
+        );
+        if (!res.ok) throw new Error('Lỗi cập nhật');
 
-        const updatedProduct = await res.json()
+        const updatedProduct = await res.json();
 
-        const index = this.products.findIndex(p => p.promotion_id === updatedProduct.promotion_id)
+        const index = this.products.findIndex(
+          (p) => p.promotion_id === updatedProduct.promotion_id
+        );
         if (index !== -1) {
-          this.$set(this.products, index, updatedProduct)
+          this.$set(this.products, index, updatedProduct);
         }
 
-        this.editingProduct = null
-        this.fetchProducts()
+        this.editingProduct = null;
+        this.fetchProducts();
       } catch (error) {
-        alert(error.message)
+        alert(error.message);
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
 
     deleteProduct() {
       if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
-        alert('BE todo')
+        alert('BE todo');
       }
     },
     openCreatePopup() {
       const newId = this.products.length
-        ? Math.max(...this.products.map(p => p.promotion_id)) + 1
-        : 1
+        ? Math.max(...this.products.map((p) => p.promotion_id)) + 1
+        : 1;
       this.creatingProduct = {
         promotion_id: newId,
         code: '',
@@ -489,41 +527,41 @@ export default {
         used_voucher: 0,
         start_date: '',
         end_date: '',
-        is_active: 1
-      }
+        is_active: 1,
+      };
     },
     closeCreatePopup() {
-      this.creatingProduct = null
+      this.creatingProduct = null;
     },
     async createProduct() {
       try {
-        this.loading = true
-        const token = this.getCookie('token')
+        this.loading = true;
+        const token = this.getCookie('token');
         const res = await fetch('http://localhost:8000/api/v1/promotions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(this.creatingProduct)
-        })
-        const contentType = res.headers.get('content-type') || ''
+          body: JSON.stringify(this.creatingProduct),
+        });
+        const contentType = res.headers.get('content-type') || '';
 
         if (!res.ok) {
-          const errorText = await res.text()
-          throw new Error(`Lỗi khi tạo sản phẩm: ${errorText}`)
+          const errorText = await res.text();
+          throw new Error(`Lỗi khi tạo sản phẩm: ${errorText}`);
         }
 
         if (!contentType.includes('application/json')) {
-          const text = await res.text()
-          throw new Error(`Phản hồi không phải JSON: ${text}`)
+          const text = await res.text();
+          throw new Error(`Phản hồi không phải JSON: ${text}`);
         }
 
-        const data = await res.json()
+        const data = await res.json();
 
-        const newProduct = data.success
+        const newProduct = data.success;
 
-        this.products.push(newProduct)
+        this.products.push(newProduct);
 
         // Reset form tạo mới
         this.creatingProduct = {
@@ -535,18 +573,18 @@ export default {
           used_voucher: '',
           start_date: '',
           end_date: '',
-          is_active: 0
-        }
+          is_active: 0,
+        };
 
-        this.closeCreatePopup()
-        this.fetchProducts()
+        this.closeCreatePopup();
+        this.fetchProducts();
       } catch (error) {
-        alert(error.message)
-        console.error(error)
+        alert(error.message);
+        console.error(error);
       } finally {
-        this.loading = false
+        this.loading = false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

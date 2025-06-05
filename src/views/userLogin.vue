@@ -7,10 +7,20 @@
     <div class="login-form">
       <form @submit.prevent="handleLogin">
         <label for="username">Tên đăng nhập</label>
-        <input id="username" v-model="username" type="text" class="input-field" />
+        <input
+          id="username"
+          v-model="username"
+          type="text"
+          class="input-field"
+        />
 
         <label for="password">Mật khẩu</label>
-        <input id="password" v-model="password" type="password" class="input-field" />
+        <input
+          id="password"
+          v-model="password"
+          type="password"
+          class="input-field"
+        />
 
         <button type="submit" class="login-button">Đăng nhập</button>
       </form>
@@ -20,7 +30,9 @@
       <p><a href="#">Quên mật khẩu?</a></p>
       <p>
         Chưa có tài khoản?
-        <router-link to="/register" class="link-highlight">Đăng ký ngay</router-link>
+        <router-link to="/register" class="link-highlight"
+          >Đăng ký ngay</router-link
+        >
       </p>
     </div>
 
@@ -38,30 +50,30 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router' // ✅ Thêm useRouter để điều hướng
+import { ref } from 'vue';
+import { useRouter } from 'vue-router'; // ✅ Thêm useRouter để điều hướng
 
-const username = ref('')
-const password = ref('')
-const errorMessage = ref('')
-const showSuccess = ref(false)
+const username = ref('');
+const password = ref('');
+const errorMessage = ref('');
+const showSuccess = ref(false);
 
-const router = useRouter() // Khởi tạo router
+const router = useRouter(); // Khởi tạo router
 
 function handleLogin() {
-  errorMessage.value = ''
+  errorMessage.value = '';
 
   if (!username.value || !password.value) {
-    errorMessage.value = 'Vui lòng nhập đầy đủ thông tin.'
-    return
+    errorMessage.value = 'Vui lòng nhập đầy đủ thông tin.';
+    return;
   }
 
-  showSuccess.value = true
+  showSuccess.value = true;
 
   // Hiển thị popup và chuyển hướng sau 2.5 giây
   setTimeout(() => {
-    showSuccess.value = false
-    router.push('/customers') // Điều hướng tới trang CustomerPage
-  }, 2500)
+    showSuccess.value = false;
+    router.push('/customers'); // Điều hướng tới trang CustomerPage
+  }, 2500);
 }
 </script>

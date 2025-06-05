@@ -60,7 +60,9 @@
       class="w-container mb-3 mx-auto p-3 rounded flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
     >
       <h2 class="mx-1 text-zinc-700 text-xl">Danh sách sản phẩm</h2>
-      <button class="btn mx-1 custom-btn" @click="openCreatePopup">+ Thêm sản phẩm</button>
+      <button class="btn mx-1 custom-btn" @click="openCreatePopup">
+        + Thêm sản phẩm
+      </button>
     </div>
 
     <!-- Thanh Search -->
@@ -78,12 +80,24 @@
       <table class="table custom-table" style="width: 100%">
         <thead>
           <tr>
-            <th @click="sortBy('product_id')" style="cursor: pointer">ID sản phẩm</th>
-            <th @click="sortBy('product_name')" style="cursor: pointer">Tên sản phẩm</th>
-            <th @click="sortBy('pet_type')" style="cursor: pointer">Loại thú nuôi</th>
-            <th @click="sortBy('base_price')" style="cursor: pointer">Giá gốc</th>
-            <th @click="sortBy('discount_price')" style="cursor: pointer">Giá tiền</th>
-            <th @click="sortBy('stock')" style="cursor: pointer">Hàng tồn kho</th>
+            <th @click="sortBy('product_id')" style="cursor: pointer">
+              ID sản phẩm
+            </th>
+            <th @click="sortBy('product_name')" style="cursor: pointer">
+              Tên sản phẩm
+            </th>
+            <th @click="sortBy('pet_type')" style="cursor: pointer">
+              Loại thú nuôi
+            </th>
+            <th @click="sortBy('base_price')" style="cursor: pointer">
+              Giá gốc
+            </th>
+            <th @click="sortBy('discount_price')" style="cursor: pointer">
+              Giá tiền
+            </th>
+            <th @click="sortBy('stock')" style="cursor: pointer">
+              Hàng tồn kho
+            </th>
             <th class="text-center">Thao tác</th>
           </tr>
         </thead>
@@ -105,11 +119,16 @@
                 @click="openEditPopup(item)"
                 style="cursor: pointer"
               ></i>
-              <i class="fas fa-trash-alt action-icon" @click="deleteProduct(item.product_id)"></i>
+              <i
+                class="fas fa-trash-alt action-icon"
+                @click="deleteProduct(item.product_id)"
+              ></i>
             </td>
           </tr>
           <tr v-if="filteredAndSortedProducts.length === 0">
-            <td colspan="7" class="text-center text-muted">Không tìm thấy sản phẩm phù hợp.</td>
+            <td colspan="7" class="text-center text-muted">
+              Không tìm thấy sản phẩm phù hợp.
+            </td>
           </tr>
         </tbody>
       </table>
@@ -120,7 +139,9 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     >
       <div class="bg-white rounded p-6 w-[420px] max-w-full">
-        <h3 class="text-lg font-semibold mb-4 text-center">Thông tin sản phẩm</h3>
+        <h3 class="text-lg font-semibold mb-4 text-center">
+          Thông tin sản phẩm
+        </h3>
         <form @submit.prevent="saveEdit">
           <div class="mb-1">
             <label class="block mb-1 font-medium text-sm">Tên sản phẩm</label>
@@ -183,7 +204,9 @@
           </div>
 
           <div class="mb-3">
-            <label class="block mb-1 font-medium text-sm">Trạng thái hoạt động</label>
+            <label class="block mb-1 font-medium text-sm"
+              >Trạng thái hoạt động</label
+            >
             <div class="flex items-center gap-4">
               <label class="inline-flex items-center text-sm">
                 <input
@@ -231,7 +254,9 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     >
       <div class="bg-white rounded p-6 w-[420px] max-w-full">
-        <h3 class="text-lg font-semibold mt-4 text-center">Thêm sản phẩm mới</h3>
+        <h3 class="text-lg font-semibold mt-4 text-center">
+          Thêm sản phẩm mới
+        </h3>
         <form @submit.prevent="createProduct">
           <div class="mb-1">
             <label class="block mb-1 font-medium text-sm">Tên sản phẩm</label>
@@ -282,7 +307,9 @@
             />
           </div>
           <div class="mb-1">
-            <label class="block mb-1 font-medium text-sm">Danh mục sản phẩm</label>
+            <label class="block mb-1 font-medium text-sm"
+              >Danh mục sản phẩm</label
+            >
             <select
               v-model="creatingProduct.category_id"
               class="w-full border border-gray-300 rounded p-1 text-sm"
@@ -318,7 +345,9 @@
           </div>
 
           <div class="mb-1">
-            <label class="block mb-1 font-medium text-sm">Trạng thái hoạt động</label>
+            <label class="block mb-1 font-medium text-sm"
+              >Trạng thái hoạt động</label
+            >
             <div class="flex items-center gap-4">
               <label class="inline-flex items-center text-sm">
                 <input
@@ -403,129 +432,133 @@ export default {
       error: null,
       creatingProduct: null,
       currentPage: 1,
-      pageSize: 8
-    }
+      pageSize: 8,
+    };
   },
   async mounted() {
-    this.fetchProducts()
-    this.fetchCategories()
+    this.fetchProducts();
+    this.fetchCategories();
   },
   computed: {
     filteredAndSortedProducts() {
-      let filtered = this.products.filter(item =>
+      let filtered = this.products.filter((item) =>
         item.product_name.toLowerCase().includes(this.searchTerm.toLowerCase())
-      )
+      );
       return filtered.slice().sort((a, b) => {
-        let modifier = this.currentSortDir === 'asc' ? 1 : -1
-        let aVal = a[this.currentSort]
-        let bVal = b[this.currentSort]
+        let modifier = this.currentSortDir === 'asc' ? 1 : -1;
+        let aVal = a[this.currentSort];
+        let bVal = b[this.currentSort];
 
         if (!isNaN(parseFloat(aVal)) && !isNaN(parseFloat(bVal))) {
-          aVal = parseFloat(aVal)
-          bVal = parseFloat(bVal)
-          if (aVal < bVal) return -1 * modifier
-          if (aVal > bVal) return 1 * modifier
-          return 0
+          aVal = parseFloat(aVal);
+          bVal = parseFloat(bVal);
+          if (aVal < bVal) return -1 * modifier;
+          if (aVal > bVal) return 1 * modifier;
+          return 0;
         }
 
-        aVal = (aVal || '').toString().toLowerCase()
-        bVal = (bVal || '').toString().toLowerCase()
-        if (aVal < bVal) return -1 * modifier
-        if (aVal > bVal) return 1 * modifier
-        return 0
-      })
+        aVal = (aVal || '').toString().toLowerCase();
+        bVal = (bVal || '').toString().toLowerCase();
+        if (aVal < bVal) return -1 * modifier;
+        if (aVal > bVal) return 1 * modifier;
+        return 0;
+      });
     },
     paginatedProducts() {
-      const start = (this.currentPage - 1) * this.pageSize
-      return this.filteredAndSortedProducts.slice(start, start + this.pageSize)
+      const start = (this.currentPage - 1) * this.pageSize;
+      return this.filteredAndSortedProducts.slice(start, start + this.pageSize);
     },
 
     totalPages() {
-      return Math.ceil(this.filteredAndSortedProducts.length / this.pageSize)
-    }
+      return Math.ceil(this.filteredAndSortedProducts.length / this.pageSize);
+    },
   },
   methods: {
     getCookie(name) {
-      const value = `; ${document.cookie}`
-      const parts = value.split(`; ${name}=`)
-      if (parts.length === 2) return parts.pop().split(';').shift()
-      return null
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
     },
     async fetchProducts() {
-      this.loading = true
+      this.loading = true;
       try {
-        const res = await fetch('http://localhost:8000/api/v1/products')
-        if (!res.ok) throw new Error('Failed to fetch products')
-        this.products = await res.json()
+        const res = await fetch('http://localhost:8000/api/v1/products');
+        if (!res.ok) throw new Error('Failed to fetch products');
+        this.products = await res.json();
       } catch (err) {
-        this.error = err.message
-        console.error(err)
+        this.error = err.message;
+        console.error(err);
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
     formatCurrency(value) {
       if (typeof value === 'number') {
-        return value.toLocaleString('vi-VN') + 'đ'
+        return value.toLocaleString('vi-VN') + 'đ';
       }
-      return String(value) + ' ' + 'đ'
+      return String(value) + ' ' + 'đ';
     },
     sortBy(column) {
       if (this.currentSort === column) {
-        this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc'
+        this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
       } else {
-        this.currentSort = column
-        this.currentSortDir = 'asc'
+        this.currentSort = column;
+        this.currentSortDir = 'asc';
       }
     },
     openEditPopup(product) {
-      this.editingProduct = { ...product }
-      console.log(this.editingProduct)
+      this.editingProduct = { ...product };
+      console.log(this.editingProduct);
     },
     closeEditPopup() {
-      this.editingProduct = null
+      this.editingProduct = null;
     },
     async saveEdit() {
-      if (!this.editingProduct) return
-      this.editingProduct.is_active = this.editingProduct.is_active ? 1 : 0
+      if (!this.editingProduct) return;
+      this.editingProduct.is_active = this.editingProduct.is_active ? 1 : 0;
 
       try {
-        this.loading = true
-        const token = this.getCookie('token')
+        this.loading = true;
+        const token = this.getCookie('token');
         const res = await fetch(
           `http://localhost:8000/api/v1/products/${this.editingProduct.product_id}`,
           {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
+              Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(this.editingProduct)
+            body: JSON.stringify(this.editingProduct),
           }
-        )
+        );
         if (!res.ok) {
-          const errorText = await res.text()
-          throw new Error(`Lỗi khi tạo sản phẩm: ${errorText}`)
+          const errorText = await res.text();
+          throw new Error(`Lỗi khi tạo sản phẩm: ${errorText}`);
         }
 
-        const updatedProduct = await res.json()
-        await this.fetchProducts()
-        await this.fetchCategories()
+        const updatedProduct = await res.json();
+        await this.fetchProducts();
+        await this.fetchCategories();
 
-        const index = this.products.findIndex(p => p.product_id === updatedProduct.product_id)
+        const index = this.products.findIndex(
+          (p) => p.product_id === updatedProduct.product_id
+        );
         if (index !== -1) {
-          this.$set(this.products, index, updatedProduct)
+          this.$set(this.products, index, updatedProduct);
         }
 
-        this.editingProduct = null
+        this.editingProduct = null;
       } catch (error) {
-        alert(error.message)
+        alert(error.message);
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
     openCreatePopup() {
-      const newId = this.products.length ? Math.max(...this.products.map(p => p.product_id)) + 1 : 1
+      const newId = this.products.length
+        ? Math.max(...this.products.map((p) => p.product_id)) + 1
+        : 1;
       this.creatingProduct = {
         product_id: newId,
         product_name: '',
@@ -534,43 +567,43 @@ export default {
         pet_type: '',
         stock: 0,
         description: '',
-        is_active: 1
-      }
+        is_active: 1,
+      };
     },
     closeCreatePopup() {
-      this.creatingProduct = null
+      this.creatingProduct = null;
     },
     async createProduct() {
       try {
-        this.loading = true
-        const token = this.getCookie('token')
+        this.loading = true;
+        const token = this.getCookie('token');
         const res = await fetch('http://localhost:8000/api/v1/products', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(this.creatingProduct)
-        })
-        const contentType = res.headers.get('content-type') || ''
+          body: JSON.stringify(this.creatingProduct),
+        });
+        const contentType = res.headers.get('content-type') || '';
 
         if (!res.ok) {
-          const errorText = await res.text()
-          console.log('response text', errorText)
-          throw new Error(`Lỗi khi tạo sản phẩm: ${errorText}`)
+          const errorText = await res.text();
+          console.log('response text', errorText);
+          throw new Error(`Lỗi khi tạo sản phẩm: ${errorText}`);
         }
 
         if (!contentType.includes('application/json')) {
-          const text = await res.text()
-          throw new Error(`Phản hồi không phải JSON: ${text}`)
+          const text = await res.text();
+          throw new Error(`Phản hồi không phải JSON: ${text}`);
         }
 
-        const data = await res.json()
+        const data = await res.json();
 
         // Lấy product mới từ data.success (theo cấu trúc server trả về)
-        const newProduct = data.success
+        const newProduct = data.success;
 
-        this.products.push(newProduct)
+        this.products.push(newProduct);
 
         // Reset form tạo mới
         this.creatingProduct = {
@@ -582,28 +615,28 @@ export default {
           discount_price: '',
           stock: '',
           image_url: '',
-          is_active: 1
-        }
+          is_active: 1,
+        };
 
-        this.closeCreatePopup()
+        this.closeCreatePopup();
       } catch (error) {
-        alert(error.message)
-        console.error(error)
+        alert(error.message);
+        console.error(error);
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
     async fetchCategories() {
-      this.loadingCategories = true
+      this.loadingCategories = true;
       try {
-        const res = await fetch('http://localhost:8000/api/v1/categories')
-        if (!res.ok) throw new Error('Lỗi khi lấy danh sách categories')
-        this.categories = await res.json()
+        const res = await fetch('http://localhost:8000/api/v1/categories');
+        if (!res.ok) throw new Error('Lỗi khi lấy danh sách categories');
+        this.categories = await res.json();
       } catch (error) {
-        this.errorCategories = error.message
-        console.error(error)
+        this.errorCategories = error.message;
+        console.error(error);
       } finally {
-        this.loadingCategories = false
+        this.loadingCategories = false;
       }
     },
 
@@ -613,30 +646,30 @@ export default {
       }
     },
     handleImageUpload(event) {
-      const file = event.target.files[0]
+      const file = event.target.files[0];
       if (file) {
-        const reader = new FileReader()
-        reader.onload = e => {
-          this.creatingProduct.image_url = e.target.result
-        }
-        reader.readAsDataURL(file)
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.creatingProduct.image_url = e.target.result;
+        };
+        reader.readAsDataURL(file);
 
-        this.creatingProduct.image_file = file
+        this.creatingProduct.image_file = file;
       }
     },
     goToPage(page) {
-      if (page < 1) page = 1
-      if (page > this.totalPages) page = this.totalPages
-      this.currentPage = page
+      if (page < 1) page = 1;
+      if (page > this.totalPages) page = this.totalPages;
+      this.currentPage = page;
     },
 
     prevPage() {
-      this.goToPage(this.currentPage - 1)
+      this.goToPage(this.currentPage - 1);
     },
 
     nextPage() {
-      this.goToPage(this.currentPage + 1)
-    }
-  }
-}
+      this.goToPage(this.currentPage + 1);
+    },
+  },
+};
 </script>

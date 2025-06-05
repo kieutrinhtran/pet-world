@@ -31,7 +31,7 @@
           <p class="category">{{ product.category?.toUpperCase() }}</p>
           <p class="pet-type">LOẠI THÚ CƯNG: {{ product.pet_type?.toUpperCase() }}</p>
           <div class="price-container">
-            <span class="current-price">{{ formatPrice(product.discount_price) }}</span>
+            <span class="current-price">{{ formatPrice(product.base_price) }}</span>
             <span class="price-unit">VND</span>
           </div>
           <div v-if="product.brand" class="brand-info">

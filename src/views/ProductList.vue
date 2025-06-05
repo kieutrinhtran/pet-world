@@ -31,58 +31,58 @@
           <ul class="filter-list">
             <li>
               <label class="checkbox-container">
-                <input type="checkbox" value="Thức ăn" v-model="selectedCategories" />
+                <input type="checkbox" value="Thuc an" v-model="selectedCategories" />
                 <span class="checkmark"></span>
-                Thức ăn
+                Thuc an
               </label>
             </li>
             <li>
               <label class="checkbox-container">
-                <input type="checkbox" value="Đồ chơi" v-model="selectedCategories" />
+                <input type="checkbox" value="Do choi" v-model="selectedCategories" />
                 <span class="checkmark"></span>
-                Đồ chơi
+                Do choi
               </label>
             </li>
             <li>
               <label class="checkbox-container">
-                <input type="checkbox" value="Phụ kiện chăm sóc" v-model="selectedCategories" />
+                <input type="checkbox" value="Phu kien cham soc" v-model="selectedCategories" />
                 <span class="checkmark"></span>
-                Phụ kiện chăm sóc
+                Phu kien cham soc
               </label>
             </li>
             <li>
               <label class="checkbox-container">
-                <input type="checkbox" value="Vật dụng vệ sinh" v-model="selectedCategories" />
+                <input type="checkbox" value="Vat dung ve sinh" v-model="selectedCategories" />
                 <span class="checkmark"></span>
-                Vật dụng vệ sinh
+                Vat dung ve sinh
               </label>
             </li>
             <li>
               <label class="checkbox-container">
-                <input type="checkbox" value="Chuồng và giường" v-model="selectedCategories" />
+                <input type="checkbox" value="Chuong va giuong" v-model="selectedCategories" />
                 <span class="checkmark"></span>
-                Chuồng và giường
+                Chuong va giuong
               </label>
             </li>
             <li>
               <label class="checkbox-container">
-                <input type="checkbox" value="Snack/Bánh thưởng" v-model="selectedCategories" />
+                <input type="checkbox" value="Snack/Banh thuong" v-model="selectedCategories" />
                 <span class="checkmark"></span>
-                Snack/Bánh thưởng
+                Snack/Banh thuong
               </label>
             </li>
             <li>
               <label class="checkbox-container">
-                <input type="checkbox" value="Thực phẩm bổ sung" v-model="selectedCategories" />
+                <input type="checkbox" value="Thuc pham bo sung" v-model="selectedCategories" />
                 <span class="checkmark"></span>
-                Thực phẩm bổ sung
+                Thuc pham bo sung
               </label>
             </li>
             <li>
               <label class="checkbox-container">
-                <input type="checkbox" value="Quần áo/Thời trang" v-model="selectedCategories" />
+                <input type="checkbox" value="Quan ao/Thoi trang" v-model="selectedCategories" />
                 <span class="checkmark"></span>
-                Quần áo/Thời trang
+                Quan ao/Thoi trang
               </label>
             </li>
           </ul>
@@ -95,16 +95,16 @@
           <ul class="filter-list">
             <li>
               <label class="checkbox-container">
-                <input type="checkbox" value="Chó" v-model="selectedPets" />
+                <input type="checkbox" value="Cho" v-model="selectedPets" />
                 <span class="checkmark"></span>
-                Chó
+                Cho
               </label>
             </li>
             <li>
               <label class="checkbox-container">
-                <input type="checkbox" value="Mèo" v-model="selectedPets" />
+                <input type="checkbox" value="Meo" v-model="selectedPets" />
                 <span class="checkmark"></span>
-                Mèo
+                Meo
               </label>
             </li>
           </ul>
@@ -128,12 +128,20 @@
             </div>
           </div>
         </div>
+
+        <!-- Clear Filters Button -->
+        <div class="filter-actions">
+          <button @click="clearAllFilters" class="clear-filters-btn">
+            Xóa tất cả bộ lọc
+          </button>
+        </div>
       </div>
 
       <!-- Right: Product Cards -->
       <div class="product-section">
-        <!-- Sort dropdown -->
+        <!-- Sort dropdown và filter summary -->
         <div class="sort-wrapper">
+
           <div class="sort-dropdown">
             <button @click="toggleDropdown" class="sort-button">
               Sắp xếp
@@ -165,16 +173,17 @@
         <!-- Product Grid -->
         <div v-else>
           <!-- Empty state when no products -->
-          <div v-if="products.length === 0" class="empty-state">
+          <div v-if="paginatedProducts.length === 0" class="empty-state">
             <div class="empty-icon">🐾</div>
             <p>Không tìm thấy sản phẩm nào phù hợp với bộ lọc của bạn</p>
+            <button @click="clearAllFilters" class="clear-filters-btn">Xóa bộ lọc</button>
           </div>
 
           <!-- Product Grid -->
           <div v-else class="product-grid">
-            <router-link v-for="product in products" :key="product.product_id"
+            <router-link v-for="product in paginatedProducts" :key="product.product_id"
               :to="{ name: 'ProductDetail', params: { id: product.product_id } }" class="product-card"
-              @mouseenter="setHoverProduct(product.id)" @mouseleave="clearHoverProduct">
+              @mouseenter="setHoverProduct(product.product_id)" @mouseleave="clearHoverProduct">
               <div class="product-image-container">
                 <img :src="product.image_url" :alt="product.product_name" class="product-img" />
                 <div class="product-overlay">
@@ -191,34 +200,33 @@
                 </div>
                 <!-- Labels overlay -->
                 <div class="product-labels">
-                  <span v-if="product.isHot" class="label hot-label">Giá hàng</span>
-                  <span v-if="product.isNew" class="label new-label">Mới ngày</span>
-                  <span v-if="product.isFavorite" class="label favorite-label">Yêu thích</span>
+                  <span v-if="product.isHot" class="label hot-label">Hot</span>
+                  <span v-if="product.isNew" class="label new-label">New</span>
+                  <span v-if="product.isFavorite" class="label favorite-label">♥</span>
                 </div>
               </div>
 
               <div class="product-info">
                 <h3 class="product-name">{{ product.product_name }}</h3>
                 <p class="product-category">{{ product.category_name }}</p>
-                <p class="product-price">{{ formatPrice(product.discount_price) }}</p>
+                <p class="product-price">{{ formatPrice(product.base_price || product.price) }}</p>
               </div>
             </router-link>
           </div>
 
           <!-- Pagination -->
-          <div v-if="paginatedProducts.length > 0" class="pagination">
-            <button @click="goToPage(1)" :disabled="currentPage === 1" class="page-btn">
-              1
+          <div v-if="totalPages > 1" class="pagination">
+            <button @click="goToPrevPage" :disabled="currentPage === 1" class="page-btn">
+              ◀ Trước
             </button>
-            <button @click="goToPage(2)" :disabled="currentPage === 2" class="page-btn"
-              :class="{ 'active': currentPage === 2 }">
-              2
+
+            <button v-for="page in visiblePages" :key="page" @click="goToPage(page)"
+              :class="{ 'active': currentPage === page }" class="page-btn">
+              {{ page }}
             </button>
-            <button @click="goToPage(3)" :disabled="currentPage === 3" class="page-btn">
-              3
-            </button>
-            <button @click="goToLastPage" :disabled="currentPage === totalPages" class="page-btn">
-              Last
+
+            <button @click="goToNextPage" :disabled="currentPage === totalPages" class="page-btn">
+              Sau ▶
             </button>
           </div>
         </div>
@@ -228,7 +236,7 @@
 </template>
 
 <script>
-import { productService } from '@/services/api'; // Gọi API thực
+import { productService } from '@/services/api';
 
 export default {
   name: 'ProductList',
@@ -260,7 +268,7 @@ export default {
 
   mounted() {
     document.addEventListener('click', this.handleClickOutside);
-    this.fetchProducts(); // ✅ Gọi 1 lần duy nhất
+    this.fetchProducts();
   },
 
   beforeUnmount() {
@@ -312,8 +320,7 @@ export default {
     selectOption(value) {
       this.sortOption = value;
       this.dropdownOpen = false;
-      this.currentPage = 1; // ✅ Cập nhật lại phân trang
-      // ❌ Không gọi lại API
+      this.currentPage = 1;
     },
 
     formatPrice(value) {
@@ -336,27 +343,68 @@ export default {
       this.currentPage = page;
     },
 
-    goToLastPage() {
-      this.currentPage = this.totalPages;
+    goToPrevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+
+    goToNextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
     },
 
     handleFiltersChange() {
       this.currentPage = 1;
-      // ❌ Không gọi lại API
+    },
+
+    // New filter management methods
+    clearAllFilters() {
+      this.selectedCategories = [];
+      this.selectedPets = [];
+      this.minPrice = this.min;
+      this.maxPrice = this.max;
+    },
+
+    removeCategory(category) {
+      const index = this.selectedCategories.indexOf(category);
+      if (index > -1) {
+        this.selectedCategories.splice(index, 1);
+      }
+    },
+
+    removePet(pet) {
+      const index = this.selectedPets.indexOf(pet);
+      if (index > -1) {
+        this.selectedPets.splice(index, 1);
+      }
+    },
+
+    clearPriceFilter() {
+      this.minPrice = this.min;
+      this.maxPrice = this.max;
     }
   },
 
   computed: {
     filteredProducts() {
       return this.products.filter((product) => {
+        // Category filter - check against category_name from API
         const categoryMatch =
           this.selectedCategories.length === 0 ||
-          this.selectedCategories.includes(product.category);
+          this.selectedCategories.includes(product.category_name);
+
+        // Pet filter - check against pet_type from API  
         const petMatch =
           this.selectedPets.length === 0 ||
-          this.selectedPets.includes(product.petType);
+          this.selectedPets.includes(product.pet_type);
+
+        // Price filter - check against discount_price or price
+        const productPrice = product.base_price || product.price;
         const priceMatch =
-          product.price >= this.minPrice && product.price <= this.maxPrice;
+          productPrice >= this.minPrice && productPrice <= this.maxPrice;
+
         return categoryMatch && petMatch && priceMatch;
       });
     },
@@ -369,16 +417,16 @@ export default {
 
       switch (this.sortOption) {
         case 'priceAsc':
-          sortedProducts.sort((a, b) => a.price - b.price);
+          sortedProducts.sort((a, b) => (a.discount_price || a.price) - (b.discount_price || b.price));
           break;
         case 'priceDesc':
-          sortedProducts.sort((a, b) => b.price - a.price);
+          sortedProducts.sort((a, b) => (b.discount_price || b.price) - (a.discount_price || a.price));
           break;
         case 'nameAsc':
-          sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+          sortedProducts.sort((a, b) => a.product_name.localeCompare(b.product_name));
           break;
         case 'nameDesc':
-          sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
+          sortedProducts.sort((a, b) => b.product_name.localeCompare(a.product_name));
           break;
       }
 
@@ -396,6 +444,28 @@ export default {
         left: `${minPercent}%`,
         width: `${maxPercent - minPercent}%`,
       };
+    },
+
+    hasActiveFilters() {
+      return this.selectedCategories.length > 0 ||
+        this.selectedPets.length > 0 ||
+        this.priceFilterActive;
+    },
+
+    priceFilterActive() {
+      return this.minPrice > this.min || this.maxPrice < this.max;
+    },
+
+    visiblePages() {
+      const pages = [];
+      const start = Math.max(1, this.currentPage - 2);
+      const end = Math.min(this.totalPages, this.currentPage + 2);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      return pages;
     }
   },
 

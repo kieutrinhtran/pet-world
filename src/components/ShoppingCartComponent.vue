@@ -3,7 +3,9 @@
     <h2>Shopping Cart</h2>
     <div v-if="cartItems.length === 0" class="empty-cart">
       <p>Your cart is empty</p>
-      <router-link to="/products" class="continue-shopping">Continue Shopping</router-link>
+      <router-link to="/products" class="continue-shopping"
+        >Continue Shopping</router-link
+      >
     </div>
     <div v-else class="cart-content">
       <div class="cart-items">
@@ -13,7 +15,12 @@
             <h3>{{ item.name }}</h3>
             <p class="price">${{ item.price }}</p>
             <div class="quantity-controls">
-              <button @click="decreaseQuantity(item)" :disabled="item.quantity <= 1">-</button>
+              <button
+                @click="decreaseQuantity(item)"
+                :disabled="item.quantity <= 1"
+              >
+                -
+              </button>
               <span>{{ item.quantity }}</span>
               <button @click="increaseQuantity(item)">+</button>
             </div>
@@ -35,53 +42,55 @@
           <span>Total:</span>
           <span>${{ total }}</span>
         </div>
-        <button @click="checkout" class="checkout-btn">Proceed to Checkout</button>
+        <button @click="checkout" class="checkout-btn">
+          Proceed to Checkout
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { useCartStore } from '../store/cart'
+import { useCartStore } from '../store/cart';
 
 export default {
   name: 'ShoppingCartComponent',
   data() {
     return {
-      shipping: 5.99
-    }
+      shipping: 5.99,
+    };
   },
   computed: {
     cart() {
-      return useCartStore()
+      return useCartStore();
     },
     cartItems() {
-      return this.cart.items
+      return this.cart.items;
     },
     subtotal() {
-      return this.cart.cartTotal.toFixed(2)
+      return this.cart.cartTotal.toFixed(2);
     },
     total() {
-      return (parseFloat(this.subtotal) + this.shipping).toFixed(2)
-    }
+      return (parseFloat(this.subtotal) + this.shipping).toFixed(2);
+    },
   },
   methods: {
     increaseQuantity(item) {
-      this.cart.updateQuantity(item.id, item.quantity + 1)
+      this.cart.updateQuantity(item.id, item.quantity + 1);
     },
     decreaseQuantity(item) {
       if (item.quantity > 1) {
-        this.cart.updateQuantity(item.id, item.quantity - 1)
+        this.cart.updateQuantity(item.id, item.quantity - 1);
       }
     },
     removeItem(item) {
-      this.cart.removeItem(item.id)
+      this.cart.removeItem(item.id);
     },
     checkout() {
-      alert('Proceeding to checkout...')
-    }
-  }
-}
+      alert('Proceeding to checkout...');
+    },
+  },
+};
 </script>
 
 <style scoped>

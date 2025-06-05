@@ -29,7 +29,8 @@
         <div class="status-info">
           <p>📦 Tình trạng đơn hàng: <span class="status">Hoàn thành</span></p>
           <p class="total">
-            Thành tiền: <span class="money">{{ formatPrice(order.total) }}đ</span>
+            Thành tiền:
+            <span class="money">{{ formatPrice(order.total) }}đ</span>
           </p>
         </div>
       </div>
@@ -54,22 +55,22 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-import Header from '@/components/AdminHeader.vue'
-import Footer from '@/components/FooterComponent.vue'
+import { useRouter } from 'vue-router';
+import Header from '@/components/AdminHeader.vue';
+import Footer from '@/components/FooterComponent.vue';
 
-const router = useRouter()
+const router = useRouter();
 
 const goBack = () => {
-  router.back()
-}
+  router.back();
+};
 
-const formatPrice = num => {
-  return num.toLocaleString('vi-VN')
-}
+const formatPrice = (num) => {
+  return num.toLocaleString('vi-VN');
+};
 
 // Sử dụng ảnh mới từ public/images
-const imgUrl = '/images/royal-canin-desc-1.jpg'
+const imgUrl = '/images/royal-canin-desc-1.jpg';
 
 const orders = [
   {
@@ -79,7 +80,7 @@ const orders = [
     package: '300g',
     quantity: 2,
     price: 350000,
-    total: 700000
+    total: 700000,
   },
   {
     image: imgUrl,
@@ -88,7 +89,7 @@ const orders = [
     package: '300g',
     quantity: 2,
     price: 350000,
-    total: 700000
+    total: 700000,
   },
   {
     image: imgUrl,
@@ -97,9 +98,9 @@ const orders = [
     package: '300g',
     quantity: 2,
     price: 350000,
-    total: 700000
-  }
-]
+    total: 700000,
+  },
+];
 </script>
 
 <style scoped>

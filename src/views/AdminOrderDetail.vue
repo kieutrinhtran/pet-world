@@ -25,7 +25,9 @@
           <div class="info-grid">
             <div class="info-item">
               <label>Trạng thái đơn hàng:</label>
-              <span :class="['status', order.status]">{{ getStatusText(order.status) }}</span>
+              <span :class="['status', order.status]">{{
+                getStatusText(order.status)
+              }}</span>
             </div>
             <div class="info-item">
               <label>Ngày đặt:</label>
@@ -41,7 +43,9 @@
             </div>
             <div class="info-item">
               <label>Trạng thái thanh toán:</label>
-              <span :class="['status', order.payment_status]">{{ getPaymentStatusText(order.payment_status) }}</span>
+              <span :class="['status', order.payment_status]">{{
+                getPaymentStatusText(order.payment_status)
+              }}</span>
             </div>
           </div>
         </div>
@@ -98,13 +102,19 @@
                 <tr v-for="item in order.items" :key="item.id">
                   <td>
                     <div class="product-info">
-                      <img :src="item.image" :alt="item.name" class="product-image" />
+                      <img
+                        :src="item.image"
+                        :alt="item.name"
+                        class="product-image"
+                      />
                       <span>{{ item.name }}</span>
                     </div>
                   </td>
                   <td>{{ formatPrice(item.unit_price) }}</td>
                   <td>{{ item.quantity }}</td>
-                  <td class="price">{{ formatPrice(item.unit_price * item.quantity) }}</td>
+                  <td class="price">
+                    {{ formatPrice(item.unit_price * item.quantity) }}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -118,7 +128,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h2>Chỉnh sửa đơn hàng</h2>
-          <button @click="showEditModal = false" class="close-btn">&times;</button>
+          <button @click="showEditModal = false" class="close-btn">
+            &times;
+          </button>
         </div>
         <div class="modal-body">
           <div class="form-group">
@@ -150,35 +162,35 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import axios from 'axios'
-import { API_ENDPOINTS } from '@/api/endpoints'
-import { orderService } from '@/services/api'
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
+import { API_ENDPOINTS } from '@/api/endpoints';
+import { orderService } from '@/services/api';
 
-const route = useRoute()
-const router = useRouter()
-const orderId = route.params.id
+const route = useRoute();
+const router = useRouter();
+const orderId = route.params.id;
 
-const order = ref({})
-const loading = ref(false)
-const error = ref(null)
-const showEditModal = ref(false)
+const order = ref({});
+const loading = ref(false);
+const error = ref(null);
+const showEditModal = ref(false);
 
 const goBack = () => {
-  router.back()
-}
+  router.back();
+};
 
 const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('vi-VN')
-}
+  return new Date(date).toLocaleDateString('vi-VN');
+};
 
 const formatPrice = (price) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
-    currency: 'VND'
-  }).format(price)
-}
+    currency: 'VND',
+  }).format(price);
+};
 
 const getStatusText = (status) => {
   const statusMap = {
@@ -186,69 +198,69 @@ const getStatusText = (status) => {
     processing: 'Đang xử lý',
     shipped: 'Đang giao hàng',
     delivered: 'Đã nhận hàng',
-    cancelled: 'Đã hủy'
-  }
-  return statusMap[status] || status
-}
+    cancelled: 'Đã hủy',
+  };
+  return statusMap[status] || status;
+};
 
 const getPaymentMethodText = (method) => {
   const methodMap = {
     cod: 'Thanh toán khi nhận hàng',
     bank_transfer: 'Chuyển khoản ngân hàng',
-    credit_card: 'Thẻ tín dụng'
-  }
-  return methodMap[method] || method
-}
+    credit_card: 'Thẻ tín dụng',
+  };
+  return methodMap[method] || method;
+};
 
 const getPaymentStatusText = (status) => {
   const statusMap = {
     pending: 'Chờ thanh toán',
     paid: 'Đã thanh toán',
-    failed: 'Thanh toán thất bại'
-  }
-  return statusMap[status] || status
-}
+    failed: 'Thanh toán thất bại',
+  };
+  return statusMap[status] || status;
+};
 
 const getShippingMethodText = (method) => {
   const methodMap = {
     standard: 'Giao hàng tiêu chuẩn',
-    express: 'Giao hàng nhanh'
-  }
-  return methodMap[method] || method
-}
+    express: 'Giao hàng nhanh',
+  };
+  return methodMap[method] || method;
+};
 
 const saveChanges = async () => {
   try {
-    loading.value = true
+    loading.value = true;
     const updatedOrder = await orderService.update(orderId, {
       status: order.value.status,
-      payment_status: order.value.payment_status
-    })
-    
+      payment_status: order.value.payment_status,
+    });
+
     if (updatedOrder) {
-      order.value = { ...updatedOrder }
-      showEditModal.value = false
+      order.value = { ...updatedOrder };
+      showEditModal.value = false;
     }
   } catch (err) {
-    error.value = err.message
-    console.error(err)
+    error.value = err.message;
+    console.error(err);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 onMounted(async () => {
   try {
-    loading.value = true
-    const response = await axios.get(API_ENDPOINTS.ORDERS.GET_DETAIL(orderId))
-    order.value = response.data
+    loading.value = true;
+    const response = await axios.get(API_ENDPOINTS.ORDERS.GET_DETAIL(orderId));
+    order.value = response.data;
   } catch (err) {
-    error.value = 'Không thể tải thông tin đơn hàng'
-    console.error(err)
+    error.value = 'Không thể tải thông tin đơn hàng';
+    console.error(err);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-})
+});
 </script>
 
 <style scoped>
@@ -275,8 +287,12 @@ onMounted(async () => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error {
@@ -410,7 +426,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #e5e7eb;
@@ -533,4 +550,4 @@ th {
 .btn-save:hover {
   background: #f97316;
 }
-</style> 
+</style>

@@ -1,6 +1,10 @@
 <template>
   <div class="flex flex-col overflow-hidden border border-gray-100 rounded-2xl">
-    <img class="min-h-[162px]" src="@/assets/images/category.png" alt="Category image" />
+    <img
+      class="min-h-[162px]"
+      src="@/assets/images/category.png"
+      alt="Category image"
+    />
     <div class="px-4 py-3 bg-white">
       <div class="flex items-center justify-between">
         <div class="text-base font-semibold">Chihuahua Puppy</div>

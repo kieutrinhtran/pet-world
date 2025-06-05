@@ -15,18 +15,19 @@
           <span>Trải nghiệm mua sắm độc đáo!</span>
         </p>
         <div class="cta-buttons">
-          <router-link to="/products" class="cta-btn primary">Mua ngay</router-link>
-          <router-link to="/contact" class="cta-btn secondary">Liên hệ</router-link>
+          <router-link to="/products" class="cta-btn primary"
+            >Mua ngay</router-link
+          >
+          <router-link to="/contact" class="cta-btn secondary"
+            >Liên hệ</router-link
+          >
         </div>
       </div>
       <div class="about-hero-img">
         <div class="hero-bg"></div>
         <img
-         
           src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=600&q=80"
-         
           alt="Dog and Cat"
-       
         />
         <span class="bird-icon">🕊️</span>
         <div class="paw-prints"></div>
@@ -44,12 +45,16 @@
         <div>
           <b class="text-primary">Pet World</b>
           <span>
-            không chỉ là một nền tảng mua sắm, mà còn là người bạn đồng hành tin cậy trên hành trình
-            chăm sóc thú cưng của bạn. Được thành lập với niềm đam mê dành cho động vật, chúng tôi
-            mang đến một hệ sinh thái thú cưng điển hình, giúp bạn dễ dàng tìm thấy mọi thứ mà thú
-            cưng cần – từ thực phẩm dinh dưỡng, phụ kiện thời trang, đồ chơi cho đến dịch vụ chăm
-            sóc sức khỏe, spa, huấn luyện.</span
+            không chỉ là một nền tảng mua sắm, mà còn là người bạn đồng hành tin
+            cậy trên hành trình chăm sóc thú cưng của bạn. Được thành lập với
+            niềm đam mê dành cho động vật, chúng tôi mang đến một hệ sinh thái
+            thú cưng điển hình, giúp bạn dễ dàng tìm thấy mọi thứ mà thú cưng
+            cần – từ thực phẩm dinh dưỡng, phụ kiện thời trang, đồ chơi cho đến
+            dịch vụ chăm sóc sức khỏe, spa, huấn luyện.</span
           >
+        </div>
+      </div>
+    </section>
     <section class="max-w-5xl mx-auto">
       <h2 class="section-title text-primary">VỀ CHÚNG TÔI</h2>
       <div class="space-y-6">
@@ -60,19 +65,21 @@
         <div>
           <b class="text-primary">Pet World</b>
           <span>
-            không chỉ là một nền tảng mua sắm, mà còn là người bạn đồng hành tin cậy trên hành trình
-            chăm sóc thú cưng của bạn. Được thành lập với niềm đam mê dành cho động vật, chúng tôi
-            mang đến một hệ sinh thái thú cưng điển hình, giúp bạn dễ dàng tìm thấy mọi thứ mà thú
-            cưng cần – từ thực phẩm dinh dưỡng, phụ kiện thời trang, đồ chơi cho đến dịch vụ chăm
-            sóc sức khỏe, spa, huấn luyện.</span
+            không chỉ là một nền tảng mua sắm, mà còn là người bạn đồng hành tin
+            cậy trên hành trình chăm sóc thú cưng của bạn. Được thành lập với
+            niềm đam mê dành cho động vật, chúng tôi mang đến một hệ sinh thái
+            thú cưng điển hình, giúp bạn dễ dàng tìm thấy mọi thứ mà thú cưng
+            cần – từ thực phẩm dinh dưỡng, phụ kiện thời trang, đồ chơi cho đến
+            dịch vụ chăm sóc sức khỏe, spa, huấn luyện.</span
           >
         </div>
         <div>
           Với sự hợp tác từ những thương hiệu hàng đầu và các chuyên gia thú y,
-          <b class="text-primary">Pet World cam kết</b> mang đến sản phẩm chất lượng cao, an toàn và
-          phù hợp nhất cho từng bé cưng. Chúng tôi tin rằng mỗi thú cưng đều xứng đáng được yêu
-          thương, chăm sóc tốt nhất, và mỗi người nuôi đều xứng đáng có trải nghiệm mua sắm tiện
-          lợi, nhanh chóng và đáng tin cậy.
+          <b class="text-primary">Pet World cam kết</b> mang đến sản phẩm chất
+          lượng cao, an toàn và phù hợp nhất cho từng bé cưng. Chúng tôi tin
+          rằng mỗi thú cưng đều xứng đáng được yêu thương, chăm sóc tốt nhất, và
+          mỗi người nuôi đều xứng đáng có trải nghiệm mua sắm tiện lợi, nhanh
+          chóng và đáng tin cậy.
         </div>
       </div>
       <div class="flex items-center justify-around mt-8 space-x-8">
@@ -96,10 +103,14 @@
     </section>
 
     <!-- TESTIMONIAL -->
-    <div class="flex flex-col items-center max-w-5xl mx-auto space-x-8 md:flex-row mt-9">
+    <div
+      class="flex flex-col items-center max-w-5xl mx-auto space-x-8 md:flex-row mt-9"
+    >
       <div class="flex-1">
         <div class="text-xs font-bold text-primary">Chứng thực</div>
-        <div class="mt-2 text-3xl font-bold">Khách hàng nói gì về chúng tôi?</div>
+        <div class="mt-2 text-3xl font-bold">
+          Khách hàng nói gì về chúng tôi?
+        </div>
         <!-- Dynamic testimoial -->
         <div class="mt-6">
           <div class="flex space-x-2">
@@ -109,24 +120,37 @@
             <i class="fa-solid fa-star" style="color: #ffb74d"></i>
             <i class="fa-solid fa-star" style="color: #ffb74d"></i>
           </div>
-          <div class="mt-2 text-base italic" v-html="currentTestimonial.text"></div>
+          <div
+            class="mt-2 text-base italic"
+            v-html="currentTestimonial.text"
+          ></div>
           <div class="flex justify-between mt-8">
             <div>
-              <div class="text-[18px] font-bold">{{ currentTestimonial.author.name }}</div>
-              <div class="text-xs font-bold">{{ currentTestimonial.author.title }}</div>
+              <div class="text-[18px] font-bold">
+                {{ currentTestimonial.author.name }}
+              </div>
+              <div class="text-xs font-bold">
+                {{ currentTestimonial.author.title }}
+              </div>
             </div>
             <div class="flex space-x-4">
               <button
                 class="flex items-center justify-center bg-black w-[30px] h-[30px] rounded-full"
                 @click="prevTestimonial()"
               >
-                <i class="fa-solid fa-angle-left fa-xs" style="color: #ffffff"></i>
+                <i
+                  class="fa-solid fa-angle-left fa-xs"
+                  style="color: #ffffff"
+                ></i>
               </button>
               <button
                 class="flex items-center justify-center bg-black w-[30px] h-[30px] rounded-full"
                 @click="nextTestimonial()"
               >
-                <i class="fa-solid fa-angle-right fa-xs" style="color: #ffffff"></i>
+                <i
+                  class="fa-solid fa-angle-right fa-xs"
+                  style="color: #ffffff"
+                ></i>
               </button>
             </div>
           </div>
@@ -144,14 +168,20 @@
 
     <!-- ĐỐI TÁC CHIẾN LƯỢC -->
     <section class="mt-24 max-w-[1050px] mx-auto">
-      <h2 class="text-3xl font-semibold text-primary">Các đối tác chiến lược</h2>
+      <h2 class="text-3xl font-semibold text-primary">
+        Các đối tác chiến lược
+      </h2>
       <BrandLists class="mt-11"></BrandLists>
     </section>
 
     <!-- HỆ THỐNG CỬA HÀNG -->
     <section class="mt-24 max-w-[1050px] mx-auto">
-      <h2 class="leading-[0.1em] bg-white border-b border-[#234BBB] text-center text-3xl font-bold">
-        <span class="px-2.5 pt-2.5 pb-0 bg-white text-primary">Hệ thống cửa hàng</span>
+      <h2
+        class="leading-[0.1em] bg-white border-b border-[#234BBB] text-center text-3xl font-bold"
+      >
+        <span class="px-2.5 pt-2.5 pb-0 bg-white text-primary"
+          >Hệ thống cửa hàng</span
+        >
       </h2>
       <div class="flex items-center justify-center mt-6 space-x-6">
         <StoreLocation
@@ -237,9 +267,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import StoreLocation from '@/components/StoreLocation.vue'
-import BrandLists from '@/components/BrandLists.vue'
+import { ref, computed, onMounted } from 'vue';
+import StoreLocation from '@/components/StoreLocation.vue';
+import BrandLists from '@/components/BrandLists.vue';
 // Form state
 // const form = reactive({
 //   firstName: '',
@@ -258,40 +288,41 @@ const testimonials = [
     author: {
       name: 'Phạm Nhật Vượng',
       title: 'Khách hàng',
-      image: '/images/phamnhatvuong.png'
-    }
+      image: '/images/phamnhatvuong.png',
+    },
   },
   {
     text: '<b>Dịch vụ tuyệt vời!</b> Tôi rất ấn tượng với sự chuyên nghiệp và tận tâm của đội ngũ Pet World. Các sản phẩm đều chất lượng và giá cả hợp lý.',
     author: {
       name: 'Nguyễn Thị Phương Thảo',
       title: 'Khách hàng thân thiết',
-      image: '/images/phuongthao.png'
-    }
+      image: '/images/phuongthao.png',
+    },
   },
   {
-    text: '<b>Mèo nhà tôi rất thích!</b> Thức ăn và đồ chơi từ Pet World luôn là lựa chọn hàng đầu của tôi. Giao hàng nhanh chóng và đóng gói cẩn thận.',
+    text: '<b>Meo nhà tôi rất thích!</b> Thức ăn và đồ chơi từ Pet World luôn là lựa chọn hàng đầu của tôi. Giao hàng nhanh chóng và đóng gói cẩn thận.',
     author: {
       name: 'Elon musk',
       title: 'Khách hàng',
-      image: '/images/elonmusk.png'
-    }
-  }
-]
+      image: '/images/elonmusk.png',
+    },
+  },
+];
 // Index hiện tại
-const currentIndex = ref(0)
+const currentIndex = ref(0);
 
 // Lấy testimonial hiện tại từ index
-const currentTestimonial = computed(() => testimonials[currentIndex.value])
+const currentTestimonial = computed(() => testimonials[currentIndex.value]);
 
 // Hàm chuyển testimonial sang phải
 function nextTestimonial() {
-  currentIndex.value = (currentIndex.value + 1) % testimonials.length
+  currentIndex.value = (currentIndex.value + 1) % testimonials.length;
 }
 
 // Hàm chuyển testimonial sang trái
 function prevTestimonial() {
-  currentIndex.value = (currentIndex.value - 1 + testimonials.length) % testimonials.length
+  currentIndex.value =
+    (currentIndex.value - 1 + testimonials.length) % testimonials.length;
 }
 
 // Form submission handler
@@ -332,10 +363,10 @@ function prevTestimonial() {
 // Auto slide on mounted
 onMounted(() => {
   setInterval(() => {
-    nextTestimonial()
-  }, 5000)
-})
-import { stores } from '@/data/store'
+    nextTestimonial();
+  }, 5000);
+});
+import { stores } from '@/data/store';
 </script>
 
 <style scoped>

@@ -8,8 +8,8 @@
           <span>Pet World</span>
         </div>
         <div class="footer-desc">
-          Chúng tôi không chỉ phục vụ thú cưng – mà còn đồng hành cùng bạn trên hành trình yêu
-          thương chúng.
+          Chúng tôi không chỉ phục vụ thú cưng – mà còn đồng hành cùng bạn trên
+          hành trình yêu thương chúng.
         </div>
       </div>
       <!-- Cột 2: Pet Shop -->
@@ -33,7 +33,9 @@
       <div class="footer-col">
         <div class="footer-title">Store</div>
         <div class="footer-store">
-          <div><b>123 Lý Thường Kiệt, Phường 3, Quận 10, Thành phố Hồ Chí Minh</b></div>
+          <div>
+            <b>123 Lý Thường Kiệt, Phường 3, Quận 10, Thành phố Hồ Chí Minh</b>
+          </div>
           <div>+84 123 456 789</div>
           <div>wearepet@petshop.com</div>
         </div>
@@ -43,12 +45,18 @@
     <div class="footer-bottom">
       <div class="footer-copyright">© Copyright Pet World 2025</div>
       <div class="footer-payments">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="VISA" />
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"
+          alt="VISA"
+        />
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png"
           alt="MasterCard"
         />
-        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" />
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg"
+          alt="PayPal"
+        />
       </div>
     </div>
     <!-- Dấu chân mờ trang trí -->
@@ -320,6 +328,6 @@
 
 <script>
 export default {
-  name: 'FooterComponent'
-}
+  name: 'FooterComponent',
+};
 </script>

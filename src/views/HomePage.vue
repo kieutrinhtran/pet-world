@@ -7,7 +7,9 @@
         <h1>Thiên đường mua sắm dành cho thú cưng!</h1>
         <p class="slogan">Dịch vụ tận tâm – Trải nghiệm mua sắm độc đáo!</p>
         <div class="cta-buttons">
-          <router-link to="/products" class="cta-btn primary">Mua ngay</router-link>
+          <router-link to="/products" class="cta-btn primary"
+            >Mua ngay</router-link
+          >
         </div>
       </div>
       <div class="banner-img">
@@ -28,7 +30,9 @@
       <!-- ProductCategorySection -->
       <section class="mt-16 max-w-[972px] mx-auto">
         <h2 class="text-3xl font-semibold">Danh mục sản phẩm</h2>
-        <div class="grid grid-cols-1 gap-4 mt-11 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div
+          class="grid grid-cols-1 gap-4 mt-11 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+        >
           <HomeCategory v-for="i in 4" :key="i"></HomeCategory>
         </div>
       </section>
@@ -36,7 +40,9 @@
       <!-- BestSellerSection -->
       <section class="mt-24 max-w-[972px] mx-auto">
         <h2 class="text-3xl font-semibold">Các sản phẩm bán chạy</h2>
-        <div class="grid max-w-5xl grid-cols-1 gap-4 mx-auto mt-11 sm:grid-cols-2 md:grid-cols-3">
+        <div
+          class="grid max-w-5xl grid-cols-1 gap-4 mx-auto mt-11 sm:grid-cols-2 md:grid-cols-3"
+        >
           <Product v-for="i in 3" :key="i"></Product>
         </div>
       </section>
@@ -52,7 +58,9 @@
         <h2
           class="leading-[0.1em] bg-white border-b border-[#234BBB] text-center text-base font-bold"
         >
-          <span class="px-2.5 pt-2.5 pb-0 bg-white text-[#234BBB]">Mua Trực Tiếp Tại Cửa Hàng</span>
+          <span class="px-2.5 pt-2.5 pb-0 bg-white text-[#234BBB]"
+            >Mua Trực Tiếp Tại Cửa Hàng</span
+          >
         </h2>
         <div class="flex items-center justify-center mt-6 space-x-6">
           <StoreLocation
@@ -69,13 +77,13 @@
 </template>
 
 <script setup>
-import HomeCategory from '@/components/category/HomeCategory.vue'
-import QuickCategory from '@/components/category/QuickCategory.vue'
-import Product from '@/components/product/Product.vue'
-import StoreLocation from '@/components/StoreLocation.vue'
+import HomeCategory from '@/components/category/HomeCategory.vue';
+import QuickCategory from '@/components/category/QuickCategory.vue';
+import Product from '@/components/product/Product.vue';
+import StoreLocation from '@/components/StoreLocation.vue';
 
-import BrandLists from '@/components/BrandLists.vue'
-import { stores } from '@/data/store'
+import BrandLists from '@/components/BrandLists.vue';
+import { stores } from '@/data/store';
 </script>
 
 <style scoped>

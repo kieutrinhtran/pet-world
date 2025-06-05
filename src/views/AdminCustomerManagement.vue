@@ -3,9 +3,15 @@
     <!-- Tìm kiếm + bộ lọc -->
     <div class="search-section">
       <span
-        >Hiển thị {{ filteredCustomers.length }} từ {{ customers.length }} kết quả tìm kiếm</span
+        >Hiển thị {{ filteredCustomers.length }} từ {{ customers.length }} kết
+        quả tìm kiếm</span
       >
-      <AdminSearchBar v-model="searchQuery" placeholder="Tìm kiếm khách hàng theo tên, email hoặc ID..." @input="() => {}" class="search-input" />
+      <AdminSearchBar
+        v-model="searchQuery"
+        placeholder="Tìm kiếm khách hàng theo tên, email hoặc ID..."
+        @input="() => {}"
+        class="search-input"
+      />
     </div>
 
     <!-- Bảng danh sách khách hàng -->
@@ -44,12 +50,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import Footer from '@/components/FooterComponent.vue'
-import AdminSearchBar from '@/components/AdminSearchBar.vue'
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import Footer from '@/components/FooterComponent.vue';
+import AdminSearchBar from '@/components/AdminSearchBar.vue';
 
-const router = useRouter()
+const router = useRouter();
 
 // Danh sách khách hàng
 const customers = ref([
@@ -59,7 +65,7 @@ const customers = ref([
     email: 'hat@example.com',
     dob: '13/05/2022',
     phone: '701112233',
-    gender: 'Nam'
+    gender: 'Nam',
   },
   {
     id: 18935,
@@ -67,7 +73,7 @@ const customers = ref([
     email: 'laptop@example.com',
     dob: '22/05/2022',
     phone: '701112233',
-    gender: 'Nam'
+    gender: 'Nam',
   },
   {
     id: 54519,
@@ -75,41 +81,43 @@ const customers = ref([
     email: 'phone@example.com',
     dob: '15/06/2022',
     phone: '701112233',
-    gender: 'Nam'
-  }
-])
+    gender: 'Nam',
+  },
+]);
 
 // Tìm kiếm
-const searchQuery = ref('')
+const searchQuery = ref('');
 
 // Lọc kết quả theo tìm kiếm
 const filteredCustomers = computed(() => {
-  if (!searchQuery.value) return customers.value
+  if (!searchQuery.value) return customers.value;
   return customers.value.filter(
-    c =>
+    (c) =>
       c.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       c.email.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       c.id.toString().includes(searchQuery.value)
-  )
-})
+  );
+});
 
 // Điều hướng chỉnh sửa
-const editCustomer = id => {
-  router.push(`/edit/${id}`)
-}
+const editCustomer = (id) => {
+  router.push(`/edit/${id}`);
+};
 
 // Điều hướng lịch sử
-const viewHistory = id => {
-  router.push(`/history/${id}`)
-}
+const viewHistory = (id) => {
+  router.push(`/history/${id}`);
+};
 
 // Xác nhận và xóa khách hàng
-const confirmDelete = id => {
-  const confirmed = window.confirm('Bạn có chắc chắn muốn xóa thông tin khách hàng này không?')
+const confirmDelete = (id) => {
+  const confirmed = window.confirm(
+    'Bạn có chắc chắn muốn xóa thông tin khách hàng này không?'
+  );
   if (confirmed) {
-    customers.value = customers.value.filter(c => c.id !== id)
+    customers.value = customers.value.filter((c) => c.id !== id);
   }
-}
+};
 </script>
 
 <style scoped>

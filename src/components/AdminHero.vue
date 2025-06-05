@@ -1,14 +1,24 @@
 <template>
-  <section class="flex items-center justify-between mx-10 mt-8 min-h-[420px] relative z-10">
+  <section
+    class="flex items-center justify-between mx-10 mt-8 min-h-[420px] relative z-10"
+  >
     <div class="flex items-center justify-between max-w-7xl mx-auto py-8 gap-8">
       <div class="z-20 flex-1">
-        <span class="text-orange-500 text-xl font-bold tracking-wider">Pet World</span>
-        <h1 class="text-4xl text-gray-800 mt-3 mb-4.5 font-extrabold leading-tight">
+        <span class="text-orange-500 text-xl font-bold tracking-wider"
+          >Pet World</span
+        >
+        <h1
+          class="text-4xl text-gray-800 mt-3 mb-4.5 font-extrabold leading-tight"
+        >
           Thiên đường mua sắm dành cho thú cưng!
         </h1>
-        <p class="text-gray-600 text-lg mb-0">Dịch vụ tận tâm – Trải nghiệm mua sắm độc đáo!</p>
+        <p class="text-gray-600 text-lg mb-0">
+          Dịch vụ tận tâm – Trải nghiệm mua sắm độc đáo!
+        </p>
       </div>
-      <div class="flex-1 relative flex items-center justify-end min-w-[350px] min-h-[350px]">
+      <div
+        class="flex-1 relative flex items-center justify-end min-w-[350px] min-h-[350px]"
+      >
         <div
           class="absolute bottom-0 w-[420px] h-[420px] bg-gradient-radial from-orange-500 to-transparent rounded-[60%_40%_60%_40%_/_50%_60%_40%_50%] z-20 opacity-95"
         ></div>

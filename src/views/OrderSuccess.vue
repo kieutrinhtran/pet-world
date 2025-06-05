@@ -1,8 +1,13 @@
 <template>
   <div class="order-success">
     <div class="breadcrumb">
-      <router-link to="/" class="text-gray-600 hover:text-orange-500">Trang chủ</router-link> &gt;
-      <router-link to="/cart" class="text-gray-600 hover:text-orange-500">Giỏ hàng</router-link>
+      <router-link to="/" class="text-gray-600 hover:text-orange-500"
+        >Trang chủ</router-link
+      >
+      &gt;
+      <router-link to="/cart" class="text-gray-600 hover:text-orange-500"
+        >Giỏ hàng</router-link
+      >
       &gt;
       <router-link to="/shipping" class="text-gray-600 hover:text-orange-500"
         >Vận chuyển</router-link
@@ -41,7 +46,9 @@
           </div>
           <div class="info-row">
             <span class="label">Tổng tiền:</span>
-            <span class="value text-orange-500 font-bold">{{ total.toLocaleString() }}đ</span>
+            <span class="value text-orange-500 font-bold"
+              >{{ total.toLocaleString() }}đ</span
+            >
           </div>
         </div>
 
@@ -99,43 +106,49 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
-import { useRoute } from 'vue-router'
-import { API_ENDPOINTS } from '@/api/endpoints'
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import { useRoute } from 'vue-router';
+import { API_ENDPOINTS } from '@/api/endpoints';
 
-const route = useRoute()
+const route = useRoute();
 
-const orderId = ref('')
-const orderDate = ref('')
-const paymentMethod = ref('')
-const total = ref(0)
+const orderId = ref('');
+const orderDate = ref('');
+const paymentMethod = ref('');
+const total = ref(0);
 const shippingInfo = ref({
   name: '',
   phone: '',
-  address: ''
-})
-const shippingMethod = ref('')
+  address: '',
+});
+const shippingMethod = ref('');
 
 async function fetchOrder() {
-  const orderId = route.params.orderId
+  const orderId = route.params.orderId;
   if (orderId) {
     try {
-      const response = await axios.get(API_ENDPOINTS.ORDERS.GET_DETAIL(orderId))
-      const orderData = response.data
-      
-      orderId.value = orderData.id
-      orderDate.value = new Date(orderData.created_at).toLocaleDateString('vi-VN')
-      paymentMethod.value = getPaymentMethodText(orderData.payment_method)
-      total.value = orderData.total_amount
+      const response = await axios.get(
+        API_ENDPOINTS.ORDERS.GET_DETAIL(orderId)
+      );
+      const orderData = response.data;
+
+      orderId.value = orderData.id;
+      orderDate.value = new Date(orderData.created_at).toLocaleDateString(
+        'vi-VN'
+      );
+      paymentMethod.value = getPaymentMethodText(orderData.payment_method);
+      total.value = orderData.total_amount;
       shippingInfo.value = {
         name: orderData.shipping_info.address.name,
         phone: orderData.shipping_info.address.phone,
-        address: orderData.shipping_info.address.address_line
-      }
-      shippingMethod.value = getShippingMethodText(orderData.shipping_info.method)
+        address: orderData.shipping_info.address.address_line,
+      };
+      shippingMethod.value = getShippingMethodText(
+        orderData.shipping_info.method
+      );
     } catch (error) {
-      console.error('Error fetching order:', error)
+      console.error('Error fetching order:', error);
     }
   }
 }
@@ -144,20 +157,20 @@ const getPaymentMethodText = (method) => {
   const methodMap = {
     cod: 'Thanh toán khi nhận hàng',
     bank_transfer: 'Chuyển khoản ngân hàng',
-    credit_card: 'Thẻ tín dụng'
-  }
-  return methodMap[method] || method
-}
+    credit_card: 'Thẻ tín dụng',
+  };
+  return methodMap[method] || method;
+};
 
 const getShippingMethodText = (method) => {
   const methodMap = {
     standard: 'Giao hàng tiêu chuẩn',
-    express: 'Giao hàng nhanh'
-  }
-  return methodMap[method] || method
-}
+    express: 'Giao hàng nhanh',
+  };
+  return methodMap[method] || method;
+};
 
-onMounted(fetchOrder)
+onMounted(fetchOrder);
 </script>
 
 <style scoped>

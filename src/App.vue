@@ -5,22 +5,22 @@
 </template>
 
 <script>
-import { useCartStore } from './store/cart'
+import { useCartStore } from './store/cart';
 
 export default {
   name: 'App',
   setup() {
-    const cart = useCartStore()
+    const cart = useCartStore();
     return {
-      cart
-    }
+      cart,
+    };
   },
   computed: {
     cartItemCount() {
-      return this.cart.itemCount
-    }
-  }
-}
+      return this.cart.itemCount;
+    },
+  },
+};
 </script>
 
 <style>

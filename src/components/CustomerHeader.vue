@@ -10,12 +10,17 @@
       </div>
       <div class="flex-1 flex justify-center text-center">
         <span class="text-primary"><i class="fas fa-map-marker-alt"></i></span>
-        <span>123 Lý Thường Kiệt, Phường 3, Quận 10, Thành phố Hồ Chí Minh</span>
+        <span
+          >123 Lý Thường Kiệt, Phường 3, Quận 10, Thành phố Hồ Chí Minh</span
+        >
       </div>
       <div class="flex items-center gap-2 min-w-[160px] justify-end">
         <span class="text-primary"><i class="fas fa-user"></i></span>
         <span v-if="isLoggedIn">{{ userName }}</span>
-        <router-link v-else to="/login" class="text-gray-800 hover:text-orange-500"
+        <router-link
+          v-else
+          to="/login"
+          class="text-gray-800 hover:text-orange-500"
           >Đăng nhập</router-link
         >
       </div>
@@ -24,8 +29,12 @@
     <!-- Navbar -->
     <nav>
       <div class="flex items-center font-bold text-xl">
-        <span class="text-2xl mr-2 text-primary"><i class="fas fa-paw"></i></span>
-        <router-link to="/" class="text-gray-800 hover:text-orange-500">Pet World</router-link>
+        <span class="text-2xl mr-2 text-primary"
+          ><i class="fas fa-paw"></i
+        ></span>
+        <router-link to="/" class="text-gray-800 hover:text-orange-500"
+          >Pet World</router-link
+        >
       </div>
       <ul>
         <li
@@ -67,7 +76,7 @@
 </template>
 
 <script>
-import { useCartStore } from '../store/cart'
+import { useCartStore } from '../store/cart';
 
 export default {
   name: 'CustomerHeader',
@@ -75,44 +84,44 @@ export default {
     return {
       searchQuery: '',
       isLoggedIn: false,
-      userName: 'Nguyễn Văn A'
-    }
+      userName: 'Nguyễn Văn A',
+    };
   },
   computed: {
     menuItems() {
       return [
         { name: 'Trang chủ', path: '/', isActive: this.isHome },
         { name: 'Sản phẩm', path: '/products', isActive: this.isProducts },
-        { name: 'Về chúng tôi', path: '/about', isActive: this.isAbout }
-      ]
+        { name: 'Về chúng tôi', path: '/about', isActive: this.isAbout },
+      ];
     },
     isHome() {
-      return this.$route.path === '/'
+      return this.$route.path === '/';
     },
     isProducts() {
-      return this.$route.path.startsWith('/products')
+      return this.$route.path.startsWith('/products');
     },
     isAbout() {
-      return this.$route.path === '/about'
+      return this.$route.path === '/about';
     },
     cart() {
-      return useCartStore()
+      return useCartStore();
     },
     cartItemCount() {
-      return this.cart.itemCount
-    }
+      return this.cart.itemCount;
+    },
   },
   methods: {
     handleSearch() {
       if (this.searchQuery.trim()) {
         this.$router.push({
           path: '/products',
-          query: { search: this.searchQuery.trim() }
-        })
+          query: { search: this.searchQuery.trim() },
+        });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

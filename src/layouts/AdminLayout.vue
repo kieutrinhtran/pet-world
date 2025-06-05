@@ -10,9 +10,9 @@
 </template>
 
 <script setup>
-import AdminHeader from '@/components/AdminHeader.vue'
-import AdminHero from '@/components/AdminHero.vue'
-import FooterComponent from '@/components/FooterComponent.vue'
+import AdminHeader from '@/components/AdminHeader.vue';
+import AdminHero from '@/components/AdminHero.vue';
+import FooterComponent from '@/components/FooterComponent.vue';
 </script>
 
 <style scoped>

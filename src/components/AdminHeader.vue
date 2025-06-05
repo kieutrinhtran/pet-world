@@ -15,22 +15,34 @@
     </div>
     <!-- Navbar -->
     <nav class="admin-navbar">
-      <router-link to="/" class="logo"> <i class="fas fa-paw"></i> Pet World </router-link>
+      <router-link to="/" class="logo">
+        <i class="fas fa-paw"></i> Pet World
+      </router-link>
       <ul>
         <li>
-          <router-link to="/admin/customers" active-class="active-menu">Khách hàng</router-link>
+          <router-link to="/admin/customers" active-class="active-menu"
+            >Khách hàng</router-link
+          >
         </li>
         <li>
-          <router-link to="/admin/orders" active-class="active-menu">Đơn hàng</router-link>
+          <router-link to="/admin/orders" active-class="active-menu"
+            >Đơn hàng</router-link
+          >
         </li>
         <li>
-          <router-link to="/admin/products" active-class="active-menu">Sản phẩm</router-link>
+          <router-link to="/admin/products" active-class="active-menu"
+            >Sản phẩm</router-link
+          >
         </li>
         <li>
-          <router-link to="/admin/coupons" active-class="active-menu">Mã khuyến mãi</router-link>
+          <router-link to="/admin/coupons" active-class="active-menu"
+            >Mã khuyến mãi</router-link
+          >
         </li>
         <li>
-          <router-link to="/admin/statistics" active-class="active-menu">Thống kê</router-link>
+          <router-link to="/admin/statistics" active-class="active-menu"
+            >Thống kê</router-link
+          >
         </li>
       </ul>
     </nav>

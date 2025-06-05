@@ -17,7 +17,9 @@
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon orders"><i class="fas fa-shopping-basket"></i></div>
+          <div class="stat-icon orders">
+            <i class="fas fa-shopping-basket"></i>
+          </div>
           <div class="stat-info">
             <div class="stat-title">Tổng đơn hàng</div>
             <div class="stat-value">{{ totalOrders.toLocaleString() }}</div>
@@ -27,7 +29,9 @@
           <div class="stat-icon revenue"><i class="fas fa-coins"></i></div>
           <div class="stat-info">
             <div class="stat-title">Tổng doanh thu</div>
-            <div class="stat-value">{{ totalRevenue.toLocaleString() }} VND</div>
+            <div class="stat-value">
+              {{ totalRevenue.toLocaleString() }} VND
+            </div>
           </div>
         </div>
       </div>
@@ -50,46 +54,46 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import Chart from 'chart.js/auto'
-import { orderService, customerService } from '@/services/api'
+import { onMounted, ref } from 'vue';
+import Chart from 'chart.js/auto';
+import { orderService, customerService } from '@/services/api';
 
-const totalCustomers = ref(0)
-const totalOrders = ref(0)
-const totalRevenue = ref(0)
-const monthlyRevenue = ref({ labels: [], data: [] })
-const bestCategories = ref({ labels: [], data: [] })
-const loading = ref(true)
-const error = ref(null)
+const totalCustomers = ref(0);
+const totalOrders = ref(0);
+const totalRevenue = ref(0);
+const monthlyRevenue = ref({ labels: [], data: [] });
+const bestCategories = ref({ labels: [], data: [] });
+const loading = ref(true);
+const error = ref(null);
 
 onMounted(async () => {
   try {
-    loading.value = true
+    loading.value = true;
     // Lấy tổng số khách hàng
-    const customersResponse = await customerService.getCount()
-    totalCustomers.value = customersResponse.total_customers
+    const customersResponse = await customerService.getCount();
+    totalCustomers.value = customersResponse.total_customers;
 
     // Lấy thống kê đơn hàng
-    const ordersResponse = await orderService.getStatistics()
-    totalOrders.value = ordersResponse.total_orders
-    totalRevenue.value = ordersResponse.total_revenue
+    const ordersResponse = await orderService.getStatistics();
+    totalOrders.value = ordersResponse.total_orders;
+    totalRevenue.value = ordersResponse.total_revenue;
 
     // Lấy doanh thu theo tháng
-    const monthlyResponse = await orderService.getMonthlyRevenue()
+    const monthlyResponse = await orderService.getMonthlyRevenue();
     monthlyRevenue.value = {
       labels: monthlyResponse.labels,
-      data: monthlyResponse.data
-    }
+      data: monthlyResponse.data,
+    };
 
     // Lấy danh mục bán chạy
-    const categoriesResponse = await orderService.getBestCategories()
+    const categoriesResponse = await orderService.getBestCategories();
     bestCategories.value = {
       labels: categoriesResponse.labels,
-      data: categoriesResponse.data
-    }
+      data: categoriesResponse.data,
+    };
 
     // Vẽ biểu đồ doanh thu theo tháng
-    const ctx1 = document.getElementById('revenueChart').getContext('2d')
+    const ctx1 = document.getElementById('revenueChart').getContext('2d');
     new Chart(ctx1, {
       type: 'bar',
       data: {
@@ -99,24 +103,31 @@ onMounted(async () => {
             label: 'Doanh thu (VND)',
             data: monthlyRevenue.value.data,
             backgroundColor: '#ff9800',
-            borderRadius: 8
-          }
-        ]
+            borderRadius: 8,
+          },
+        ],
       },
       options: {
         responsive: true,
         plugins: {
           legend: { display: false },
-          tooltip: { callbacks: { label: ctx => `${ctx.parsed.y.toLocaleString()} VND` } }
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${ctx.parsed.y.toLocaleString()} VND`,
+            },
+          },
         },
         scales: {
-          y: { beginAtZero: true, ticks: { callback: v => v.toLocaleString() } }
-        }
-      }
-    })
+          y: {
+            beginAtZero: true,
+            ticks: { callback: (v) => v.toLocaleString() },
+          },
+        },
+      },
+    });
 
     // Vẽ biểu đồ danh mục bán chạy
-    const ctx2 = document.getElementById('categoryChart').getContext('2d')
+    const ctx2 = document.getElementById('categoryChart').getContext('2d');
     new Chart(ctx2, {
       type: 'doughnut',
       data: {
@@ -124,23 +135,29 @@ onMounted(async () => {
         datasets: [
           {
             data: bestCategories.value.data,
-            backgroundColor: ['#ff9800', '#ffd54f', '#4fc3f7', '#81c784', '#f06292']
-          }
-        ]
+            backgroundColor: [
+              '#ff9800',
+              '#ffd54f',
+              '#4fc3f7',
+              '#81c784',
+              '#f06292',
+            ],
+          },
+        ],
       },
       options: {
         plugins: {
-          legend: { position: 'right' }
-        }
-      }
-    })
+          legend: { position: 'right' },
+        },
+      },
+    });
   } catch (err) {
-    error.value = err.message
-    console.error('Chi tiết lỗi:', err)
+    error.value = err.message;
+    console.error('Chi tiết lỗi:', err);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-})
+});
 </script>
 
 <style scoped>
@@ -324,8 +341,12 @@ canvas {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error {

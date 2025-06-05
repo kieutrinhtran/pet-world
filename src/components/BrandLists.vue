@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="grid grid-cols-3 gap-4 place-items-center md:grid-cols-4 lg:grid-cols-8">
+    <div
+      class="grid grid-cols-3 gap-4 place-items-center md:grid-cols-4 lg:grid-cols-8"
+    >
       <div
         class="flex flex-col justify-between rounded py-4 space-y-6 shadow-md max-w-[120px] w-full"
         v-for="brand in brands"
@@ -17,69 +19,69 @@
 const brands = [
   {
     photo: '/images/brand/nutrience_logo.png',
-    name: 'Nutrience'
+    name: 'Nutrience',
   },
   {
     photo: '/images/brand/royal_canin_logo.png',
-    name: 'Royal Canin'
+    name: 'Royal Canin',
   },
   {
     photo: '/images/brand/hi-raw_logo.png',
-    name: 'Hi Raw!'
+    name: 'Hi Raw!',
   },
   {
     photo: '/images/brand/equilibrio_logo.png',
-    name: 'Equilibrio'
+    name: 'Equilibrio',
   },
   {
     photo: '/images/brand/kit_cat_logo.png',
-    name: 'Kit Cat'
+    name: 'Kit Cat',
   },
   {
     photo: '/images/brand/tropiclean_logo.png',
-    name: 'Tropiclean'
+    name: 'Tropiclean',
   },
   {
     photo: '/images/brand/ciao_logo.png',
-    name: 'Ciao Churu'
+    name: 'Ciao Churu',
   },
   {
     photo: '/images/brand/nekko_logo.png',
-    name: 'Nekko'
+    name: 'Nekko',
   },
   {
     photo: '/images/brand/monge_logo.png',
-    name: 'Monge'
+    name: 'Monge',
   },
   {
     photo: '/images/brand/zenith_logo.png',
-    name: 'Zenith'
+    name: 'Zenith',
   },
   {
     photo: '/images/brand/anf_logo.png',
-    name: 'ANF'
+    name: 'ANF',
   },
   {
     photo: '/images/brand/gimcat_logo.png',
-    name: 'Gimcat'
+    name: 'Gimcat',
   },
   {
     photo: '/images/brand/inaba_logo.png',
-    name: 'Inaba'
+    name: 'Inaba',
   },
   {
     photo: '/images/brand/meo_logo.png',
-    name: 'Me-O'
+    name: 'Me-O',
   },
   {
     photo: '/images/brand/inaba_logo.png',
-    name: 'Lapaw'
+    name: 'Lapaw',
   },
   {
     photo: '/images/brand/absolute_hoistic_logo.png',
-    name: 'Absolute Hoistic'
-  }
-]
+    name: 'Absolute Hoistic',
+  },
+];
 </script>
 
 <style scoped></style>

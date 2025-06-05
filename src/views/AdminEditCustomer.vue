@@ -25,13 +25,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 // Router & Route
-const route = useRoute()
-const router = useRouter()
-const id = parseInt(route.params.id)
+const route = useRoute();
+const router = useRouter();
+const id = parseInt(route.params.id);
 
 // Dummy data (giả lập data thực tế từ database/API)
 const allCustomers = ref([
@@ -41,7 +41,7 @@ const allCustomers = ref([
     email: 'hat@example.com',
     dob: '13/05/2022',
     phone: '701112233',
-    gender: 'Nam'
+    gender: 'Nam',
   },
   {
     id: 18935,
@@ -49,7 +49,7 @@ const allCustomers = ref([
     email: 'laptop@example.com',
     dob: '22/05/2022',
     phone: '701112233',
-    gender: 'Nam'
+    gender: 'Nam',
   },
   {
     id: 54519,
@@ -57,9 +57,9 @@ const allCustomers = ref([
     email: 'phone@example.com',
     dob: '15/06/2022',
     phone: '701112233',
-    gender: 'Nam'
-  }
-])
+    gender: 'Nam',
+  },
+]);
 
 const customer = ref({
   id: null,
@@ -67,28 +67,28 @@ const customer = ref({
   dob: '',
   gender: '',
   phone: '',
-  email: ''
-})
+  email: '',
+});
 
 // Lấy dữ liệu khi vào trang
 onMounted(() => {
-  const found = allCustomers.value.find(c => c.id === id)
+  const found = allCustomers.value.find((c) => c.id === id);
   if (found) {
-    customer.value = { ...found }
+    customer.value = { ...found };
   }
-})
+});
 
 // Lưu dữ liệu chỉnh sửa
 const saveChanges = () => {
   // Gọi API hoặc cập nhật danh sách tại đây
-  alert('Thông tin đã được lưu!')
-  router.push('/')
-}
+  alert('Thông tin đã được lưu!');
+  router.push('/');
+};
 
 // Hủy chỉnh sửa
 const goBack = () => {
-  router.back()
-}
+  router.back();
+};
 </script>
 
 <style scoped>

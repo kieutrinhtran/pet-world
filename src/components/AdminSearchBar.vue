@@ -10,25 +10,28 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch } from 'vue';
 const props = defineProps({
   modelValue: String,
   placeholder: {
     type: String,
-    default: 'Tìm kiếm...'
+    default: 'Tìm kiếm...',
+  },
+});
+const emit = defineEmits(['update:modelValue', 'input']);
+
+const inputValue = ref(props.modelValue || '');
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    inputValue.value = val;
   }
-})
-const emit = defineEmits(['update:modelValue', 'input'])
-
-const inputValue = ref(props.modelValue || '')
-
-watch(() => props.modelValue, (val) => {
-  inputValue.value = val
-})
+);
 
 function onInput() {
-  emit('update:modelValue', inputValue.value)
-  emit('input', inputValue.value)
+  emit('update:modelValue', inputValue.value);
+  emit('input', inputValue.value);
 }
 </script>
 
@@ -39,4 +42,4 @@ function onInput() {
   border: 1px solid #ddd;
   border-radius: 4px;
 }
-</style> 
+</style>
