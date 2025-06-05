@@ -44,4 +44,14 @@ class CartController
             'data' => ['success' => $result]
         ];
     }
+    public function updateCartItemQuantity($cart_item_id, $quantity)
+{
+    requireLogin(['admin', 'user']);
+    $result = $this->service->updateCartItemQuantity($cart_item_id, $quantity);
+    return [
+        'status' => $result ? 200 : 400,
+        'data' => $result ? ['success' => true] : ['success' => false, 'message' => 'Cập nhật số lượng thất bại']
+    ];
+}
+
 }
