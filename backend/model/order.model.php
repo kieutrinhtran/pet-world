@@ -119,11 +119,80 @@ class Order
     // Lấy tất cả đơn hàng theo customer_id (dành cho user)
     public function getAllOrdersByCustomer($customer_id)
     {
-        $query = "SELECT * FROM `order` WHERE customer_id = :customer_id ORDER BY order_date DESC";
+        $query = "SELECT 
+            o.order_id, 
+            o.order_date, 
+            o.status, 
+            o.total_amount,
+            o.payment_method, 
+            o.payment_status,
+            c.customer_name, 
+            c.phone,
+            a.address_line, 
+            a.ward_id,
+            COUNT(od.product_id) as total_items
+          FROM `order` o
+          JOIN customer c ON o.customer_id = c.customer_id
+          JOIN address a ON o.address_id = a.address_id
+          LEFT JOIN order_detail od ON o.order_id = od.order_id
+          WHERE o.customer_id = :customer_id
+          GROUP BY o.order_id, o.order_date, o.status, o.total_amount, 
+                  o.payment_method, o.payment_status, c.customer_name, 
+                  c.phone, a.address_line, a.ward_id";
+
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':customer_id', $customer_id);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC); // Trả về danh sách đơn hàng
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($orders as &$order) {
+            $detailQuery = "SELECT 
+                          od.product_id,
+                          od.quantity as count,
+                          od.unit_price as price,
+                          p.product_name as name,
+                          p.stock as quantity,
+                          p.image_url,
+                          c.category_name as category
+                        FROM order_detail od
+                        JOIN product p ON od.product_id = p.product_id
+                        LEFT JOIN category c ON p.category_id = c.category_id
+                        WHERE od.order_id = :order_id";
+
+            $detailStmt = $this->conn->prepare($detailQuery);
+            $detailStmt->bindParam(':order_id', $order['order_id']);
+            $detailStmt->execute();
+            $items = $detailStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($items as &$item) {
+                $item['price'] = number_format($item['price'], 0, ',', '.');
+                $item['count'] = (string) $item['count'];
+                $item['quantity'] = (string) $item['quantity'];
+                $item['image'] = $item['image_url'];
+                unset($item['image_url']);
+            }
+
+            $order['items'] = $items;
+            $order['id'] = $order['order_id'];
+            $order['status'] = $order['status'];
+            $order['total'] = number_format($order['total_amount'], 0, ',', '.') . 'đ';
+
+            if (!empty($items)) {
+                $firstItem = $items[0];
+                $order['image'] = $firstItem['image'];
+                $order['name'] = $firstItem['name'];
+                $order['category'] = $firstItem['category'];
+                $order['quantity'] = $firstItem['quantity'];
+                $order['count'] = $firstItem['count'];
+                $order['price'] = $firstItem['price'];
+
+                $numericPrice = (int) str_replace('.', '', $firstItem['price']);
+                $numericCount = (int) $firstItem['count'];
+                $order['total'] = number_format($numericPrice * $numericCount, 0, ',', '.') . 'đ';
+            }
+        }
+
+        return $orders;
     }
 
     // Lấy chi tiết một đơn hàng (bao gồm sản phẩm bên trong)
@@ -193,5 +262,12 @@ class Order
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+    public function getAllOrders()
+    {
+        $query = "SELECT * FROM `order` ORDER BY order_date DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

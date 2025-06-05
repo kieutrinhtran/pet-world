@@ -69,20 +69,16 @@ class OrderService
         }
     }
 
-    if (empty($data['status'])) {
-        $data['status'] = 'pending';
-    }
-
-     $promotionResult = $this->applyPromotion(
-        !empty($data['promotion_id']) ? $data['promotion_id'] : null,
-        $data['total_amount']
-    );
-
-    if (!$promotionResult['valid']) {
-        return ['success' => false, 'message' => $promotionResult['message']];
-    }
-
-    $data['total_amount'] = $promotionResult['final_total'];
+        $promotionResult = $this->applyPromotion(
+            !empty($data['promotion_id']) ? $data['promotion_id'] : null,
+            $data['total_amount']
+        );
+      
+        if (!$promotionResult['valid']) {
+            return ['success' => false, 'message' => $promotionResult['message']];
+        }
+        $data['total_amount'] = $promotionResult['final_total'];
+      
 
 
     $order_id = $this->orderModel->createOrderFromCart($data, $cart_items);
@@ -198,5 +194,9 @@ if ($order_id) {
     {
         return $this->orderModel->countCustomers();
     }
-}
 
+    public function getAllOrders()
+    {
+        return $this->orderModel->getAllOrders();
+    }
+}
