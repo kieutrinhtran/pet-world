@@ -55,5 +55,6 @@ class OrderRouter
 
         // 12. Tuyến tổng hợp tất cả các thống kê trên một request duy nhất (gộp lại để giảm số lần gọi API)
         $router->addRoute('GET', '/orders/statistics/all', 'OrderController', 'getAllStatistics');
+        $router->addRoute('GET', '/admin/orders', 'OrderController', 'getAllOrders');
     }
 }
