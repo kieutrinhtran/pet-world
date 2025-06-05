@@ -4,7 +4,7 @@ class Database{
     private $port = "3307"; // Thêm cấu hình port
     private $db_name = "petshop";
     private $username = "root";
-    private $password = "123456";
+    private $password = "";
     public $conn;
 
     public function getConnection(): ?PDO {

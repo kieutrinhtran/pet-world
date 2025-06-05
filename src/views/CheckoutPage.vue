@@ -1,5 +1,7 @@
 <template>
+  <!-- Trang thanh toán: Kiểm tra lại đơn hàng, chọn phương thức thanh toán, nhập mã giảm giá, xác nhận đặt hàng -->
   <div v-if="!loading" class="bg-white rounded-2xl p-4 md:p-8 max-w-7xl mx-auto my-4 md:my-8">
+    <!-- Breadcrumb điều hướng -->
     <div class="mb-4 text-sm md:text-base">
       <router-link to="/" class="text-gray-600 hover:text-orange-500">Trang chủ</router-link> &gt;
       <router-link to="/cart" class="text-gray-600 hover:text-orange-500">Giỏ hàng</router-link> &gt;
@@ -9,6 +11,7 @@
 
     <h1 class="text-xl md:text-2xl font-bold mb-6">Thanh toán</h1>
 
+    <!-- Địa chỉ nhận hàng -->
     <div class="flex flex-col items-center my-4">
       <h3 class="flex items-center gap-2 text-orange-500 font-semibold text-lg mb-2">
         <i class="fas fa-map-marker-alt"></i> Địa chỉ nhận hàng
@@ -23,6 +26,7 @@
       </div>
     </div>
 
+    <!-- Thanh tiến trình các bước -->
     <div class="flex items-center justify-center my-6 md:my-8">
       <div class="flex flex-col items-center text-gray-400">
         <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mb-2 font-bold">1</div>
@@ -40,8 +44,10 @@
       </div>
     </div>
 
+    <!-- Nội dung chính: chọn phương thức thanh toán, nhập mã giảm giá, xác nhận -->
     <div v-if="cartItems.length > 0" class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 md:gap-8">
       <div>
+        <!-- Chọn phương thức thanh toán -->
         <div class="bg-orange-50 rounded-xl p-4 md:p-6 mb-4 md:mb-6">
           <h3 class="text-lg md:text-xl font-semibold mb-4">Phương thức thanh toán</h3>
           <div class="grid gap-3">
@@ -61,6 +67,7 @@
           </div>
         </div>
 
+        <!-- Nhập mã giảm giá -->
         <div class="bg-orange-50 rounded-xl p-4 md:p-6 mb-4 md:mb-6">
           <h3 class="text-lg md:text-xl font-semibold mb-4">Mã giảm giá</h3>
           <div class="flex gap-3">
@@ -98,6 +105,7 @@
           </div>
         </div>
 
+        <!-- Nút hoàn tất thanh toán -->
         <button 
           @click="goSuccess" 
           :disabled="!isValid"
@@ -108,6 +116,7 @@
         </button>
       </div>
 
+      <!-- Bảng tổng kết đơn hàng -->
       <div class="bg-orange-50 rounded-xl p-4 md:p-6 h-fit">
         <h3 class="text-lg md:text-xl font-semibold mb-4">Đơn hàng của bạn</h3>
         <div class="space-y-3 mb-4 md:mb-6">
@@ -141,6 +150,7 @@
         </div>
       </div>
     </div>
+    <!-- Nếu không có sản phẩm trong giỏ -->
     <div v-else class="text-center py-8">
       <p class="text-gray-600">Không có sản phẩm trong giỏ hàng</p>
       <router-link to="/cart" class="text-orange-500 hover:text-orange-600 mt-4 inline-block">
@@ -148,21 +158,21 @@
       </router-link>
     </div>
   </div>
+  <!-- Loading khi đang xử lý -->
   <div v-else class="flex items-center justify-center min-h-screen">
     <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
   </div>
 </template>
 
 <script setup>
+// Import các thư viện cần thiết
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import { API_ENDPOINTS } from '@/api/endpoints'
 
 const router = useRouter()
 
-
-// Payment methods data
+// Danh sách phương thức thanh toán
 const paymentMethods = [
   {
     value: 'cod',
@@ -184,30 +194,32 @@ const paymentMethods = [
   }
 ]
 
-// State
-const cartItems = ref([])
-const paymentMethod = ref('cod')
-const discountCode = ref('')
-const discountError = ref('')
-const discount = ref(0)
-const loading = ref(true)
-const appliedPromotion = ref(null)
-const shippingMethod = ref('standard')
-const shippingCost = ref(30000)
-const shippingAddress = ref({})
+// State lưu trữ dữ liệu
+const cartItems = ref([]) // Danh sách sản phẩm trong giỏ hàng
+const paymentMethod = ref('cod') // Phương thức thanh toán được chọn
+const discountCode = ref('') // Mã giảm giá nhập vào
+const discountError = ref('') // Lỗi mã giảm giá
+const discount = ref(0) // Số tiền giảm giá
+const loading = ref(true) // Trạng thái loading
+const appliedPromotion = ref(null) // Thông tin khuyến mãi áp dụng
+const shippingMethod = ref('standard') // Chỉ còn phương thức 'standard'
+const shippingCost = ref(30000) // Phí vận chuyển
+const shippingAddress = ref({}) // Địa chỉ giao hàng
 
-// Computed
+// Tính tổng tiền hàng
 const subtotal = computed(() => {
   return cartItems.value.reduce((total, item) => total + item.price * item.quantity, 0)
 })
 
+// Tính tổng tiền phải trả
 const total = computed(() => subtotal.value + shippingCost.value - discount.value)
 
+// Kiểm tra hợp lệ trước khi đặt hàng
 const isValid = computed(() => {
   return paymentMethod.value && cartItems.value.length > 0 && shippingAddress.value
 })
 
-// Methods
+// Định dạng giá tiền VND
 const formatPrice = (price) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -215,27 +227,20 @@ const formatPrice = (price) => {
   }).format(price)
 }
 
+// Hàm kiểm tra và áp dụng mã giảm giá
 const applyDiscount = async () => {
   if (!discountCode.value) return
-
   try {
-    loading.value = true
-    const response = await axios.get(`${API_ENDPOINTS.PROMOTIONS.CHECK_CODE}/${discountCode.value}`)
-    if (response.data) {
-      appliedPromotion.value = response.data
-      discount.value = subtotal.value * (response.data.discount_percent / 100)
-      discountError.value = ''
-    }
-  } catch (error) {
-    console.error('Error applying discount:', error.response?.data || error.message)
-    discountError.value = error.response?.data?.message || 'Mã giảm giá không hợp lệ'
+    const res = await axios.get(`/promotions/code/${discountCode.value}`)
+    discount.value = subtotal.value * (res.data.discount_percent / 100)
+    discountError.value = ''
+  } catch (e) {
+    discountError.value = 'Mã giảm giá không hợp lệ'
     discount.value = 0
-    appliedPromotion.value = null
-  } finally {
-    loading.value = false
   }
 }
 
+// Hàm xóa mã giảm giá
 const removeDiscount = () => {
   discountCode.value = ''
   discount.value = 0
@@ -243,13 +248,15 @@ const removeDiscount = () => {
   discountError.value = ''
 }
 
+// Hàm hoàn tất đặt hàng
 const goSuccess = async () => {
   if (!isValid.value) return
 
   try {
     loading.value = true
+    const customerId = localStorage.getItem('user_id')
     const orderData = {
-      customer_id: localStorage.getItem('user_id'),
+      customer_id: customerId,
       payment_method: paymentMethod.value,
       payment_status: 'pending',
       promotion_id: appliedPromotion.value?.promotion_id,
@@ -266,15 +273,12 @@ const goSuccess = async () => {
       }))
     }
 
-    const response = await axios.post(API_ENDPOINTS.ORDERS.CREATE_FROM_CART, orderData)
-    if (response.data) {
-      // Xóa giỏ hàng sau khi đặt hàng thành công
-      const customerId = localStorage.getItem('user_id')
-      await axios.delete(API_ENDPOINTS.CART.GET_CART(customerId))
-      
-      // Chuyển đến trang thành công
-      router.push(`/order-success/${response.data.order_id}`)
-    }
+    // Gọi API tạo đơn hàng từ giỏ hàng
+    const res = await axios.post('/orders/cart', orderData)
+    // Xóa giỏ hàng sau khi đặt hàng thành công
+    await axios.delete(`/api/cart/${customerId}`)
+    // Chuyển đến trang thành công
+    router.push(`/order-success/${res.data.order_id}`)
   } catch (error) {
     console.error('Error creating order:', error.response?.data || error.message)
     alert(error.response?.data?.message || 'Có lỗi xảy ra khi xử lý đơn hàng')
@@ -283,21 +287,19 @@ const goSuccess = async () => {
   }
 }
 
-// Load data
+// Khi component mounted, lấy dữ liệu giỏ hàng và địa chỉ giao hàng
 onMounted(async () => {
   try {
     loading.value = true
     const customerId = localStorage.getItem('user_id')
     if (customerId) {
       // Lấy giỏ hàng
-      const cartResponse = await axios.get(API_ENDPOINTS.CART.GET_CART(customerId))
-      cartItems.value = cartResponse.data.items || []
-    }
+      const cartRes = await axios.get(`/cart/${customerId}`)
+      cartItems.value = cartRes.data.items
 
-    // Lấy địa chỉ giao hàng từ localStorage
-    const savedShippingAddress = localStorage.getItem('shipping_address')
-    if (savedShippingAddress) {
-      shippingAddress.value = JSON.parse(savedShippingAddress)
+      // Lấy địa chỉ giao hàng
+      const addressRes = await axios.get(`/address?customer_id=${customerId}`)
+      shippingAddress.value = addressRes.data.find(addr => addr.is_default) || addressRes.data[0]
     }
   } catch (error) {
     console.error('Error loading data:', error.response?.data || error.message)
@@ -308,7 +310,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* Improve touch targets for mobile */
+/* Style tăng vùng bấm cho các nút trên mobile */
 @media (hover: none) {
   input[type="radio"],
   input[type="text"],

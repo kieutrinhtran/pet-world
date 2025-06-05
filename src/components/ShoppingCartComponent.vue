@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { useCartStore } from '../store/cart'
+import { useCart } from '../store/cart'
 
 export default {
   name: 'ShoppingCartComponent',
@@ -53,7 +53,7 @@ export default {
   },
   computed: {
     cart() {
-      return useCartStore()
+      return useCart()
     },
     cartItems() {
       return this.cart.items
@@ -79,6 +79,12 @@ export default {
     },
     checkout() {
       alert('Proceeding to checkout...')
+    }
+  },
+  setup() {
+    const cart = useCart()
+    return {
+      cart
     }
   }
 }

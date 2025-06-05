@@ -1,12 +1,16 @@
 <template>
   <div class="admin-order-detail">
+    <!-- Hiển thị loading khi đang tải dữ liệu -->
     <div v-if="loading" class="loading">
       <div class="spinner"></div>
     </div>
+    <!-- Hiển thị lỗi nếu có -->
     <div v-else-if="error" class="error">
       {{ error }}
     </div>
+    <!-- Hiển thị chi tiết đơn hàng -->
     <div v-else class="order-detail">
+      <!-- Header với tiêu đề và các nút thao tác -->
       <div class="header">
         <h1>Chi tiết đơn hàng #{{ order.id }}</h1>
         <div class="actions">
@@ -19,7 +23,9 @@
         </div>
       </div>
 
+      <!-- Các section thông tin đơn hàng -->
       <div class="order-info">
+        <!-- Thông tin cơ bản của đơn hàng -->
         <div class="info-section">
           <h2>Thông tin đơn hàng</h2>
           <div class="info-grid">
@@ -46,6 +52,7 @@
           </div>
         </div>
 
+        <!-- Thông tin khách hàng -->
         <div class="info-section">
           <h2>Thông tin khách hàng</h2>
           <div class="info-grid">
@@ -64,6 +71,7 @@
           </div>
         </div>
 
+        <!-- Thông tin vận chuyển -->
         <div class="info-section">
           <h2>Thông tin vận chuyển</h2>
           <div class="info-grid">
@@ -82,6 +90,7 @@
           </div>
         </div>
 
+        <!-- Chi tiết sản phẩm trong đơn hàng -->
         <div class="info-section">
           <h2>Chi tiết sản phẩm</h2>
           <div class="products-table">
@@ -113,22 +122,26 @@
       </div>
     </div>
 
-    <!-- Edit Modal -->
+    <!-- Modal chỉnh sửa đơn hàng -->
     <div v-if="showEditModal" class="modal">
       <div class="modal-content">
+        <!-- Header của modal -->
         <div class="modal-header">
           <h2>Chỉnh sửa đơn hàng</h2>
           <button @click="showEditModal = false" class="close-btn">&times;</button>
         </div>
+        <!-- Body của modal -->
         <div class="modal-body">
+          <!-- Form chỉnh sửa trạng thái -->
           <div class="form-group">
             <label>Trạng thái đơn hàng:</label>
             <select v-model="order.status" class="form-control">
+              <!-- Luôn hiển thị tất cả các trạng thái, nhưng chỉ cho phép chọn từ pending sang processing -->
               <option value="pending">Chờ xác nhận</option>
-              <option value="processing">Đang xử lý</option>
-              <option value="shipped">Đang giao hàng</option>
-              <option value="delivered">Đã nhận hàng</option>
-              <option value="cancelled">Đã hủy</option>
+              <option value="processing" :disabled="order.status !== 'pending'">Đang xử lý</option>
+              <option value="shipped" :disabled="order.status === 'pending'">Đang giao hàng</option>
+              <option value="delivered" :disabled="order.status === 'pending'">Đã nhận hàng</option>
+              <option value="cancelled" :disabled="order.status === 'pending'">Đã hủy</option>
             </select>
           </div>
           <div class="form-group">
@@ -140,6 +153,7 @@
             </select>
           </div>
         </div>
+        <!-- Footer của modal -->
         <div class="modal-footer">
           <button @click="showEditModal = false" class="btn-cancel">Hủy</button>
           <button @click="saveChanges" class="btn-save">Lưu thay đổi</button>
@@ -150,29 +164,112 @@
 </template>
 
 <script setup>
+// Import các thư viện và component cần thiết
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
-import { API_ENDPOINTS } from '@/api/endpoints'
-import { orderService } from '@/services/api'
 
+// Cấu hình axios instance
+const axiosInstance = axios.create({
+  baseURL: process.env.VUE_APP_API_URL || 'http://localhost:8000/api/v1',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
+})
+
+// Thêm interceptor để xử lý request
+axiosInstance.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('admin_token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
+
+// Thêm interceptor để xử lý response
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('admin_token')
+      window.location.href = '/admin/login'
+      return Promise.reject(error)
+    }
+    return Promise.reject(error)
+  }
+)
+
+// Helper function để xử lý lỗi
+const handleError = (error, defaultMessage = 'Có lỗi xảy ra') => {
+  console.error(error)
+  if (error.response?.data?.message) {
+    throw new Error(error.response.data.message)
+  }
+  throw new Error(defaultMessage)
+}
+
+// Order Service
+const orderService = {
+  getById: async (id) => {
+    try {
+      const response = await axiosInstance.get(`/orders/${id}`)
+      return response.data
+    } catch (error) {
+      handleError(error, 'Không thể tải thông tin đơn hàng')
+    }
+  },
+
+  update: async (id, data) => {
+    try {
+      const response = await axiosInstance.put(`/orders/${id}`, data)
+      return response.data
+    } catch (error) {
+      handleError(error, 'Không thể cập nhật đơn hàng')
+    }
+  }
+}
+
+// =====================
+// Biến trạng thái reactive
+// =====================
+// Lấy thông tin route (lấy orderId từ URL)
 const route = useRoute()
+// Đối tượng router để điều hướng
 const router = useRouter()
+// Lấy orderId từ params
 const orderId = route.params.id
-
+// Đơn hàng hiện tại
 const order = ref({})
+// Trạng thái loading khi gọi API
 const loading = ref(false)
+// Biến lưu lỗi nếu có
 const error = ref(null)
+// Hiển thị modal chỉnh sửa
 const showEditModal = ref(false)
 
+// =====================
+// Hàm điều hướng quay lại trang trước
+// =====================
 const goBack = () => {
   router.back()
 }
 
+// =====================
+// Các hàm format dữ liệu hiển thị
+// =====================
+// Định dạng ngày theo chuẩn Việt Nam
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('vi-VN')
 }
 
+// Định dạng giá tiền VND
 const formatPrice = (price) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -180,6 +277,10 @@ const formatPrice = (price) => {
   }).format(price)
 }
 
+// =====================
+// Hàm mapping trạng thái sang tiếng Việt
+// =====================
+// Chuyển trạng thái đơn hàng sang tiếng Việt
 const getStatusText = (status) => {
   const statusMap = {
     pending: 'Chờ xác nhận',
@@ -191,6 +292,7 @@ const getStatusText = (status) => {
   return statusMap[status] || status
 }
 
+// Chuyển phương thức thanh toán sang tiếng Việt
 const getPaymentMethodText = (method) => {
   const methodMap = {
     cod: 'Thanh toán khi nhận hàng',
@@ -200,6 +302,7 @@ const getPaymentMethodText = (method) => {
   return methodMap[method] || method
 }
 
+// Chuyển trạng thái thanh toán sang tiếng Việt
 const getPaymentStatusText = (status) => {
   const statusMap = {
     pending: 'Chờ thanh toán',
@@ -209,6 +312,7 @@ const getPaymentStatusText = (status) => {
   return statusMap[status] || status
 }
 
+// Chuyển phương thức vận chuyển sang tiếng Việt
 const getShippingMethodText = (method) => {
   const methodMap = {
     standard: 'Giao hàng tiêu chuẩn',
@@ -217,14 +321,17 @@ const getShippingMethodText = (method) => {
   return methodMap[method] || method
 }
 
+// =====================
+// Hàm lưu thay đổi đơn hàng
+// =====================
 const saveChanges = async () => {
   try {
     loading.value = true
+    // Gọi API cập nhật đơn hàng
     const updatedOrder = await orderService.update(orderId, {
       status: order.value.status,
       payment_status: order.value.payment_status
     })
-    
     if (updatedOrder) {
       order.value = { ...updatedOrder }
       showEditModal.value = false
@@ -237,10 +344,14 @@ const saveChanges = async () => {
   }
 }
 
+// =====================
+// Lifecycle: Khi component mounted, gọi API lấy chi tiết đơn hàng
+// =====================
 onMounted(async () => {
   try {
     loading.value = true
-    const response = await axios.get(API_ENDPOINTS.ORDERS.GET_DETAIL(orderId))
+    // Gọi API lấy chi tiết đơn hàng theo orderId
+    const response = await axiosInstance.get(`/orders/${orderId}`)
     order.value = response.data
   } catch (err) {
     error.value = 'Không thể tải thông tin đơn hàng'
@@ -252,12 +363,14 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+/* Style cho trang chi tiết đơn hàng */
 .admin-order-detail {
   padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+/* Style cho loading spinner */
 .loading {
   display: flex;
   justify-content: center;
@@ -279,12 +392,14 @@ onMounted(async () => {
   100% { transform: rotate(360deg); }
 }
 
+/* Style cho thông báo lỗi */
 .error {
   color: #dc2626;
   text-align: center;
   padding: 24px;
 }
 
+/* Style cho header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -297,6 +412,7 @@ onMounted(async () => {
   gap: 12px;
 }
 
+/* Style cho các nút */
 .btn-back,
 .btn-edit {
   padding: 8px 16px;
@@ -326,6 +442,7 @@ onMounted(async () => {
   background: #f97316;
 }
 
+/* Style cho các section thông tin */
 .info-section {
   background: white;
   border-radius: 12px;
@@ -363,6 +480,7 @@ onMounted(async () => {
   color: #111827;
 }
 
+/* Style cho trạng thái */
 .status {
   display: inline-block;
   padding: 4px 8px;
@@ -396,11 +514,13 @@ onMounted(async () => {
   color: #991b1b;
 }
 
+/* Style cho giá tiền */
 .price {
   color: #ff813f;
   font-weight: 600;
 }
 
+/* Style cho bảng sản phẩm */
 .products-table {
   overflow-x: auto;
 }
@@ -435,6 +555,7 @@ th {
   border-radius: 4px;
 }
 
+/* Style cho modal */
 .modal {
   position: fixed;
   top: 0;

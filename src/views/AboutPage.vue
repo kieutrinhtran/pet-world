@@ -48,24 +48,7 @@
             chăm sóc thú cưng của bạn. Được thành lập với niềm đam mê dành cho động vật, chúng tôi
             mang đến một hệ sinh thái thú cưng điển hình, giúp bạn dễ dàng tìm thấy mọi thứ mà thú
             cưng cần – từ thực phẩm dinh dưỡng, phụ kiện thời trang, đồ chơi cho đến dịch vụ chăm
-            sóc sức khỏe, spa, huấn luyện.</span
-          >
-    <section class="max-w-5xl mx-auto">
-      <h2 class="section-title text-primary">VỀ CHÚNG TÔI</h2>
-      <div class="space-y-6">
-        <div>
-          <b class="text-primary">Pet World </b>
-          <span>– Vì một thế giới hoàn hảo cho thú cưng</span>
-        </div>
-        <div>
-          <b class="text-primary">Pet World</b>
-          <span>
-            không chỉ là một nền tảng mua sắm, mà còn là người bạn đồng hành tin cậy trên hành trình
-            chăm sóc thú cưng của bạn. Được thành lập với niềm đam mê dành cho động vật, chúng tôi
-            mang đến một hệ sinh thái thú cưng điển hình, giúp bạn dễ dàng tìm thấy mọi thứ mà thú
-            cưng cần – từ thực phẩm dinh dưỡng, phụ kiện thời trang, đồ chơi cho đến dịch vụ chăm
-            sóc sức khỏe, spa, huấn luyện.</span
-          >
+            sóc sức khỏe, spa, huấn luyện.</span>
         </div>
         <div>
           Với sự hợp tác từ những thương hiệu hàng đầu và các chuyên gia thú y,
