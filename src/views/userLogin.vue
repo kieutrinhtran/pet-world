@@ -53,49 +53,55 @@ export default {
     };
   },
   methods: {
-    async login() {
-      const url = this.loginType === 'admin'
-        ? 'http://localhost:8000/login'
-        : 'http://localhost:8000/user/login';
+  async login() {
+    const url = this.loginType === 'admin'
+    ? 'http://localhost:8000/login'
+    : 'http://localhost:8000/user/login';
 
-      const body = this.loginType === 'admin'
-        ? { user_name: this.username, password: this.password }
-        : { username: this.username, password: this.password };
+    const body = this.loginType === 'admin'
+    ? { user_name: this.username, password: this.password }
+    : { username: this.username, password: this.password };
 
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
+    try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (data.error === true && data.message) {
-          this.errorMessage = data.message;
-          setTimeout(() => this.errorMessage = '', 5000);
-          return;
-        }
+    if (data.error === true && data.message) {
+      this.errorMessage = data.message;
+      setTimeout(() => this.errorMessage = '', 5000);
+      return;
+    }
 
-        if (data === false) {
-          this.errorMessage = 'Sai tên đăng nhập hoặc mật khẩu';
-          setTimeout(() => this.errorMessage = '', 5000);
-          return;
-        }
+    if (data === false) {
+      this.errorMessage = 'Sai tên đăng nhập hoặc mật khẩu';
+      setTimeout(() => this.errorMessage = '', 5000);
+      return;
+    }
 
-        localStorage.setItem('user_name', data.user_name || this.username);
-        localStorage.setItem('role', data.role || 'user');
-        this.showSuccess = true;
-        setTimeout(() => {
-          this.showSuccess = false;
-          this.$router.push('/customers');
-        }, 1500);
-      } catch (error) {
-        console.error('Lỗi kết nối API:', error);
-        this.errorMessage = 'Không thể kết nối tới máy chủ';
-        setTimeout(() => this.errorMessage = '', 5000);
+    localStorage.setItem('user_name', data.user_name || this.username);
+    localStorage.setItem('role', data.role || 'user');
+
+    this.showSuccess = true;
+    setTimeout(() => {
+      this.showSuccess = false;
+      if (this.loginType === 'admin') {
+        this.$router.push({ name: 'AdminCustomerManagement' });
+      } else {
+        this.$router.push({ name: 'HomePage' });
       }
-    },
+    }, 1500);
+  } catch (error) {
+    console.error('Lỗi kết nối API:', error);
+    this.errorMessage = 'Không thể kết nối tới máy chủ';
+    setTimeout(() => this.errorMessage = '', 5000);
+  }
+}
+
     goToRegister() {
       this.$router.push('/register');
     }
