@@ -100,7 +100,7 @@ export default {
     this.errorMessage = 'Không thể kết nối tới máy chủ';
     setTimeout(() => this.errorMessage = '', 5000);
   }
-},
+}
 
     goToRegister() {
       this.$router.push('/register');
@@ -197,8 +197,9 @@ button:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 .modal-content .icon {
+  display: block;
+  margin: 0 auto 1rem auto;
   width: 50px;
-  margin-bottom: 1rem;
 }
 .error-message {
   color: red;
