@@ -200,6 +200,11 @@ public function clearCartByCustomer($customer_id)
 
     return false;
 }
+public function updateCartItemQuantity($cart_item_id, $quantity)
+{
+    $stmt = $this->conn->prepare("UPDATE cart_items SET quantity = ? WHERE id = ?");
+    return $stmt->execute([$quantity, $cart_item_id]);
+}
 
 
 }
