@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     async login() {
-      const url = 'http://localhost:8000/login'; // 1 API duy nhất
+      const url = 'http://localhost:8000/login';
 
       try {
         const response = await fetch(url, {
@@ -59,15 +59,16 @@ export default {
           })
         });
 
-        const data = await response.json();
+        const result = await response.json();
 
-        if (!data.success) {
-          this.errorMessage = data.message || 'Sai tên đăng nhập hoặc mật khẩu';
+        if (response.status !== 200) {
+          // Lỗi đăng nhập từ server
+          this.errorMessage = result.data?.message || 'Sai tên đăng nhập hoặc mật khẩu';
           setTimeout(() => (this.errorMessage = ''), 5000);
           return;
         }
 
-        const user = data.user;
+        const user = result.data.user;
         const role = user.role || 'user';
 
         // Lưu session
@@ -78,7 +79,7 @@ export default {
         setTimeout(() => {
           this.showSuccess = false;
 
-          // Điều hướng dựa trên vai trò
+          // Điều hướng theo vai trò
           if (role === 'admin') {
             this.$router.push({ name: 'AdminCustomerManagement' });
           } else {
@@ -98,6 +99,7 @@ export default {
   }
 };
 </script>
+
 
 
 
