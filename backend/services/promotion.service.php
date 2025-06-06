@@ -13,7 +13,7 @@ class PromotionService
         $this->promotionModel = new Promotion($db);
     }
 
-    public function createPromotion($data)
+        public function createPromotion($data)
     {
         return $this->promotionModel->create(
             $data['code'],
@@ -41,6 +41,8 @@ class PromotionService
             $data['is_active']
         );
     }
+
+    
 
     public function getDetailPromotion($id)
     {

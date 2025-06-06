@@ -9,22 +9,15 @@
       <label>Mật khẩu</label>
       <input v-model="password" type="password" required />
 
-      <label>Loại đăng nhập:</label>
-      <select v-model="loginType">
-        <option value="user">Người dùng</option>
-        <option value="admin">Quản trị viên</option>
-      </select>
-
       <button type="submit">Đăng nhập</button>
     </form>
 
     <div class="links">
       <p>
-    Chưa có tài khoản?
-    <a @click.prevent="goToRegister" href="#">Đăng ký ngay</a>
+        Chưa có tài khoản?
+        <a @click.prevent="goToRegister" href="#">Đăng ký ngay</a>
       </p>
     </div>
-
 
     <!-- Popup đăng nhập thành công -->
     <div v-if="showSuccess" class="modal">
@@ -47,60 +40,65 @@ export default {
     return {
       username: '',
       password: '',
-      loginType: 'user',
       errorMessage: '',
       showSuccess: false
     };
   },
+
+
   methods: {
-  async login() {
-    const url = this.loginType === 'admin'
-    ? 'http://localhost:8000/login'
-    : 'http://localhost:8000/user/login';
+    async login() {
+      this.errorMessage = '';
 
-    const body = this.loginType === 'admin'
-    ? { user_name: this.username, password: this.password }
-    : { username: this.username, password: this.password };
-
-    try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-
-    const data = await response.json();
-
-    if (data.error === true && data.message) {
-      this.errorMessage = data.message;
-      setTimeout(() => this.errorMessage = '', 5000);
-      return;
-    }
-
-    if (data === false) {
-      this.errorMessage = 'Sai tên đăng nhập hoặc mật khẩu';
-      setTimeout(() => this.errorMessage = '', 5000);
-      return;
-    }
-
-    localStorage.setItem('user_name', data.user_name || this.username);
-    localStorage.setItem('role', data.role || 'user');
-
-    this.showSuccess = true;
-    setTimeout(() => {
-      this.showSuccess = false;
-      if (this.loginType === 'admin') {
-        this.$router.push({ name: 'AdminCustomerManagement' });
-      } else {
-        this.$router.push({ name: 'HomePage' });
+      if (!this.username || !this.password) {
+        this.errorMessage = 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu';
+        return;
       }
-    }, 1500);
-  } catch (error) {
-    console.error('Lỗi kết nối API:', error);
-    this.errorMessage = 'Không thể kết nối tới máy chủ';
-    setTimeout(() => this.errorMessage = '', 5000);
-  }
-},
+
+      const url = 'http://localhost:8000/login';
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_name: this.username,
+            password: this.password
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.status !== 200) {
+          this.errorMessage = result.data?.message || 'Sai tên đăng nhập hoặc mật khẩu';
+          setTimeout(() => (this.errorMessage = ''), 5000);
+          return;
+        }
+
+        const user = result.data.user;
+        const role = user.role || 'user';
+
+        // Lưu session
+        localStorage.setItem('user_name', user.user_name);
+        localStorage.setItem('role', role);
+
+        this.showSuccess = true;
+        setTimeout(() => {
+          this.showSuccess = false;
+
+          // Điều hướng theo vai trò
+          if (role === 'admin') {
+            this.$router.push({ name: 'AdminCustomerManagement' });
+          } else {
+            this.$router.push({ name: 'HomePage' });
+          }
+        }, 1500);
+      } catch (error) {
+        console.error('Lỗi kết nối API:', error);
+        this.errorMessage = 'Không thể kết nối tới máy chủ';
+        setTimeout(() => (this.errorMessage = ''), 5000);
+      }
+    },
 
     goToRegister() {
       this.$router.push('/register');

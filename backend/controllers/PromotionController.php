@@ -32,7 +32,7 @@ class PromotionController
         $result = $this->service->getDetailPromotion($id);
         return [
             'status' => $result ? 200 : 404,
-            'data' => $result ? $result : ['message' => 'Promotion not foundsss']
+            'data' => $result ? $result : ['message' => 'Promotion not founds']
         ];
     }
 
