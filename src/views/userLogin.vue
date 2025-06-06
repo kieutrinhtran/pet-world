@@ -45,24 +45,10 @@ export default {
     };
   },
 
-  mounted() {
-    // Nếu đã login thì tự động redirect theo role
-    const userName = localStorage.getItem('user_name');
-    const role = localStorage.getItem('role');
-
-    if (userName && role) {
-      if (role === 'admin') {
-        this.$router.push({ name: 'AdminCustomerManagement' });
-      } else {
-        this.$router.push({ name: 'HomePage' });
-      }
-    }
-    // Nếu chưa có, vẫn ở trang login và hiện nút
-  },
 
   methods: {
     async login() {
-      this.errorMessage = ''; // reset lỗi mỗi lần login
+      this.errorMessage = '';
 
       if (!this.username || !this.password) {
         this.errorMessage = 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu';
@@ -120,6 +106,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .login-container {
