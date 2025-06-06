@@ -34,7 +34,6 @@
   </div>
 </template>
 
-
 <script>
 export default {
   data() {
@@ -45,8 +44,31 @@ export default {
       showSuccess: false
     };
   },
+
+  mounted() {
+    // Nếu đã login thì tự động redirect theo role
+    const userName = localStorage.getItem('user_name');
+    const role = localStorage.getItem('role');
+
+    if (userName && role) {
+      if (role === 'admin') {
+        this.$router.push({ name: 'AdminCustomerManagement' });
+      } else {
+        this.$router.push({ name: 'HomePage' });
+      }
+    }
+    // Nếu chưa có, vẫn ở trang login và hiện nút
+  },
+
   methods: {
     async login() {
+      this.errorMessage = ''; // reset lỗi mỗi lần login
+
+      if (!this.username || !this.password) {
+        this.errorMessage = 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu';
+        return;
+      }
+
       const url = 'http://localhost:8000/login';
 
       try {
@@ -62,7 +84,6 @@ export default {
         const result = await response.json();
 
         if (response.status !== 200) {
-          // Lỗi đăng nhập từ server
           this.errorMessage = result.data?.message || 'Sai tên đăng nhập hoặc mật khẩu';
           setTimeout(() => (this.errorMessage = ''), 5000);
           return;
@@ -99,9 +120,6 @@ export default {
   }
 };
 </script>
-
-
-
 
 <style scoped>
 .login-container {
