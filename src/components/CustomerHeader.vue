@@ -21,9 +21,11 @@
           v-else
           to="/login"
           class="text-gray-800 hover:text-orange-500"
-          >Đăng nhập</router-link
         >
+      Đăng nhập
+        </router-link>
       </div>
+
     </div>
 
     <!-- Navbar -->
@@ -75,62 +77,46 @@
   </header>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useCart } from '../store/cart'
 
-export default {
-  name: 'CustomerHeader',
-  data() {
-    return {
-      searchQuery: '',
-      isLoggedIn: false,
-      userName: '', // Không hard-code tên mặc định ở đây
-    };
-  },
-  computed: {
-    menuItems() {
-      return [
-        { name: 'Trang chủ', path: '/', isActive: this.isHome },
-        { name: 'Sản phẩm', path: '/products', isActive: this.isProducts },
-        { name: 'Về chúng tôi', path: '/about', isActive: this.isAbout },
-      ];
-    },
-    isHome() {
-      return this.$route.path === '/';
-    },
-    isProducts() {
-      return this.$route.path.startsWith('/products');
-    },
-    isAbout() {
-      return this.$route.path === '/about';
-    },
-    cartItemCount() {
-      return this.cart.itemCount;
-    },
-  },
-  methods: {
-    handleSearch() {
-      if (this.searchQuery.trim()) {
-        this.$router.push({
-          path: '/products',
-          query: { search: this.searchQuery.trim() },
-        });
-      }
-    }
-  },
-  mounted() {
-    const storedName = localStorage.getItem('user_name');
-    if (storedName) {
-      this.userName = storedName;
-      this.isLoggedIn = true;
-    }
-  },
-  setup() {
-    const cart = useCart()
-    return { cart }
+const router = useRouter()
+const route = useRoute()
+
+const cart = useCart()
+
+const searchQuery = ref('')
+const userName = ref('')
+const isLoggedIn = ref(false)
+
+const menuItems = computed(() => [
+  { name: 'Trang chủ', path: '/', isActive: route.path === '/' },
+  { name: 'Sản phẩm', path: '/products', isActive: route.path.startsWith('/products') },
+  { name: 'Về chúng tôi', path: '/about', isActive: route.path === '/about' },
+])
+
+const cartItemCount = computed(() => cart.itemCount)
+
+const handleSearch = () => {
+  if (searchQuery.value.trim()) {
+    router.push({
+      path: '/products',
+      query: { search: searchQuery.value.trim() },
+    })
   }
 }
+
+onMounted(() => {
+  const storedName = localStorage.getItem('user_name')
+  if (storedName) {
+    userName.value = storedName
+    isLoggedIn.value = true
+  }
+})
 </script>
+
 
 <style scoped>
 header {
