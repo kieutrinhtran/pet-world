@@ -202,9 +202,21 @@ public function clearCartByCustomer($customer_id)
 }
 public function updateCartItemQuantity($cart_item_id, $quantity)
 {
-    $stmt = $this->conn->prepare("UPDATE cart_items SET quantity = ? WHERE id = ?");
-    return $stmt->execute([$quantity, $cart_item_id]);
+    if ($quantity > 0) {
+        $query = "UPDATE cart_item SET quantity = :quantity WHERE cart_item_id = :cart_item_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':quantity', $quantity);
+        $stmt->bindParam(':cart_item_id', $cart_item_id);
+        return $stmt->execute();
+    } else {
+        // Xóa luôn nếu số lượng <= 0
+        $deleteQuery = "DELETE FROM cart_item WHERE cart_item_id = :cart_item_id";
+        $deleteStmt = $this->conn->prepare($deleteQuery);
+        $deleteStmt->bindParam(':cart_item_id', $cart_item_id);
+        return $deleteStmt->execute();
+    }
 }
+
 
 
 }

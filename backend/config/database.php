@@ -1,7 +1,7 @@
 <?php
 class Database{
     private $host = "127.0.0.1";
-    private $port = "3307"; // Thêm cấu hình port
+    private $port = "3306"; // Thêm cấu hình port
     private $db_name = "petshop";
     private $username = "root";
     private $password = "";
