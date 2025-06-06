@@ -75,10 +75,10 @@ export default {
         }
 
         const user = result.data.user;
-        const role = user.role || 'user';
+        const role = user?.role || 'user';
 
         // Lưu session
-        localStorage.setItem('user_name', user.user_name);
+        localStorage.setItem('user_name', user?.user_name);
         localStorage.setItem('role', role);
 
         this.showSuccess = true;
