@@ -92,7 +92,7 @@ const filteredCustomers = computed(() => {
 
 // Điều hướng lịch sử
 const viewHistory = id => {
-  router.push(`/history/${id}`)
+  router.push({ name: 'AdminCustomerPurchaseHistory', params: { id } })
 }
 </script>
 

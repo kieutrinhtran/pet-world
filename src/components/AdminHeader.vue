@@ -49,9 +49,70 @@
   </header>
 </template>
 
-<script setup>
-// Có thể thêm logic logout hoặc hiển thị tên admin ở đây
+<script>
+import { useCart } from '../store/cart'
+
+export default {
+  name: 'CustomerHeader',
+  data() {
+    return {
+      searchQuery: '',
+      isLoggedIn: false,
+      userName: '',
+    };
+  },
+  computed: {
+    menuItems() {
+      return [
+        { name: 'Trang chủ', path: '/', isActive: this.isHome },
+        { name: 'Sản phẩm', path: '/products', isActive: this.isProducts },
+        { name: 'Về chúng tôi', path: '/about', isActive: this.isAbout },
+      ];
+    },
+    isHome() {
+      return this.$route.path === '/';
+    },
+    isProducts() {
+      return this.$route.path.startsWith('/products');
+    },
+    isAbout() {
+      return this.$route.path === '/about';
+    },
+    cartItemCount() {
+      return this.cart.itemCount;
+    },
+  },
+  methods: {
+    handleSearch() {
+      if (this.searchQuery.trim()) {
+        this.$router.push({
+          path: '/products',
+          query: { search: this.searchQuery.trim() },
+        });
+      }
+    },
+    logout() {
+      localStorage.removeItem('user_name');
+      localStorage.removeItem('role');
+      this.isLoggedIn = false;
+      this.userName = '';
+      this.$router.push('/login');
+    }
+  },
+  mounted() {
+    const userName = localStorage.getItem('user_name');
+    if (userName) {
+      this.userName = userName;
+      this.isLoggedIn = true;
+    }
+  },
+  setup() {
+    const cart = useCart()
+    return { cart }
+  }
+}
 </script>
+
 
 <style scoped>
 .admin-header {
