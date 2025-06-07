@@ -101,7 +101,7 @@
               <p class="text-gray-600 text-sm">{{ item.category }}</p>
             </div>
           </div>
-          <div class="text-gray-800">{{ item.price.toLocaleString() }}đ</div>
+          <!-- <div class="text-gray-800">{{ item.price.toLocaleString() }}đ</div> -->
           <div class="flex items-center gap-2">
             <!-- Nút giảm số lượng -->
             <button
@@ -201,8 +201,8 @@ if (!isLoggedIn.value) {
     cartItems.value = res.data.items
 
     // Lấy địa chỉ giao hàng mặc định hoặc đầu tiên
-    const addressRes = await axios.get(`http://localhost:8000/address?customer_id=${customerId}`)
-    shippingAddress.value = addressRes.data.find(addr => addr.is_default) || addressRes.data[0]
+    // const addressRes = await axios.get(`http://localhost:8000/address?customer_id=${customerId}`)
+    // shippingAddress.value = addressRes.data.find(addr => addr.is_default) || addressRes.data[0]
   })
 }
 
