@@ -432,7 +432,7 @@ export default {
       error: null,
       creatingProduct: null,
       currentPage: 1,
-      pageSize: 8,
+      pageSize: 10,
     };
   },
   async mounted() {
