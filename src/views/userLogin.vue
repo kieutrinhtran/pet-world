@@ -35,27 +35,34 @@
 </template>
 
 <script>
+import userStore from '@/store/user'
+
 export default {
+  setup() {
+    const { getUserFromLocal } = userStore()
+    return {
+      getUserFromLocal
+    }
+  },
   data() {
     return {
       username: '',
       password: '',
       errorMessage: '',
       showSuccess: false
-    };
+    }
   },
-
 
   methods: {
     async login() {
-      this.errorMessage = '';
+      this.errorMessage = ''
 
       if (!this.username || !this.password) {
-        this.errorMessage = 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu';
-        return;
+        this.errorMessage = 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu'
+        return
       }
 
-      const url = 'http://localhost:8000/login';
+      const url = 'http://localhost:8000/login'
 
       try {
         const response = await fetch(url, {
@@ -65,48 +72,53 @@ export default {
             user_name: this.username,
             password: this.password
           })
-        });
+        })
 
-        const result = await response.json();
+        const result = await response.json()
+        console.log('🚀 ~ login ~ result:', result)
 
         if (response.status !== 200) {
-          this.errorMessage = result.data?.message || 'Sai tên đăng nhập hoặc mật khẩu';
-          setTimeout(() => (this.errorMessage = ''), 5000);
-          return;
+          this.errorMessage = result.data?.message || 'Sai tên đăng nhập hoặc mật khẩu'
+          setTimeout(() => (this.errorMessage = ''), 5000)
+          return
         }
 
-        const user = result.data.user;
-        const role = user?.role || 'user';
-
+        const user = result.user
+        const role = user?.role || 'user'
         // Lưu session
-        localStorage.setItem('user_name', user?.user_name);
-        localStorage.setItem('role', role);
+        if (user) {
+          const stringifyUser = JSON.stringify(user)
+          localStorage.setItem('user', stringifyUser)
+          this.getUserFromLocal()
+        }
 
-        this.showSuccess = true;
+        // localStorage.setItem('user_name', user?.user_name);
+        // localStorage.setItem('role', role);
+
+        this.showSuccess = true
         setTimeout(() => {
-          this.showSuccess = false;
+          this.showSuccess = false
 
           // Điều hướng theo vai trò
           if (role === 'admin') {
-            this.$router.push({ name: 'AdminCustomerManagement' });
+            this.$router.push({ name: 'AdminCustomerManagement' })
           } else {
-            this.$router.push({ name: 'HomePage' });
+            this.$router.push({ name: 'HomePage' })
           }
-        }, 1500);
+        }, 1500)
       } catch (error) {
-        console.error('Lỗi kết nối API:', error);
-        this.errorMessage = 'Không thể kết nối tới máy chủ';
-        setTimeout(() => (this.errorMessage = ''), 5000);
+        console.error('Lỗi kết nối API:', error)
+        this.errorMessage = 'Không thể kết nối tới máy chủ'
+        setTimeout(() => (this.errorMessage = ''), 5000)
       }
     },
 
     goToRegister() {
-      this.$router.push('/register');
+      this.$router.push('/register')
     }
   }
-};
+}
 </script>
-
 
 <style scoped>
 .login-container {
