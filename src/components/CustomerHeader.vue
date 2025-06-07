@@ -7,8 +7,7 @@
         <span>+84 123 456 789</span>
         <span class="text-primary"><i class="fas fa-envelope"></i></span>
         <span>wearepet@petshop.com</span>
-      </div>
-      <div class="flex-1 flex justify-center text-center">
+        
         <span class="text-primary"><i class="fas fa-map-marker-alt"></i></span>
         <span
           >123 Lý Thường Kiệt, Phường 3, Quận 10, Thành phố Hồ Chí Minh</span
