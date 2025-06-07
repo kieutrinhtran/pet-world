@@ -15,5 +15,6 @@ class AuthRouter
     public function addRoutes($router)
     {
         $router->addRoute('POST', '/login', 'AuthController', 'login');
+        $router->addRoute('POST', '/customer', 'AuthController', 'getCustomer');
     }
 }

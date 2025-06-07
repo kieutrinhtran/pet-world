@@ -7,35 +7,24 @@
         <span>+84 123 456 789</span>
         <span class="text-primary"><i class="fas fa-envelope"></i></span>
         <span>wearepet@petshop.com</span>
-        
+
         <span class="text-primary"><i class="fas fa-map-marker-alt"></i></span>
-        <span
-          >123 Lý Thường Kiệt, Phường 3, Quận 10, Thành phố Hồ Chí Minh</span
-        >
+        <span>123 Lý Thường Kiệt, Phường 3, Quận 10, Thành phố Hồ Chí Minh</span>
       </div>
       <div class="flex items-center gap-2 min-w-[160px] justify-end">
         <span class="text-primary"><i class="fas fa-user"></i></span>
-        <span v-if="isLoggedIn">{{ userName }}</span>
-        <router-link
-          v-else
-          to="/login"
-          class="text-gray-800 hover:text-orange-500"
-        >
-      Đăng nhập
+        <span v-if="isLoggedIn">{{ user.user_name }}</span>
+        <router-link v-else to="/login" class="text-gray-800 hover:text-orange-500">
+          Đăng nhập
         </router-link>
       </div>
-
     </div>
 
     <!-- Navbar -->
     <nav>
       <div class="flex items-center font-bold text-xl">
-        <span class="text-2xl mr-2 text-primary"
-          ><i class="fas fa-paw"></i
-        ></span>
-        <router-link to="/" class="text-gray-800 hover:text-orange-500"
-          >Pet World</router-link
-        >
+        <span class="text-2xl mr-2 text-primary"><i class="fas fa-paw"></i></span>
+        <router-link to="/" class="text-gray-800 hover:text-orange-500">Pet World</router-link>
       </div>
       <ul>
         <li
@@ -77,23 +66,24 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useCart } from '../store/cart'
+import userStore from '@/store/user'
 
 const router = useRouter()
 const route = useRoute()
 
 const cart = useCart()
+const { user, isLoggedIn } = storeToRefs(userStore())
 
 const searchQuery = ref('')
-const userName = ref('')
-const isLoggedIn = ref(false)
 
 const menuItems = computed(() => [
   { name: 'Trang chủ', path: '/', isActive: route.path === '/' },
   { name: 'Sản phẩm', path: '/products', isActive: route.path.startsWith('/products') },
-  { name: 'Về chúng tôi', path: '/about', isActive: route.path === '/about' },
+  { name: 'Về chúng tôi', path: '/about', isActive: route.path === '/about' }
 ])
 
 const cartItemCount = computed(() => cart.itemCount)
@@ -102,20 +92,11 @@ const handleSearch = () => {
   if (searchQuery.value.trim()) {
     router.push({
       path: '/products',
-      query: { search: searchQuery.value.trim() },
+      query: { search: searchQuery.value.trim() }
     })
   }
 }
-
-onMounted(() => {
-  const storedName = localStorage.getItem('user_name')
-  if (storedName) {
-    userName.value = storedName
-    isLoggedIn.value = true
-  }
-})
 </script>
-
 
 <style scoped>
 header {

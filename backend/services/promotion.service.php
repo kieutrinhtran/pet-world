@@ -49,9 +49,9 @@ class PromotionService
         return $this->promotionModel->findOne($id);
     }
 
-    public function getAllPromotions()
+    public function getAllPromotions($page)
     {
-        return $this->promotionModel->findAll();
+        return $this->promotionModel->findAll($page, 200);
     }
 
     public function findByCode($code)
