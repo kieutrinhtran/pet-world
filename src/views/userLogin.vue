@@ -119,7 +119,7 @@ export default {
   padding: 2rem;
 }
 .logo {
-  width: 180px;
+  width: 200px;
   margin-bottom: 2rem;
 }
 .title {
