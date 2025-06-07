@@ -12,24 +12,17 @@
           hành trình yêu thương chúng.
         </div>
       </div>
-      <!-- Cột 2: Pet Shop -->
+      <!-- Cột 2: Pet World -->
       <div class="footer-col">
         <div class="footer-title">Pet World</div>
         <ul>
-          <li>About us</li>
-          <li>Gift cards</li>
+          <!-- Link cho "About us" -->
+          <li>
+            <router-link to="/about" class="text-gray-800 hover:text-orange-500">About us</router-link>
+          </li>
         </ul>
       </div>
-      <!-- Cột 3: Customer Service -->
-      <div class="footer-col">
-        <div class="footer-title">Customer Service</div>
-        <ul>
-          <li>Contact Us</li>
-          <li>Shipping</li>
-          <li>Returns</li>
-        </ul>
-      </div>
-      <!-- Cột 4: Store -->
+      <!-- Cột 3: Store -->
       <div class="footer-col">
         <div class="footer-title">Store</div>
         <div class="footer-store">
@@ -325,9 +318,3 @@
   }
 }
 </style>
-
-<script>
-export default {
-  name: 'FooterComponent',
-};
-</script>
