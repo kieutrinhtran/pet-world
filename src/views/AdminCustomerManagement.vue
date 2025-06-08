@@ -3,7 +3,7 @@
     <!-- Tìm kiếm + bộ lọc -->
     <div class="search-section">
       <span>
-        Hiển thị {{ filteredCustomers.length }} từ {{ customers.length }} kết quả tìm kiếm
+        Hiển thị 10 từ {{ customers.length }} kết quả tìm kiếm
       </span>
       <AdminSearchBar
         v-model="searchQuery"
@@ -54,11 +54,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import AdminSearchBar from '@/components/AdminSearchBar.vue'
 import BasePagination from '@/components/BasePagination.vue'
 
-// Trạng thái
 const customers = ref([])
 const loading = ref(true)
 const error = ref('')
@@ -66,14 +65,12 @@ const searchQuery = ref('')
 const currentPage = ref(1)
 const pageSize = 10
 
-// Gọi API lấy danh sách khách hàng
 onMounted(async () => {
   try {
     const response = await fetch('http://localhost:8000/customers', { credentials: 'include' })
     if (!response.ok) throw new Error('Không thể tải danh sách khách hàng')
     const data = await response.json()
     customers.value = data.customers
-    console.log(data)
   } catch (err) {
     error.value = err.message || 'Đã xảy ra lỗi khi tải dữ liệu'
   } finally {
@@ -81,23 +78,27 @@ onMounted(async () => {
   }
 })
 
-// Lọc kết quả theo tìm kiếm
 const filteredCustomers = computed(() => {
   if (!searchQuery.value) return customers.value
   return customers.value.filter(
     c =>
-      c.name?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      c.customer_name?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       c.email?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      c.id?.toString().includes(searchQuery.value)
+      c.customer_id?.toString().includes(searchQuery.value)
   )
 })
 
+// Reset lại trang hiện tại về 1 mỗi khi tìm kiếm mới
+watch(searchQuery, () => {
+  currentPage.value = 1
+})
+
 const totalPages = computed(() => Math.ceil(filteredCustomers.value.length / pageSize))
+
 const paginatedCustomers = computed(() => {
   const start = (currentPage.value - 1) * pageSize
   return filteredCustomers.value.slice(start, start + pageSize)
 })
-
 </script>
 
 <style scoped>
