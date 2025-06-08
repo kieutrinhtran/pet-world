@@ -94,7 +94,7 @@ class Promotion
     public function findAll($page = 1, $limit = 10)
     {
         $offset = ($page - 1) * $limit;
-        $query = "SELECT * FROM {$this->table_name} LIMIT :limit OFFSET :offset";
+        $query = "SELECT * FROM {$this->table_name} LIMIT :limit OFFSET :offset WHERE is_active = 1";
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
