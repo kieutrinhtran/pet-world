@@ -11,6 +11,7 @@
           <i class="fas fa-user"></i>
           <span>Quản lý cửa hàng</span>
         </span>
+        <button class="logout-btn" @click="logout">Đăng xuất</button>
       </div>
     </div>
     <!-- Navbar -->
@@ -202,5 +203,20 @@ export default {
 .admin-navbar ul li a:hover {
   color: #ff9800;
   border-bottom: none !important;
+}
+.logout-btn {
+  margin-left: 18px;
+  background: #ff9800;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.logout-btn:hover {
+  background: #e67300;
 }
 </style>
