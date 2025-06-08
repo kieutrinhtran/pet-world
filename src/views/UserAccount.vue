@@ -48,35 +48,47 @@
           <form v-else>
             <div class="form-group">
               <label>Họ và tên</label>
-              <input type="text" v-model="userData.fullName" disabled />
+              <input type="text" v-model="userData.fullName" :disabled="!isEditing" />
             </div>
 
             <div class="form-group">
               <label>Ngày sinh</label>
-              <input type="text" v-model="userData.dateOfBirth" disabled />
+              <input type="text" v-model="userData.dateOfBirth" :disabled="!isEditing" />
             </div>
 
             <div class="form-group">
               <label>Giới tính</label>
-              <input type="text" v-model="userData.gender" disabled />
+              <input type="text" v-model="userData.gender" :disabled="!isEditing" />
             </div>
 
             <div class="form-group">
               <label>Số điện thoại</label>
-              <input type="text" v-model="userData.phone" disabled />
+              <input type="text" v-model="userData.phone" :disabled="!isEditing" />
             </div>
 
             <div class="form-group">
               <label>Email</label>
-              <input type="email" v-model="userData.email" disabled />
+              <input type="email" v-model="userData.email" :disabled="!isEditing" />
             </div>
 
             <div class="form-group">
               <label>Ngày tham gia</label>
               <input type="text" v-model="userData.joinDate" disabled />
             </div>
+
+            <!-- Thêm nút Edit và Save -->
+            <div class="form-actions">
+              <button v-if="!isEditing" @click.prevent="startEditing" class="edit-btn">
+                Chỉnh sửa
+              </button>
+              <template v-else>
+                <button @click.prevent="cancelEditing" class="cancel-btn">Hủy</button>
+                <button @click.prevent="saveUserData" class="save-btn">Lưu thay đổi</button>
+              </template>
+            </div>
           </form>
         </div>
+
         <div v-if="activeTab === 'wishlist'" class="wishlist-box">
           <div class="search-bar">
             <input type="text" v-model="searchQuery" placeholder="Tìm kiếm sản phẩm..." />
@@ -139,63 +151,6 @@
           </div>
         </div>
 
-        <!-- Thêm nút Edit vào phần thông tin tài khoản -->
-        <div v-if="activeTab === 'account'" class="account-box">
-          <!-- Loading state -->
-          <div v-if="isLoading" class="loading-state">
-            <div class="spinner"></div>
-            <p>Đang tải thông tin...</p>
-          </div>
-
-          <!-- Error state -->
-          <div v-else-if="error" class="error-state">
-            <p class="error-message">{{ error }}</p>
-            <button @click="fetchCustomerData" class="retry-btn">Thử lại</button>
-          </div>
-
-          <!-- Data display -->
-          <form v-else>
-            <div class="form-group">
-              <label>Họ và tên</label>
-              <input type="text" v-model="userData.fullName" :disabled="!isEditing" />
-            </div>
-
-            <div class="form-group">
-              <label>Ngày sinh</label>
-              <input type="text" v-model="userData.dateOfBirth" :disabled="!isEditing" />
-            </div>
-
-            <div class="form-group">
-              <label>Giới tính</label>
-              <input type="text" v-model="userData.gender" :disabled="!isEditing" />
-            </div>
-
-            <div class="form-group">
-              <label>Số điện thoại</label>
-              <input type="text" v-model="userData.phone" :disabled="!isEditing" />
-            </div>
-
-            <div class="form-group">
-              <label>Email</label>
-              <input type="email" v-model="userData.email" :disabled="!isEditing" />
-            </div>
-
-            <div class="form-group">
-              <label>Ngày tham gia</label>
-              <input type="text" v-model="userData.joinDate" disabled />
-            </div>
-
-            <!-- Thêm nút Edit và Save -->
-            <div class="form-actions">
-              <button v-if="!isEditing" @click.prevent="startEditing" class="edit-btn"></button>
-              <template v-else>
-                <button @click.prevent="cancelEditing" class="cancel-btn">Hủy</button>
-                <button @click.prevent="saveUserData" class="save-btn">Lưu thay đổi</button>
-              </template>
-            </div>
-          </form>
-        </div>
-
         <div v-if="activeTab === 'history'" class="order-history">
           <div v-if="selectedOrder" class="order-detail-form">
             <h3>Chi tiết đơn hàng #{{ selectedOrder.orderDetails.order_id }}</h3>
@@ -238,7 +193,18 @@
                 </div>
                 <div class="info-row">
                   <span class="label">Trạng thái thanh toán:</span>
-                  <span class="value payment-status paid">Đã thanh toán</span>
+                  <span
+                    class="value payment-status"
+                    :class="
+                      selectedOrder.orderDetails.payment_status === 'paid' ? 'paid' : 'unpaid'
+                    "
+                  >
+                    {{
+                      selectedOrder.orderDetails.payment_status === 'paid'
+                        ? 'Đã thanh toán'
+                        : 'Chưa thanh toán'
+                    }}
+                  </span>
                 </div>
               </div>
 
@@ -755,6 +721,9 @@ const fetchOrders = async () => {
       console.log('API Response:', response)
 
       orders.value = response.map(order => {
+        // Chuyển đổi trạng thái thanh toán
+        const paymentStatus = order.payment_status === 'paid' ? 'paid' : 'unpaid'
+
         const orderItems =
           order.items && Array.isArray(order.items) && order.items.length > 0
             ? order.items.map(item => ({
@@ -763,7 +732,7 @@ const fetchOrders = async () => {
                 name: item.name || 'Sản phẩm chưa xác định',
                 quantity: item.quantity || '0',
                 count: item.count || '1',
-                price: item.price || '0',
+                price: formatPrice(item.price) || '0',
                 image: item.image || 'https://via.placeholder.com/150'
               }))
             : [
@@ -784,7 +753,7 @@ const fetchOrders = async () => {
           name: orderItems[0].name || `Đơn hàng #${order.order_id}`,
           quantity: orderItems[0].quantity || '0',
           count: orderItems[0].count || '1',
-          price: orderItems[0].price || '0',
+          price: formatPrice(orderItems[0].price) || '0',
           total: formatPrice(order.total_amount) + 'đ',
           status: getStatusText(order.status),
           image: orderItems[0].image || 'https://via.placeholder.com/150',
@@ -795,7 +764,7 @@ const fetchOrders = async () => {
             status: order.status,
             total_amount: order.total_amount,
             payment_method: order.payment_method,
-            payment_status: order.payment_status,
+            payment_status: paymentStatus, // Đảm bảo payment_status được chuyển đổi đúng
             customer_name: order.customer_name,
             phone: order.phone,
             address_line: order.address_line,

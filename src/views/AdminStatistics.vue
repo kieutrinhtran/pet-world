@@ -31,12 +31,6 @@
           <div class="stat-icon">🛍️</div>
           <div class="stat-value">{{ totalCustomers }}</div>
         </div>
-        <!-- Card: Tổng số mã giảm giá -->
-        <div class="stat-card aspect-square h-60">
-          <div class="stat-title">TỔNG SỐ MÃ GIẢM GIÁ</div>
-          <div class="stat-icon">🏷️</div>
-          <div class="stat-value">{{ activePromotions }}</div>
-        </div>
         <!-- Card: Doanh thu trong tháng -->
         <div class="stat-card aspect-square h-60">
           <div class="stat-title">DOANH THU TRONG THÁNG</div>
@@ -58,7 +52,6 @@ import axios from 'axios'
 const totalOrders = ref(0) // Tổng số đơn hàng
 const totalProducts = ref(0) // Tổng số sản phẩm
 const totalCustomers = ref(0) // Tổng số khách hàng
-const activePromotions = ref(0) // Tổng số mã giảm giá đang hoạt động
 const totalRevenue = ref(0) // Doanh thu trong tháng
 const loading = ref(true) // Trạng thái loading khi lấy dữ liệu
 const error = ref(null) // Biến lưu lỗi nếu có
@@ -76,7 +69,6 @@ onMounted(async () => {
     totalOrders.value = stats.total_orders || stats.totalOrders || 0
     totalProducts.value = stats.total_products || stats.totalProducts || 0
     totalCustomers.value = stats.total_customers || stats.totalCustomers || 0
-    activePromotions.value = stats.active_promotions || stats.activePromotions || 0
     totalRevenue.value = stats.revenue_this_month || stats.revenueThisMonth || 0
   } catch (err) {
     error.value = err.message
