@@ -230,7 +230,7 @@ class Order
     }
     public function countCustomers()
     {
-        $query = "SELECT COUNT(*) as total FROM user_account WHERE role = 'user' and is_active = 1";
+        $query = "SELECT COUNT(*) as total FROM user_account WHERE role = 'user'";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
