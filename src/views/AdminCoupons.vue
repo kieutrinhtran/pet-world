@@ -14,6 +14,7 @@
   padding: 6px 16px;
   font-weight: 500;
 }
+
 .custom-btn:hover {
   background-color: #fd7e14;
   color: white;
@@ -23,30 +24,37 @@
 .custom-table thead {
   background-color: #f1f3f5;
 }
+
 .custom-table th {
   font-weight: 600;
   font-size: 14px;
   white-space: nowrap;
   vertical-align: middle;
-  cursor: pointer; /* Thêm con trỏ để người dùng biết có thể click */
+  cursor: pointer;
+  /* Thêm con trỏ để người dùng biết có thể click */
 }
+
 .custom-table td {
   vertical-align: middle;
   font-size: 14px;
   text-align: center;
 }
+
 .custom-table tbody tr:nth-child(even) {
   background-color: #faf5ff;
 }
+
 .action-icon {
   color: #fd7e14;
   cursor: pointer;
   transition: 0.2s ease;
 }
+
 .action-icon:hover {
   transform: scale(1.1);
   opacity: 0.8;
 }
+
 .sort-indicator {
   font-size: 12px;
   margin-left: 6px;
@@ -89,7 +97,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in paginatedPromotions" :key="item.promotion_id">
+          <tr v-for="item in filteredAndSortedProducts" :key="item.promotion_id">
             <td>
               <strong>{{ item.promotion_id }}</strong>
             </td>
@@ -107,14 +115,9 @@
                 @click="openEditPopup(item)"
                 style="cursor: pointer"
               ></i>
-
-              <!-- <i
-                class="fas fa-trash-alt action-icon"
-                @click="deleteProduct(item.promotion_id)"
-              ></i> -->
             </td>
           </tr>
-          <tr v-if="filteredAndSortedPromotions.length === 0">
+          <tr v-if="filteredAndSortedProducts.length === 0">
             <td colspan="7" class="text-center text-muted">Không tìm thấy sản phẩm phù hợp.</td>
           </tr>
         </tbody>
@@ -351,33 +354,6 @@
         </form>
       </div>
     </div>
-    <div class="flex justify-center items-center gap-3 my-4">
-      <button
-        class="px-3 py-1 border rounded disabled:opacity-50"
-        :disabled="currentPage === 1"
-        @click="currentPage--"
-      >
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        class="px-3 py-1 border rounded"
-        :class="{ 'bg-orange-400 text-white': page === currentPage }"
-        @click="currentPage = page"
-      >
-        {{ page }}
-      </button>
-
-      <button
-        class="px-3 py-1 border rounded disabled:opacity-50"
-        :disabled="currentPage === totalPages"
-        @click="currentPage++"
-      >
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
-    </div>
   </div>
 </template>
 
@@ -392,19 +368,23 @@ export default {
       editingProduct: null,
       loading: false,
       error: null,
-      creatingProduct: null,
-      currentPage: 1,
-      pageSize: 10
+      creatingProduct: null
     }
   },
   async mounted() {
-    this.fetchPromotions()
+    this.fetchProducts()
   },
   computed: {
-    filteredAndSortedPromotions() {
-      let filtered = this.products.filter(item =>
-        item.code.toLowerCase().includes(this.searchTerm.toLowerCase())
-      )
+    filteredAndSortedProducts() {
+      // First add a safety check to ensure products is an array
+      if (!Array.isArray(this.products)) return []
+
+      // Then add a safety check for the code property
+      let filtered = this.products.filter(item => {
+        if (!item || typeof item !== 'object') return false
+        return item.code && item.code.toLowerCase().includes((this.searchTerm || '').toLowerCase())
+      })
+
       return filtered.slice().sort((a, b) => {
         let modifier = this.currentSortDir === 'asc' ? 1 : -1
         let aVal = a[this.currentSort]
@@ -424,14 +404,6 @@ export default {
         if (aVal > bVal) return 1 * modifier
         return 0
       })
-    },
-    paginatedPromotions() {
-      const start = (this.currentPage - 1) * this.pageSize
-      return this.filteredAndSortedPromotions.slice(start, start + this.pageSize)
-    },
-
-    totalPages() {
-      return Math.ceil(this.filteredAndSortedPromotions.length / this.pageSize)
     }
   },
   methods: {
@@ -441,15 +413,38 @@ export default {
       if (parts.length === 2) return parts.pop().split(';').shift()
       return null
     },
-    async fetchPromotions() {
+    async fetchProducts() {
       this.loading = true
       try {
-        const res = await fetch('http://localhost:8000/api/v1/promotions')
+        const res = await fetch('http://localhost:8000/api/v1/promotions', {
+          credentials: 'include' // Add this to include cookies in the request
+        })
+
         if (!res.ok) throw new Error('Failed to fetch products')
-        this.products = await res.json()
+
+        const data = await res.json()
+
+        // Check if the response is an array or has a data property
+        if (Array.isArray(data)) {
+          this.products = data
+        } else if (data.promotions && Array.isArray(data.promotions)) {
+          this.products = data.promotions
+        } else if (data.data && Array.isArray(data.data)) {
+          this.products = data.data
+        } else {
+          console.error('Unexpected API response format:', data)
+          this.products = []
+          throw new Error('Invalid data format received from API')
+        }
+
+        // Log the first item to help debug structure
+        if (this.products.length > 0) {
+          console.log('Sample promotion item:', this.products[0])
+        }
       } catch (err) {
         this.error = err.message
         console.error(err)
+        this.products = [] // Ensure products is at least an empty array on error
       } finally {
         this.loading = false
       }
@@ -486,6 +481,7 @@ export default {
           `http://localhost:8000/api/v1/promotions/${this.editingProduct.promotion_id}`,
           {
             method: 'PUT',
+            credentials: 'include',
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`
@@ -503,7 +499,7 @@ export default {
         }
 
         this.editingProduct = null
-        this.fetchPromotions()
+        this.fetchProducts()
       } catch (error) {
         alert(error.message)
       } finally {
@@ -538,15 +534,15 @@ export default {
     async createProduct() {
       try {
         this.loading = true
-        const token = this.getCookie('token')
         const res = await fetch('http://localhost:8000/api/v1/promotions', {
           method: 'POST',
+          credentials: 'include', // Add this line to include cookies in the request
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(this.creatingProduct)
         })
+
         const contentType = res.headers.get('content-type') || ''
 
         if (!res.ok) {
@@ -561,44 +557,21 @@ export default {
 
         const data = await res.json()
 
-        const newProduct = data.success
+        // Handle the response correctly based on your API structure
+        const newProduct = data.success ? data.promotion : data
 
         this.products.push(newProduct)
 
         // Reset form tạo mới
-        this.creatingProduct = {
-          promotion_id: '',
-          code: '',
-          description: '',
-          discount_percent: '',
-          total_voucher: '',
-          used_voucher: '',
-          start_date: '',
-          end_date: '',
-          is_active: 0
-        }
-
+        this.creatingProduct = null
         this.closeCreatePopup()
-        this.fetchPromotions()
+        this.fetchProducts()
       } catch (error) {
         alert(error.message)
         console.error(error)
       } finally {
         this.loading = false
       }
-    },
-    goToPage(page) {
-      if (page < 1) page = 1
-      if (page > this.totalPages) page = this.totalPages
-      this.currentPage = page
-    },
-
-    prevPage() {
-      this.goToPage(this.currentPage - 1)
-    },
-
-    nextPage() {
-      this.goToPage(this.currentPage + 1)
     }
   }
 }

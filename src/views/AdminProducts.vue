@@ -14,6 +14,7 @@
   padding: 6px 16px;
   font-weight: 500;
 }
+
 .custom-btn:hover {
   background-color: #fd7e14;
   color: white;
@@ -23,30 +24,37 @@
 .custom-table thead {
   background-color: #f1f3f5;
 }
+
 .custom-table th {
   font-weight: 600;
   font-size: 14px;
   white-space: nowrap;
   vertical-align: middle;
-  cursor: pointer; /* Thêm con trỏ để người dùng biết có thể click */
+  cursor: pointer;
+  /* Thêm con trỏ để người dùng biết có thể click */
 }
+
 .custom-table td {
   vertical-align: middle;
   font-size: 14px;
   text-align: center;
 }
+
 .custom-table tbody tr:nth-child(even) {
   background-color: #faf5ff;
 }
+
 .action-icon {
   color: #fd7e14;
   cursor: pointer;
   transition: 0.2s ease;
 }
+
 .action-icon:hover {
   transform: scale(1.1);
   opacity: 0.8;
 }
+
 .sort-indicator {
   font-size: 12px;
   margin-left: 6px;
@@ -105,10 +113,6 @@
                 @click="openEditPopup(item)"
                 style="cursor: pointer"
               ></i>
-              <!-- <i
-                class="fas fa-trash-alt action-icon"
-                @click="deleteProduct(item.product_id)"
-              ></i> -->
             </td>
           </tr>
           <tr v-if="filteredAndSortedProducts.length === 0">
@@ -406,7 +410,7 @@ export default {
       error: null,
       creatingProduct: null,
       currentPage: 1,
-      pageSize: 10
+      pageSize: 8
     }
   },
   async mounted() {
@@ -457,7 +461,9 @@ export default {
     async fetchProducts() {
       this.loading = true
       try {
-        const res = await fetch('http://localhost:8000/api/v1/products')
+        const res = await fetch('http://localhost:8000/api/v1/products', {
+          credentials: 'include'
+        })
         if (!res.ok) throw new Error('Failed to fetch products')
         this.products = await res.json()
       } catch (err) {
@@ -494,14 +500,13 @@ export default {
 
       try {
         this.loading = true
-        const token = this.getCookie('token')
         const res = await fetch(
           `http://localhost:8000/api/v1/products/${this.editingProduct.product_id}`,
           {
             method: 'PUT',
+            credentials: 'include',
             headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify(this.editingProduct)
           }
@@ -546,12 +551,11 @@ export default {
     async createProduct() {
       try {
         this.loading = true
-        const token = this.getCookie('token')
         const res = await fetch('http://localhost:8000/api/v1/products', {
           method: 'POST',
+          credentials: 'include',
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(this.creatingProduct)
         })
