@@ -12,24 +12,20 @@
           hành trình yêu thương chúng.
         </div>
       </div>
-      <!-- Cột 2: Pet Shop -->
+
+      <!-- Cột 2: Pet World -->
       <div class="footer-col">
         <div class="footer-title">Pet World</div>
         <ul>
-          <li>About us</li>
-          <li>Gift cards</li>
+          <li>
+            <router-link to="/about" class="text-[#222] hover:text-[#ff9000] transition-all">
+              About us
+            </router-link>
+          </li>
         </ul>
       </div>
-      <!-- Cột 3: Customer Service -->
-      <div class="footer-col">
-        <div class="footer-title">Customer Service</div>
-        <ul>
-          <li>Contact Us</li>
-          <li>Shipping</li>
-          <li>Returns</li>
-        </ul>
-      </div>
-      <!-- Cột 4: Store -->
+
+      <!-- Cột 3: Store -->
       <div class="footer-col">
         <div class="footer-title">Store</div>
         <div class="footer-store">
@@ -41,6 +37,7 @@
         </div>
       </div>
     </div>
+
     <!-- Dòng logo thanh toán -->
     <div class="footer-bottom">
       <div class="footer-copyright">© Copyright Pet World 2025</div>
@@ -59,6 +56,7 @@
         />
       </div>
     </div>
+
     <!-- Dấu chân mờ trang trí -->
     <div class="footer-paws">
       <span class="paw paw1"><i class="fas fa-paw"></i></span>
@@ -69,6 +67,7 @@
     </div>
   </footer>
 </template>
+
 
 <script setup>
 // Không cần logic JS cho footer này
