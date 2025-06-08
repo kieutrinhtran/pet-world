@@ -20,7 +20,7 @@
   <div v-else-if="product" class="product-detail-wrapper">
     <!-- Bên trái: Ảnh sản phẩm -->
     <div class="product-image">
-      <img :src="product.image" :alt="product.name" />
+      <img :src="product.image_url" :alt="product.name" />
     </div>
 
     <!-- Bên phải: Thông tin sản phẩm -->
@@ -43,7 +43,7 @@
             <span class="stock-count">{{ product.stock }} sản phẩm</span>
           </div>
         </div>
-        <button class="like-button" :class="{ 'active': isLiked }" @click="toggleLike">
+        <button class="like-button" :class="{ active: isLiked }" @click="toggleLike">
           <i class="fas fa-heart"></i>
         </button>
       </div>
@@ -94,10 +94,14 @@
       <div v-if="product.nutritionFacts">
         <h4>Thông tin dinh dưỡng:</h4>
         <ul class="nutrition-list">
-          <li v-if="product.nutritionFacts.protein">Protein: {{ product.nutritionFacts.protein }}</li>
+          <li v-if="product.nutritionFacts.protein">
+            Protein: {{ product.nutritionFacts.protein }}
+          </li>
           <li v-if="product.nutritionFacts.fat">Chất béo: {{ product.nutritionFacts.fat }}</li>
           <li v-if="product.nutritionFacts.fiber">Chất xơ: {{ product.nutritionFacts.fiber }}</li>
-          <li v-if="product.nutritionFacts.moisture">Độ ẩm: {{ product.nutritionFacts.moisture }}</li>
+          <li v-if="product.nutritionFacts.moisture">
+            Độ ẩm: {{ product.nutritionFacts.moisture }}
+          </li>
         </ul>
       </div>
 
@@ -113,23 +117,6 @@
         <p>{{ product.ageGroup }}</p>
       </div>
     </div>
-  </div>
-
-  <div class="related-products-section">
-    <h3 class="section-title">Sản phẩm liên quan</h3>
-    <div class="related-products-grid">
-      <div class="related-product-card" v-for="product in relatedProducts" :key="product.id">
-        <div class="product-image">
-          <img :src="product.image_url" :alt="product.name">
-        </div>
-        <div class="product-info">
-          <h4 class="product-name">{{ product.name }}</h4>
-          <p class="product-category">{{ product.category }}</p>
-          <p class="product-price">{{ product.price.toLocaleString() }}</p>
-        </div>
-      </div>
-    </div>
-    <button class="show-more-btn">Hiện thị thêm</button>
   </div>
 </template>
 
@@ -182,7 +169,7 @@
 
 .product-name {
   font-size: 20px;
-  color: #FF5722;
+  color: #ff5722;
   margin-bottom: 16px;
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
@@ -229,7 +216,7 @@
 .quantity-control {
   display: inline-flex;
   align-items: center;
-  border: 1px solid #FF5722;
+  border: 1px solid #ff5722;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -239,7 +226,7 @@
   height: 36px;
   border: none;
   background: white;
-  color: #FF5722;
+  color: #ff5722;
   font-size: 20px;
   cursor: pointer;
   display: flex;
@@ -251,8 +238,8 @@
   width: 50px;
   height: 36px;
   border: none;
-  border-left: 1px solid #FF5722;
-  border-right: 1px solid #FF5722;
+  border-left: 1px solid #ff5722;
+  border-right: 1px solid #ff5722;
   text-align: center;
   font-size: 16px;
 }
@@ -271,16 +258,16 @@
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  border: 1px solid #F87537;
+  border: 1px solid #f87537;
 }
 
 .add-to-cart {
   background: white;
-  color: #F87537;
+  color: #f87537;
 }
 
 .buy-now {
-  background: #F87537;
+  background: #f87537;
   color: white;
 }
 
@@ -288,12 +275,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #F87537;
+  color: #f87537;
   font-size: 14px;
 }
 
 .shipping-note i {
-  color: #F87537;
+  color: #f87537;
 }
 
 .like-button {
@@ -311,7 +298,7 @@
 }
 
 .like-button.active {
-  color: #F87537;
+  color: #f87537;
 }
 
 .like-button:hover {
@@ -348,7 +335,7 @@
 }
 
 .section-title {
-  color: #F87537;
+  color: #f87537;
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 24px;
@@ -410,7 +397,7 @@
   content: '•';
   position: absolute;
   left: 8px;
-  color: #FF5722;
+  color: #ff5722;
   font-size: 16px;
 }
 
@@ -432,8 +419,8 @@
   margin: 0 auto;
   padding: 12px 24px;
   background: white;
-  border: 1px solid #F87537;
-  color: #F87537;
+  border: 1px solid #f87537;
+  color: #f87537;
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
@@ -441,7 +428,7 @@
 }
 
 .show-more-btn:hover {
-  background: #FFF3E0;
+  background: #fff3e0;
 }
 
 /* Responsive Design */
@@ -488,7 +475,7 @@
   width: 50px;
   height: 50px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #F87537;
+  border-top: 4px solid #f87537;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;
@@ -538,7 +525,7 @@
 }
 
 .retry-button {
-  background-color: #F87537;
+  background-color: #f87537;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -568,7 +555,7 @@
 }
 
 .brand-name {
-  color: #F87537;
+  color: #f87537;
   font-weight: 600;
 }
 
@@ -602,7 +589,7 @@
   content: '•';
   position: absolute;
   left: 8px;
-  color: #F87537;
+  color: #f87537;
   font-size: 16px;
 }
 
@@ -611,7 +598,7 @@
   padding: 20px;
   background-color: #f8f9fa;
   border-radius: 8px;
-  border-left: 4px solid #F87537;
+  border-left: 4px solid #f87537;
 }
 
 .product-description p {
@@ -623,7 +610,7 @@
 
 /* Like button active state */
 .like-button.active {
-  color: #F87537;
+  color: #f87537;
   transform: scale(1.1);
 }
 
@@ -643,9 +630,23 @@
 }
 </style>
 <script>
-import { productService } from '@/services/api'; // Enable real API
+import { productService } from '@/services/api'
+import { useCart } from '@/store/cart'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 export default {
+  setup() {
+    // Use cart in setup to make it available throughout the component
+    const cart = useCart()
+    const router = useRouter()
+
+    return {
+      cart,
+      router
+    }
+  },
+
   data() {
     return {
       quantity: 1,
@@ -682,36 +683,63 @@ export default {
           price: 400000,
           image: require('@/assets/product4.png')
         }
-      ]
+      ],
+      cartLoading: false
     }
   },
 
   async mounted() {
-    await this.fetchProduct();
+    await this.fetchProduct()
   },
 
   methods: {
     async fetchProduct() {
       try {
-        this.loading = true;
-        this.error = null;
+        this.loading = true
+        this.error = null
+        console.log('Fetching product details...', this.$route.params.id)
+        const productId = this.$route.params.id
+        console.log('Fetching product with ID:', productId)
+        const productData = await productService.getById(productId)
 
-        const productId = parseInt(this.$route.params.id);
-        console.log('Fetching product with ID:', productId);
-        const productData = await productService.getById(productId);
         if (!productData) {
-          throw new Error('Không tìm thấy sản phẩm');
+          throw new Error('Không tìm thấy sản phẩm')
         }
 
-        this.product = productData;
-        this.isLiked = productData.isFavorite || false;
+        this.product = productData
 
-        console.log('Product data from API:', productData);
+        // Kiểm tra trạng thái yêu thích sau khi lấy thông tin sản phẩm
+        await this.checkWishlistStatus()
+
+        console.log('Product data from API:', productData)
       } catch (error) {
-        this.error = error.message;
-        console.error('Error fetching product:', error);
+        this.error = error.message
+        console.error('Error fetching product:', error)
       } finally {
-        this.loading = false;
+        this.loading = false
+      }
+    },
+
+    async checkWishlistStatus() {
+      if (!this.product.product_id) return
+
+      try {
+        // Lấy danh sách yêu thích
+        const response = await axios.get('http://localhost:8000/api/v1/wishlist', {
+          withCredentials: true
+        })
+
+        // Kiểm tra xem sản phẩm hiện tại có trong danh sách yêu thích không
+        if (response.data && Array.isArray(response.data)) {
+          // Tìm sản phẩm trong danh sách yêu thích
+          const isInWishlist = response.data.some(
+            item => item.product_id === this.product.id || item.id === this.product.id
+          )
+
+          this.isLiked = isInWishlist
+        }
+      } catch (error) {
+        console.error('Error checking wishlist status:', error)
       }
     },
 
@@ -722,26 +750,143 @@ export default {
     },
 
     increase() {
-      this.quantity++
+      if (this.quantity < (this.product.stock || 99)) {
+        this.quantity++
+      }
     },
 
-    toggleLike() {
-      this.isLiked = !this.isLiked;
-      // TODO: Call API to update favorite status
+    async toggleLike() {
+      if (!this.product.product_id) {
+        alert('Không thể thêm sản phẩm vào danh sách yêu thích.')
+        return
+      }
+
+      const previousState = this.isLiked
+      this.isLiked = !this.isLiked
+
+      try {
+        const endpoint = this.isLiked ? '/api/v1/wishlist/add' : '/api/v1/wishlist/remove'
+
+        // Gọi API yêu thích sản phẩm
+        await axios.post(
+          `http://localhost:8000${endpoint}`,
+          {
+            product_id: this.product.product_id
+          },
+          {
+            withCredentials: true
+          }
+        )
+      } catch (error) {
+        console.error('Error updating wishlist:', error)
+
+        // Khôi phục trạng thái UI nếu API gọi thất bại
+        this.isLiked = previousState
+
+        // Hiển thị thông báo lỗi
+        alert(
+          this.isLiked
+            ? 'Không thể thêm sản phẩm vào danh sách yêu thích. Vui lòng thử lại sau.'
+            : 'Không thể xóa sản phẩm khỏi danh sách yêu thích. Vui lòng thử lại sau.'
+        )
+      }
     },
 
-    addToCart() {
-      // TODO: Implement add to cart functionality
-      console.log(`Added ${this.quantity} ${this.product?.name} to cart`);
+    async addToCart() {
+      if (!this.product) return
+
+      try {
+        this.cartLoading = true
+
+        // Format product data for cart
+        const productForCart = {
+          id: this.product.id || this.product.product_id,
+          name: this.product.name || this.product.product_name,
+          price: this.product.base_price || this.product.price,
+          image: this.product.image_url,
+          category: this.product.category
+        }
+
+        // Use the addItem method from the cart store
+        await this.cart.addItem(productForCart)
+
+        // Success message
+        alert(`Đã thêm ${this.quantity} ${productForCart.name} vào giỏ hàng!`)
+      } catch (error) {
+        console.error('Error adding to cart:', error)
+        alert('Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại sau.')
+      } finally {
+        this.cartLoading = false
+      }
     },
 
-    buyNow() {
-      // TODO: Implement buy now functionality
-      console.log(`Buy now ${this.quantity} ${this.product?.name}`);
+    async buyNow() {
+      if (!this.product) return
+
+      try {
+        this.cartLoading = true
+
+        // Get default address for user
+        let addressId = null
+        try {
+          const addressRes = await axios.get('http://localhost:8000/api/v1/address', {
+            withCredentials: true
+          })
+          console.log('xx', addressRes)
+
+          if (
+            addressRes.data.addresses &&
+            Array.isArray(addressRes.data.addresses) &&
+            addressRes.data.addresses.length > 0
+          ) {
+            const defaultAddress =
+              addressRes.data.addresses.find(addr => addr.is_default) || addressRes.data[0]
+            addressId = defaultAddress.id || defaultAddress.address_id
+          }
+        } catch (error) {
+          console.error('Error fetching address:', error)
+        }
+
+        if (!addressId) {
+          alert('Vui lòng thêm địa chỉ giao hàng trước khi mua hàng')
+          this.$router.push('/profile')
+          return
+        }
+
+        // Prepare order data
+        const orderData = {
+          address_id: addressId,
+          payment_method: 'COD',
+          product: {
+            product_id: this.product.id || this.product.product_id,
+            quantity: this.quantity,
+            unit_price: this.product.base_price || this.product.price
+          }
+        }
+
+        // Call BuyNow API
+        const response = await axios.post('http://localhost:8000/api/v1/orders/buynow', orderData, {
+          withCredentials: true
+        })
+
+        if (response.data && response.data.order_id) {
+          alert('Đặt hàng thành công!')
+        } else {
+          throw new Error(response.data?.message || 'Không thể đặt hàng')
+        }
+      } catch (error) {
+        console.error('Error with buy now:', error)
+        alert(
+          'Không thể mua ngay: ' +
+            (error.response?.data?.message || error.message || 'Lỗi không xác định')
+        )
+      } finally {
+        this.cartLoading = false
+      }
     },
 
     formatPrice(price) {
-      return new Intl.NumberFormat('vi-VN').format(price);
+      return new Intl.NumberFormat('vi-VN').format(price)
     }
   }
 }

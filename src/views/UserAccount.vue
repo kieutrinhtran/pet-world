@@ -3,17 +3,14 @@
     <!-- Banner -->
     <div class="banner-wrapper">
       <div class="user-card">
-        <h2>Nguyễn Văn A</h2>
-        <span class="role">User</span>
+        <h2>{{ userData.fullName }}</h2>
+        <span class="role">Thành viên</span>
       </div>
     </div>
 
     <div class="main-container">
       <div class="sidebar">
-        <div class="joined-info">
-          <h4>Giới thiệu</h4>
-          <p>Tham gia từ tháng 8 2025</p>
-        </div>
+        <div class="joined-info"></div>
       </div>
 
       <div class="content">
@@ -24,160 +21,177 @@
           <button :class="{ active: activeTab === 'wishlist' }" @click="activeTab = 'wishlist'">
             Wish List
           </button>
-          <button :class="{ active: activeTab === 'address' }" @click="activeTab = 'address'">
-            Sổ địa chỉ
+          <button :class="{ active: activeTab === 'history' }" @click="activeTab = 'history'">
+            Lịch sử mua hàng
           </button>
-          <button :class="{ active: activeTab === 'history' }" @click="activeTab = 'history'">Lịch sử mua hàng</button>
-          <button :class="{ active: activeTab === 'password' }" @click="activeTab = 'password'">Đổi mật khẩu</button>
+          <button :class="{ active: activeTab === 'password' }" @click="activeTab = 'password'">
+            Đổi mật khẩu
+          </button>
         </div>
 
-        <div v-if="activeTab === 'account'" class="form-box">
-          <h3>Thông tin tài khoản</h3>
-          <form>
-            <label>Họ và tên</label>
-            <input type="text" value="Nguyễn Văn A" />
+        <div v-if="activeTab === 'account'" class="account-box">
+          <!-- Loading state -->
+          <div v-if="isLoading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Đang tải thông tin...</p>
+          </div>
 
-            <label>Ngày sinh</label>
-            <input type="text" value="16/3/2002" />
+          <!-- Error state -->
+          <div v-else-if="error" class="error-state">
+            <p class="error-message">{{ error }}</p>
+            <button @click="fetchCustomerData" class="retry-btn">Thử lại</button>
+          </div>
 
-            <label>Giới tính</label>
-            <input type="text" value="Nam" />
+          <!-- Data display -->
+          <form v-else>
+            <div class="form-group">
+              <label>Họ và tên</label>
+              <input type="text" v-model="userData.fullName" disabled />
+            </div>
 
-            <label>Số điện thoại</label>
-            <input type="text" value="0123456789" />
+            <div class="form-group">
+              <label>Ngày sinh</label>
+              <input type="text" v-model="userData.dateOfBirth" disabled />
+            </div>
 
-            <label>Email</label>
-            <input type="email" value="nguyenvana@gmail.com" />
+            <div class="form-group">
+              <label>Giới tính</label>
+              <input type="text" v-model="userData.gender" disabled />
+            </div>
 
-            <div class="form-actions">
-              <button type="button" class="edit">Chỉnh sửa</button>
-              <button type="submit" class="save">Lưu</button>
+            <div class="form-group">
+              <label>Số điện thoại</label>
+              <input type="text" v-model="userData.phone" disabled />
+            </div>
+
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" v-model="userData.email" disabled />
+            </div>
+
+            <div class="form-group">
+              <label>Ngày tham gia</label>
+              <input type="text" v-model="userData.joinDate" disabled />
             </div>
           </form>
         </div>
-
         <div v-if="activeTab === 'wishlist'" class="wishlist-box">
           <div class="search-bar">
-            <input type="text" v-model="searchQuery" placeholder="Tên sản phẩm, tên shop..." />
+            <input type="text" v-model="searchQuery" placeholder="Tìm kiếm sản phẩm..." />
             <button><i class="fas fa-search"></i></button>
           </div>
 
-          <div class="product-list">
-            <div v-for="(product, index) in paginatedProducts" :key="index" class="product-card">
-              <img :src="product.image" alt="Ảnh sản phẩm" />
+          <!-- Loading state -->
+          <div v-if="wishlistLoading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Đang tải danh sách yêu thích...</p>
+          </div>
+
+          <!-- Error state -->
+          <div v-else-if="wishlistError" class="error-state">
+            <p class="error-message">{{ wishlistError }}</p>
+            <button @click="fetchWishlist" class="retry-btn">Thử lại</button>
+          </div>
+
+          <!-- Empty state -->
+          <div v-else-if="wishlists.length === 0" class="empty-state">
+            <p>Chưa có sản phẩm nào trong danh sách yêu thích</p>
+          </div>
+
+          <!-- Wishlist items -->
+          <div v-else class="product-list">
+            <div v-for="product in wishlists" :key="product.id" class="product-card">
+              <img :src="product.image" :alt="product.name" />
               <div class="product-info">
                 <h4>{{ product.name }}</h4>
                 <p>{{ product.price }}₫</p>
               </div>
               <div class="product-actions">
-                <button class="add-to-cart">Thêm vào giỏ hàng</button>
-                <button class="wishlist-button">❤️</button>
+                <button class="add-to-cart" @click="addToCart(product)">Thêm vào giỏ hàng</button>
               </div>
             </div>
           </div>
 
-          <div class="pagination" v-if="totalPages > 1">
-            <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
+          <!-- Pagination -->
+          <div class="pagination" v-if="totalWishlistPages > 1">
+            <button
+              @click="goToWishlistPage(currentWishlistPage - 1)"
+              :disabled="currentWishlistPage === 1"
+            >
               ←
             </button>
-            <button v-for="page in totalPages" :key="page" @click="goToPage(page)"
-              :class="{ active: currentPage === page }">
+            <button
+              v-for="page in totalWishlistPages"
+              :key="page"
+              @click="goToWishlistPage(page)"
+              :class="{ active: currentWishlistPage === page }"
+            >
               {{ page }}
             </button>
-            <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">
+            <button
+              @click="goToWishlistPage(currentWishlistPage + 1)"
+              :disabled="currentWishlistPage === totalWishlistPages"
+            >
               →
             </button>
           </div>
         </div>
 
-        <div v-if="activeTab === 'address'" class="address-book">
-          <div v-if="editAddressMode" class="address-edit-form">
-            <h3>Chỉnh sửa địa chỉ</h3>
+        <!-- Thêm nút Edit vào phần thông tin tài khoản -->
+        <div v-if="activeTab === 'account'" class="account-box">
+          <!-- Loading state -->
+          <div v-if="isLoading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Đang tải thông tin...</p>
+          </div>
+
+          <!-- Error state -->
+          <div v-else-if="error" class="error-state">
+            <p class="error-message">{{ error }}</p>
+            <button @click="fetchCustomerData" class="retry-btn">Thử lại</button>
+          </div>
+
+          <!-- Data display -->
+          <form v-else>
             <div class="form-group">
               <label>Họ và tên</label>
-              <input type="text" v-model="editingAddress.name">
+              <input type="text" v-model="userData.fullName" :disabled="!isEditing" />
             </div>
+
+            <div class="form-group">
+              <label>Ngày sinh</label>
+              <input type="text" v-model="userData.dateOfBirth" :disabled="!isEditing" />
+            </div>
+
+            <div class="form-group">
+              <label>Giới tính</label>
+              <input type="text" v-model="userData.gender" :disabled="!isEditing" />
+            </div>
+
             <div class="form-group">
               <label>Số điện thoại</label>
-              <input type="text" v-model="editingAddress.phone">
+              <input type="text" v-model="userData.phone" :disabled="!isEditing" />
             </div>
+
             <div class="form-group">
-              <label>Số nhà, tên đường</label>
-              <input type="text" v-model="editingAddress.street">
+              <label>Email</label>
+              <input type="email" v-model="userData.email" :disabled="!isEditing" />
             </div>
+
             <div class="form-group">
-              <label>Phường</label>
-              <div class="select-wrapper">
-                <select v-model="editingAddress.ward">
-                  <option value="WAR1">Phường 6</option>
-                  <option value="WAR10">Phường 10</option>
-                </select>
-                <span class="select-arrow">▼</span>
-              </div>
+              <label>Ngày tham gia</label>
+              <input type="text" v-model="userData.joinDate" disabled />
             </div>
-            <div class="form-group">
-              <label>Quận/Huyện</label>
-              <div class="select-wrapper">
-                <select v-model="editingAddress.district" disabled>
-                  <option value="Quận 3">Quận 3</option>
-                </select>
-                <span class="select-arrow">▼</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Thành phố</label>
-              <div class="select-wrapper">
-                <select v-model="editingAddress.city" disabled>
-                  <option value="TP. Hồ Chí Minh">Thành phố Hồ Chí Minh</option>
-                </select>
-                <span class="select-arrow">▼</span>
-              </div>
-            </div>
-            <div class="default-checkbox">
-              <label class="toggle-switch">
-                <input type="checkbox" v-model="editingAddress.default">
-                <span class="toggle-slider"></span>
-              </label>
-              <span>Đặt làm địa chỉ mặc định</span>
-            </div>
+
+            <!-- Thêm nút Edit và Save -->
             <div class="form-actions">
-              <button class="save-btn" @click="saveAddress">Lưu</button>
+              <button v-if="!isEditing" @click.prevent="startEditing" class="edit-btn"></button>
+              <template v-else>
+                <button @click.prevent="cancelEditing" class="cancel-btn">Hủy</button>
+                <button @click.prevent="saveUserData" class="save-btn">Lưu thay đổi</button>
+              </template>
             </div>
-          </div>
-
-          <div v-else-if="isLoading" class="loading-indicator">
-            <p>Đang tải địa chỉ...</p>
-          </div>
-
-          <div v-else-if="addresses.length === 0" class="no-addresses">
-            <p>Bạn chưa có địa chỉ nào. Hãy thêm địa chỉ mới.</p>
-            <button class="add-address-btn" @click="addNewAddress">Thêm địa chỉ mới</button>
-          </div>
-
-          <div v-else>
-            <div v-for="(address, idx) in addresses" :key="address.address_id" class="address-card">
-              <div class="address-content">
-                <div class="address-header">
-                  <div class="name-phone-group">
-                    <span class="address-name">{{ address.name }}</span>
-                    <span class="address-phone">{{ address.phone }}</span>
-                  </div>
-                </div>
-                <div class="address-detail">{{ address.detail }}</div>
-                <div class="address-label">
-                  <span class="address-default" :class="{ orange: address.default, gray: !address.default }">
-                    Mặc định
-                  </span>
-                </div>
-              </div>
-              <div class="address-actions">
-                <button class="action-btn chinhsua" @click="editAddress(idx)">Chỉnh sửa</button>
-                <button class="action-btn xoadiachi" @click="deleteAddress(idx)">Xóa địa chỉ</button>
-              </div>
-            </div>
-
-            <button class="add-address-btn" @click="addNewAddress">Thêm địa chỉ mới</button>
-          </div>
+          </form>
         </div>
 
         <div v-if="activeTab === 'history'" class="order-history">
@@ -191,9 +205,7 @@
 
             <div v-else-if="orderError" class="error-state">
               <p class="error-message">{{ orderError }}</p>
-              <button @click="fetchOrders" class="retry-btn">
-                Thử lại
-              </button>
+              <button @click="fetchOrders" class="retry-btn">Thử lại</button>
             </div>
             <div v-else class="order-content">
               <div class="customer-info">
@@ -230,7 +242,11 @@
 
               <div class="order-items">
                 <h4>Sản phẩm trong đơn hàng</h4>
-                <div class="order-item-detail" v-for="(item, idx) in selectedOrder.items" :key="idx">
+                <div
+                  class="order-item-detail"
+                  v-for="(item, idx) in selectedOrder.items"
+                  :key="idx"
+                >
                   <img :src="item.image" alt="Ảnh sản phẩm" class="product-image" />
 
                   <div class="order-info">
@@ -251,7 +267,10 @@
               <div class="order-summary">
                 <div class="summary-row">
                   <span>Tình trạng đơn hàng:</span>
-                  <span class="status-value" :class="selectedOrder.status === 'Hoàn thành' ? 'completed' : ''">
+                  <span
+                    class="status-value"
+                    :class="selectedOrder.status === 'Hoàn thành' ? 'completed' : ''"
+                  >
                     {{ selectedOrder.status }}
                   </span>
                 </div>
@@ -280,17 +299,15 @@
 
             <div v-else-if="orderError" class="error-state">
               <p class="error-message">{{ orderError }}</p>
-              <button @click="fetchOrders" class="retry-btn">
-                Thử lại
-              </button>
+              <button @click="fetchOrders" class="retry-btn">Thử lại</button>
             </div>
 
             <div v-else-if="orders.length === 0" class="empty-state">
               <p>Bạn chưa có đơn hàng nào</p>
             </div>
-
             <div v-else class="order-list">
-              <div class="order-item" v-for="order in filteredOrders" :key="order.id">
+              <!-- Change from filteredOrders to paginatedOrders -->
+              <div class="order-item" v-for="order in paginatedOrders" :key="order.id">
                 <div class="order-product">
                   <img :src="order.image" alt="Ảnh sản phẩm" class="product-image" />
 
@@ -306,7 +323,10 @@
                   <div class="status-label">
                     <i class="fas fa-truck-moving"></i> Tình trạng đơn hàng:
                   </div>
-                  <span class="status-value" :class="order.status === 'Hoàn thành' ? 'completed' : ''">
+                  <span
+                    class="status-value"
+                    :class="order.status === 'Hoàn thành' ? 'completed' : ''"
+                  >
                     {{ order.status }}
                   </span>
                 </div>
@@ -322,16 +342,59 @@
               </div>
             </div>
 
-            <div class="pagination" v-if="filteredOrders.length > ordersPerPage">
+            <!-- Update pagination section -->
+            <div class="pagination" v-if="orderTotalPages > 1">
               <button class="prev-btn" @click="prevOrderPage" :disabled="orderCurrentPage === 1">
                 <i class="fas fa-chevron-left"></i>
               </button>
-              <div class="page-info">Trang {{ orderCurrentPage }}/{{ orderTotalPages }}</div>
-              <button class="next-btn" @click="nextOrderPage" :disabled="orderCurrentPage === orderTotalPages">
+
+              <template v-for="page in orderTotalPages" :key="page">
+                <!-- Show first page -->
+                <button
+                  v-if="page === 1"
+                  :class="{ active: orderCurrentPage === 1 }"
+                  @click="orderCurrentPage = 1"
+                >
+                  1
+                </button>
+
+                <!-- Show dots if needed -->
+                <span v-if="page === 2 && orderCurrentPage > 3">...</span>
+
+                <!-- Show current page and neighbors -->
+                <button
+                  v-if="
+                    page !== 1 && page !== orderTotalPages && Math.abs(page - orderCurrentPage) <= 1
+                  "
+                  :class="{ active: orderCurrentPage === page }"
+                  @click="orderCurrentPage = page"
+                >
+                  {{ page }}
+                </button>
+
+                <!-- Show dots if needed -->
+                <span v-if="page === orderTotalPages - 1 && orderCurrentPage < orderTotalPages - 2"
+                  >...</span
+                >
+
+                <!-- Show last page -->
+                <button
+                  v-if="page === orderTotalPages"
+                  :class="{ active: orderCurrentPage === orderTotalPages }"
+                  @click="orderCurrentPage = orderTotalPages"
+                >
+                  {{ orderTotalPages }}
+                </button>
+              </template>
+
+              <button
+                class="next-btn"
+                @click="nextOrderPage"
+                :disabled="orderCurrentPage === orderTotalPages"
+              >
                 <i class="fas fa-chevron-right"></i>
               </button>
             </div>
-
             <div v-if="filteredOrders.length > 0" class="orders-total">
               <span class="label">Tổng tiền tất cả đơn hàng:</span>
               <span class="amount">{{ calculateAllOrdersTotal() }}</span>
@@ -342,25 +405,99 @@
         <div v-if="activeTab === 'password'" class="password-change-form">
           <h3>Đổi mật khẩu</h3>
 
-          <div class="form-group">
-            <label>Tên đăng nhập</label>
-            <input type="text" value="Nguyen Van A" disabled />
+          <!-- Loading state -->
+          <div v-if="passwordLoading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Đang xử lý...</p>
           </div>
 
-          <div class="form-group">
-            <label>Mật khẩu hiện tại</label>
-            <input type="password" v-model="passwordData.current" />
+          <!-- Error state -->
+          <div v-else-if="passwordError" class="error-state">
+            <p class="error-message">{{ passwordError }}</p>
+            <button @click="resetPasswordForm" class="retry-btn">Thử lại</button>
           </div>
 
-          <div class="form-group">
-            <label>Mật khẩu mới</label>
-            <input type="password" v-model="passwordData.new" />
+          <!-- Success message -->
+          <div v-else-if="passwordSuccess" class="success-state">
+            <p class="success-message">
+              <i class="fas fa-check-circle"></i> Mật khẩu đã được thay đổi thành công!
+            </p>
+            <button @click="resetPasswordForm" class="retry-btn">Đóng</button>
           </div>
 
-          <div class="form-group password-actions">
-            <button class="cancel-btn" @click="resetPasswordForm">Hủy</button>
-            <button class="save-btn" @click="changePassword">Lưu</button>
-          </div>
+          <!-- Form -->
+          <form v-else @submit.prevent="changePassword">
+            <div class="form-group">
+              <label>Tên đăng nhập</label>
+              <input type="text" :value="userData.fullName" disabled />
+            </div>
+
+            <div class="form-group">
+              <label>Mật khẩu hiện tại <span class="required">*</span></label>
+              <div class="password-field">
+                <input
+                  :type="showCurrentPassword ? 'text' : 'password'"
+                  v-model="passwordData.current_password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  @click="showCurrentPassword = !showCurrentPassword"
+                >
+                  <i :class="showCurrentPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Mật khẩu mới <span class="required">*</span></label>
+              <div class="password-field">
+                <input
+                  :type="showNewPassword ? 'text' : 'password'"
+                  v-model="passwordData.new_password"
+                  required
+                  pattern=".{6,}"
+                  title="Mật khẩu phải có ít nhất 6 ký tự"
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  @click="showNewPassword = !showNewPassword"
+                >
+                  <i :class="showNewPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                </button>
+              </div>
+              <span class="password-hint">Mật khẩu phải có ít nhất 6 ký tự</span>
+            </div>
+
+            <div class="form-group">
+              <label>Xác nhận mật khẩu mới <span class="required">*</span></label>
+              <div class="password-field">
+                <input
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  v-model="passwordData.confirm_password"
+                  required
+                  :class="{ 'error-input': !passwordsMatch && passwordData.confirm_password }"
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  @click="showConfirmPassword = !showConfirmPassword"
+                >
+                  <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                </button>
+              </div>
+              <span class="error-text" v-if="!passwordsMatch && passwordData.confirm_password">
+                Mật khẩu xác nhận không khớp
+              </span>
+            </div>
+
+            <div class="form-group password-actions">
+              <button type="button" class="cancel-btn" @click="resetPasswordForm">Hủy</button>
+              <button type="submit" class="save-btn" :disabled="!formValid">Lưu thay đổi</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -368,279 +505,275 @@
 </template>
 
 <script setup>
-import { customerService, orderService } from '@/services/api';
-import { onMounted, watch } from 'vue';
-import { ref, computed } from 'vue';
+import { orderService } from '@/services/api'
+import { onMounted, watch } from 'vue'
+import { ref, computed } from 'vue'
+import axios from 'axios'
 
-const activeTab = ref('account');
-const searchQuery = ref('');
-const currentPage = ref(1);
-const itemsPerPage = 2;
-const orderLoading = ref(false);
-const orderError = ref(null);
-// const addresses = ref([
-//   {
-//     name: 'Nguyễn Văn A',
-//     phone: '(+84) 347 895 555',
-//     detail: '123 Nguyễn Thị Minh Khai, Phường 6, Quận 3, TP. HCM',
-//     default: true,
-//   },
-//   {
-//     name: 'Nguyễn Văn A',
-//     phone: '(+84) 347 895 555',
-//     detail: '123 Nguyễn Thị Minh Khai, Phường 6, Quận 3, TP. HCM',
-//     default: false,
-//   },
-//   {
-//     name: 'Nguyễn Văn A',
-//     phone: '(+84) 347 895 555',
-//     detail: '123 Nguyễn Thị Minh Khai, Phường 6, Quận 3, TP. HCM',
-//     default: false,
-//   },
-// ]);
+const userData = ref({
+  fullName: '',
+  dateOfBirth: '',
+  gender: '',
+  phone: '',
+  email: '',
+  joinDate: '',
+  customerId: '',
+  userId: ''
+})
 
-const products = ref([
-  {
-    name: 'Hạt Royal Canin',
-    price: '350,000',
-    image:
-      'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880',
-  },
-  {
-    name: 'Thuc an Pedigree',
-    price: '350,000',
-    image:
-      'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880',
-  },
-  {
-    name: 'Hạt Whiskas',
-    price: '350,000',
-    image:
-      'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880',
-  },
-  {
-    name: 'Hạt CatPy',
-    price: '350,000',
-    image:
-      'https://down-vn.img.susercontent.com/file/1f4ecf5cbd05ac1ee06a4be19e24f880',
-  },
-]);
-const paginatedProducts = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  return filteredProducts.value.slice(start, start + itemsPerPage);
-});
+const activeTab = ref('account')
+const searchQuery = ref('')
+// const currentPage = ref(1);
+// const itemsPerPage = 2;
+const orderLoading = ref(false)
+const orderError = ref(null)
+const isLoading = ref(false)
+const error = ref(null)
+const fetchCustomerData = async () => {
+  try {
+    isLoading.value = true
+    error.value = null
 
-const totalPages = computed(() => {
-  return Math.ceil(filteredProducts.value.length / itemsPerPage);
-});
+    const response = await axios.get('http://localhost:8000/api/v1/customer', {
+      withCredentials: true
+    })
+    console.log('123', response)
 
-const goToPage = (page) => {
-  if (page >= 1 && page <= totalPages.value) {
-    currentPage.value = page;
+    if (response.data.success) {
+      const customer = response.data.success
+      userData.value = {
+        fullName: customer.customer_name,
+        dateOfBirth: formatDate(customer.date_of_birth),
+        gender: formatGender(customer.gender),
+        phone: formatPhone(customer.phone),
+        email: customer.email,
+        joinDate: formatDate(customer.created_at),
+        customerId: customer.customer_id,
+        userId: customer.user_id
+      }
+    }
+  } catch (err) {
+    console.error('Error fetching customer data:', err)
+    error.value = 'Không thể tải thông tin khách hàng'
+  } finally {
+    isLoading.value = false
   }
-};
-const filteredProducts = computed(() => {
-  const query = searchQuery.value.toLowerCase();
-  return products.value.filter((p) => p.name.toLowerCase().includes(query));
-});
-const addresses = ref([]);
-const isLoading = ref(false);
-const editAddressMode = ref(false);
-const editingAddress = ref({});
-const editingAddressIndex = ref(-1);
+}
+
+const formatGender = gender => {
+  if (!gender) return ''
+  return gender.toLowerCase() === 'male' ? 'Nam' : 'Nữ'
+}
+
+const formatPhone = phone => {
+  if (!phone) return ''
+  return `(+84) ${phone.slice(1)}`
+}
+const wishlists = ref([])
+const wishlistLoading = ref(false)
+const wishlistError = ref(null)
+
+const fetchWishlist = async () => {
+  try {
+    wishlistLoading.value = true
+    wishlistError.value = null
+
+    const response = await axios.get('http://localhost:8000/api/v1/wishlist', {
+      withCredentials: true
+    })
+
+    console.log('Wishlist response:', response)
+
+    if (response.data.success && Array.isArray(response.data.items)) {
+      wishlists.value = response.data.items.map(item => ({
+        id: item.product_id,
+        name: item.product_name,
+        description: item.description,
+        price: formatPrice(item.base_price),
+        image: item.image || 'https://via.placeholder.com/150',
+        stock: item.stock,
+        category: item.category_name
+      }))
+    } else {
+      wishlists.value = []
+    }
+  } catch (err) {
+    console.error('Error fetching wishlist:', err)
+    wishlistError.value = 'Không thể tải danh sách yêu thích'
+  } finally {
+    wishlistLoading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchCustomerData()
+})
+
+// const products = ref([]);
+// const paginatedProducts = computed(() => {
+//   const start = (currentPage.value - 1) * itemsPerPage;
+//   return filteredProducts.value.slice(start, start + itemsPerPage);
+// });
+
+// const totalPages = computed(() => {
+//   return Math.ceil(filteredProducts.value.length / itemsPerPage);
+// });
+
+// const goToPage = (page) => {
+//   if (page >= 1 && page <= totalPages.value) {
+//     currentPage.value = page;
+//   }
+// };
+// const filteredProducts = computed(() => {
+//   const query = searchQuery.value.toLowerCase();
+//   return products.value.filter((p) => p.name.toLowerCase().includes(query));
+// });
+const addresses = ref([])
+// const editAddressMode = ref(false);
+// const editingAddress = ref({});
+// const editingAddressIndex = ref(-1);
 
 onMounted(async () => {
-  await fetchAddresses();
+  await fetchAddresses()
   if (activeTab.value === 'history') {
-    await fetchOrders();
+    await fetchOrders()
   }
-});
-watch(activeTab, async (newTab) => {
+  if (activeTab.value === 'wishlist') {
+    await fetchWishlist()
+  }
+})
+watch(activeTab, async newTab => {
   if (newTab === 'history' && orders?.value.length === 0) {
-    await fetchOrders();
+    await fetchOrders()
   }
-});
+  if (newTab === 'wishlist') {
+    await fetchWishlist()
+  }
+})
 const fetchAddresses = async () => {
   try {
-    isLoading.value = true;
+    isLoading.value = true
+    error.value = null
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const response = await axios.get('http://localhost:8000/api/v1/address', {
+      withCredentials: true
+    })
 
-    const mockAddresses = [
-      {
-        address_id: "1",
-        customer_name: "Nguyễn Văn A",
-        phone: "(+84) 347 895 555",
-        address_line: "123 Nguyễn Thị Minh Khai, Phường 6, Quận 3, TP. HCM",
-        ward_id: "WAR1",
-        is_default: 1,
-        created_at: "2024-01-15 10:30:00"
-      },
-      {
-        address_id: "2",
-        customer_name: "Nguyễn Văn A",
-        phone: "(+84) 347 895 555",
-        address_line: "456 Lê Văn Sỹ, Phường 12, Quận 3, TP. HCM",
-        ward_id: "WAR10",
-        is_default: 0,
-        created_at: "2024-02-20 14:15:00"
-      },
-      {
-        address_id: "3",
-        customer_name: "Nguyễn Văn A",
-        phone: "(+84) 347 895 555",
-        address_line: "789 Cách Mạng Tháng 8, Phường 6, Quận 3, TP. HCM",
-        ward_id: "WAR1",
-        is_default: 0,
-        created_at: "2024-03-10 09:45:00"
-      }
-    ];
-
-    addresses.value = mockAddresses.map(addr => ({
-      address_id: addr.address_id,
-      name: addr.customer_name,
-      phone: addr.phone,
-      detail: addr.address_line,
-      ward_id: addr.ward_id,
-      default: addr.is_default === 1,
-      created_at: addr.created_at
-    }));
-
-    // const response = await customerService.getAddress();
-    // if (response && response.success && response.addresses) {
-    //   addresses.value = response.addresses.map(addr => ({
-    //     address_id: addr.address_id,
-    //     name: addr.customer_name,
-    //     phone: addr.phone,
-    //     detail: addr.address_line,
-    //     ward_id: addr.ward_id,
-    //     default: addr.is_default === 1,
-    //     created_at: addr.created_at
-    //   }));
-    // }
-  } catch (error) {
-    console.error("Lỗi khi tải địa chỉ:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const saveAddress = async () => {
-  try {
-    const addressData = {
-      address_id: editingAddressIndex.value >= 0 ? addresses.value[editingAddressIndex.value].address_id : "",
-      customer_id: localStorage.getItem('customerId') || "123",
-      address_line: editingAddress.value.street,
-      ward_id: editingAddress.value.ward,
-      is_default: editingAddress.value.default ? 1 : 0,
-      created_at: new Date().toISOString().slice(0, 19).replace('T', ' ') // Format: YYYY-MM-DD HH:MM:SS
-    };
-
-    const response = await customerService.saveAddress(addressData);
-
-    if (response && response.success) {
-      await fetchAddresses();
-
-      editAddressMode.value = false;
-      editingAddressIndex.value = -1;
-
-      alert("Địa chỉ đã được lưu thành công!");
+    if (response.data && response.data.success) {
+      addresses.value = response.data.addresses.map(addr => ({
+        address_id: addr.address_id,
+        customer_id: addr.customer_id,
+        detail: addr.address_line,
+        ward_id: addr.ward_id,
+        default: addr.is_default === 1,
+        created_at: addr.created_at,
+        name: addr.customer_name || 'Khách hàng',
+        phone: addr.phone || ''
+      }))
     } else {
-      alert("Có lỗi xảy ra khi lưu địa chỉ. Vui lòng thử lại.");
+      addresses.value = []
     }
   } catch (error) {
-    console.error("Lỗi khi lưu địa chỉ:", error);
-    alert("Có lỗi xảy ra khi lưu địa chỉ. Vui lòng thử lại.");
+    console.error('Lỗi khi tải địa chỉ:', error)
+    error.value = 'Không thể tải danh sách địa chỉ'
+    addresses.value = []
+  } finally {
+    isLoading.value = false
   }
-};
+}
 
-const editAddress = (index) => {
-  const addr = addresses.value[index];
-  editingAddress.value = {
-    address_id: addr.address_id,
-    name: addr.name,
-    phone: addr.phone,
-    street: addr.detail,
-    ward: addr.ward_id,
-    district: 'Quận 3',
-    city: 'TP. Hồ Chí Minh',
-    default: addr.default
-  };
-  editingAddressIndex.value = index;
-  editAddressMode.value = true;
-};
+// const saveAddress = async () => {
+//   try {
+//     const addressData = {
+//       address_id: editingAddress.value.address_id || '',
+//       customer_id: 'CUS1',
+//       address_line: editingAddress.value.street,
+//       ward_id: editingAddress.value.ward,
+//       is_default: editingAddress.value.default ? 1 : 0
+//     };
 
-const addNewAddress = () => {
-  editingAddress.value = {
-    address_id: "",
-    name: '',
-    phone: '',
-    street: '',
-    ward: 'WAR1',
-    district: 'Quận 3',
-    city: 'TP. Hồ Chí Minh',
-    default: false
-  };
-  editingAddressIndex.value = -1;
-  editAddressMode.value = true;
-};
+//     const response = await axios.post('http://localhost:8000/api/v1/address/save',
+//       addressData,
+//       {
+//         withCredentials: true,
+//       }
+//     );
 
-const deleteAddress = async (index) => {
-  if (confirm('Bạn có chắc muốn xóa địa chỉ này?')) {
-    try {
-      // const addressId = addresses.value[index].address_id;
-      // TODO: Cần thêm API endpoint để xóa địa chỉ
-      // await customerService.deleteAddress(addressId);
+//     if (response.data && response.data.success) {
+//       await fetchAddresses();
+//       editAddressMode.value = false;
+//       editingAddressIndex.value = -1;
+//       alert('Đã lưu địa chỉ thành công!');
+//     }
+//   } catch (error) {
+//     console.error("Lỗi khi lưu địa chỉ:", error);
+//     alert('Có lỗi xảy ra khi lưu địa chỉ. Vui lòng thử lại.');
+//   }
+// };
 
-      // Tạm thời xóa khỏi local array
-      addresses.value.splice(index, 1);
+// // Add deleteAddress method
+// const deleteAddress = async (index) => {
+//   if (!confirm('Bạn có chắc muốn xóa địa chỉ này?')) {
+//     return;
+//   }
 
-      // Làm mới danh sách địa chỉ sau khi có API
-      // await fetchAddresses();
-    } catch (error) {
-      console.error("Lỗi khi xóa địa chỉ:", error);
-      alert("Có lỗi xảy ra khi xóa địa chỉ. Vui lòng thử lại.");
-    }
-  }
-};
-const orders = ref([]);
-const orderSearchQuery = ref('');
-const orderCurrentPage = ref(1);
-const ordersPerPage = 4;
-const selectedOrder = ref(null);
+//   try {
+//     const addressId = addresses.value[index].address_id;
+//     const response = await axios.delete(`http://localhost:8000/api/v1/address/${addressId}`, {
+//       withCredentials: true,
+//     });
+
+//     if (response.data && response.data.success) {
+//       await fetchAddresses();
+//       alert('Đã xóa địa chỉ thành công!');
+//     }
+//   } catch (error) {
+//     console.error("Lỗi khi xóa địa chỉ:", error);
+//     alert('Có lỗi xảy ra khi xóa địa chỉ. Vui lòng thử lại.');
+//   }
+// };
+const orders = ref([])
+const orderSearchQuery = ref('')
+const orderCurrentPage = ref(1)
+const ordersPerPage = 4
+const selectedOrder = ref(null)
 
 const fetchOrders = async () => {
   try {
-    orderLoading.value = true;
-    orderError.value = null;
+    orderLoading.value = true
+    orderError.value = null
 
-    let customerId = localStorage.getItem('customer_id') || localStorage.getItem('customerId') || "CUS1";
+    let customerId =
+      localStorage.getItem('customer_id') || localStorage.getItem('customerId') || 'CUS1'
 
-    const response = await orderService.getAllCus(customerId);
+    const response = await orderService.getAllCus(customerId)
 
     if (response && Array.isArray(response)) {
-      console.log('API Response:', response);
+      console.log('API Response:', response)
 
       orders.value = response.map(order => {
-        const orderItems = order.items && Array.isArray(order.items) && order.items.length > 0
-          ? order.items.map(item => ({
-            product_id: item.product_id || '',
-            category: item.category || 'Sản phẩm',
-            name: item.name || 'Sản phẩm chưa xác định',
-            quantity: item.quantity || '0',
-            count: item.count || '1',
-            price: formatPrice(item.price) || '0',
-            image: item.image || 'https://via.placeholder.com/150'
-          }))
-          : [{
-            product_id: order.product_id || '',
-            category: order.category || 'Đơn hàng',
-            name: order.name || `Đơn hàng #${order.order_id}`,
-            quantity: order.quantity || '0',
-            count: order.count || '1',
-            price: formatPrice(order.price) || '0',
-            image: order.image || 'https://via.placeholder.com/150'
-          }];
+        const orderItems =
+          order.items && Array.isArray(order.items) && order.items.length > 0
+            ? order.items.map(item => ({
+                product_id: item.product_id || '',
+                category: item.category || 'Sản phẩm',
+                name: item.name || 'Sản phẩm chưa xác định',
+                quantity: item.quantity || '0',
+                count: item.count || '1',
+                price: item.price || '0',
+                image: item.image || 'https://via.placeholder.com/150'
+              }))
+            : [
+                {
+                  product_id: order.product_id || '',
+                  category: order.category || 'Đơn hàng',
+                  name: order.name || `Đơn hàng #${order.order_id}`,
+                  quantity: order.quantity || '0',
+                  count: order.count || '1',
+                  price: formatPrice(order.price) || '0',
+                  image: order.image || 'https://via.placeholder.com/150'
+                }
+              ]
 
         return {
           id: order.order_id,
@@ -648,7 +781,7 @@ const fetchOrders = async () => {
           name: orderItems[0].name || `Đơn hàng #${order.order_id}`,
           quantity: orderItems[0].quantity || '0',
           count: orderItems[0].count || '1',
-          price: formatPrice(orderItems[0].price) || '0',
+          price: orderItems[0].price || '0',
           total: formatPrice(order.total_amount) + 'đ',
           status: getStatusText(order.status),
           image: orderItems[0].image || 'https://via.placeholder.com/150',
@@ -668,109 +801,253 @@ const fetchOrders = async () => {
           },
 
           items: orderItems
-        };
-      });
+        }
+      })
 
-      console.log('Transformed orders:', orders.value);
+      console.log('Transformed orders:', orders.value)
     } else {
-      console.warn('No orders found or invalid response format');
-      orders.value = [];
+      console.warn('No orders found or invalid response format')
+      orders.value = []
     }
   } catch (error) {
-    console.error('Error fetching orders:', error);
-    orderError.value = 'Không thể tải danh sách đơn hàng';
+    console.error('Error fetching orders:', error)
+    orderError.value = 'Không thể tải danh sách đơn hàng'
   } finally {
-    orderLoading.value = false;
+    orderLoading.value = false
   }
-};
+}
 
-const formatPrice = (price) => {
-  if (!price) return '0';
-  return new Intl.NumberFormat('vi-VN').format(price);
-};
+const formatPrice = price => {
+  if (!price) return '0'
+  console.log('Formatting price:', price)
 
-const getStatusText = (status) => {
-  const statusString = String(status);
+  return new Intl.NumberFormat('vi-VN').format(price)
+}
+
+const getStatusText = status => {
+  const statusString = String(status)
 
   if (statusString === '1') {
-    return 'Hoàn thành';
+    return 'Hoàn thành'
   } else {
-    return 'Chưa hoàn thành';
+    return 'Chưa hoàn thành'
   }
-};
+}
 
-const formatDate = (dateString) => {
-  if (!dateString) return '';
-  const date = new Date(dateString);
+const formatDate = dateString => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
   return date.toLocaleDateString('vi-VN', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit'
-  });
-};
-
+  })
+}
 
 const filteredOrders = computed(() => {
-  const query = orderSearchQuery.value.toLowerCase();
-  return orders?.value.filter(order =>
-    order.name.toLowerCase().includes(query) ||
-    order.category.toLowerCase().includes(query)
-  );
-});
+  const query = orderSearchQuery.value.toLowerCase()
+  return orders?.value.filter(
+    order =>
+      order.name.toLowerCase().includes(query) || order.category.toLowerCase().includes(query)
+  )
+})
 
-
+const paginatedOrders = computed(() => {
+  const start = (orderCurrentPage.value - 1) * ordersPerPage
+  const end = start + ordersPerPage
+  return filteredOrders.value?.slice(start, end) || []
+})
 
 const orderTotalPages = computed(() => {
-  return Math.ceil(filteredOrders.value.length / ordersPerPage);
-});
+  return Math.ceil(filteredOrders.value.length / ordersPerPage)
+})
 
 const nextOrderPage = () => {
   if (orderCurrentPage.value < orderTotalPages.value) {
-    orderCurrentPage.value++;
+    orderCurrentPage.value++
   }
-};
+}
 
 const prevOrderPage = () => {
   if (orderCurrentPage.value > 1) {
-    orderCurrentPage.value--;
+    orderCurrentPage.value--
   }
-};
+}
 
-const viewOrderDetail = (order) => {
-  selectedOrder.value = order;
-};
+const viewOrderDetail = order => {
+  selectedOrder.value = order
+}
 
-const passwordData = ref({
-  current: '',
-  new: ''
-});
-
-const resetPasswordForm = () => {
-  passwordData.value.current = '';
-  passwordData.value.new = '';
-};
-
-const changePassword = () => {
-  if (!passwordData.value.current || !passwordData.value.new) {
-    alert('Vui lòng nhập đầy đủ thông tin');
-    return;
-  }
-
-  alert('Mật khẩu đã được cập nhật thành công!');
-  resetPasswordForm();
-};
 const calculateAllOrdersTotal = () => {
-  if (!orders.value || orders.value.length === 0) return '0đ';
+  if (!orders.value || orders.value.length === 0) return '0đ'
 
   const total = orders.value.reduce((sum, order) => {
-    const amount = parseFloat(order.orderDetails.total_amount || 0);
-    return sum + amount;
-  }, 0);
+    const amount = parseFloat(order.orderDetails.total_amount || 0)
+    return sum + amount
+  }, 0)
 
-  return new Intl.NumberFormat('vi-VN').format(total) + 'đ';
-};
+  return new Intl.NumberFormat('vi-VN').format(total) + 'đ'
+}
+// Thêm biến trạng thái cho chức năng chỉnh sửa
+const isEditing = ref(false)
+const userDataBackup = ref({})
+
+// Phương thức để bắt đầu chỉnh sửa
+const startEditing = () => {
+  // Sao lưu dữ liệu hiện tại để có thể hủy thay đổi
+  userDataBackup.value = { ...userData.value }
+  isEditing.value = true
+}
+
+// Phương thức để hủy chỉnh sửa
+const cancelEditing = () => {
+  // Khôi phục dữ liệu từ bản sao lưu
+  userData.value = { ...userDataBackup.value }
+  isEditing.value = false
+}
+
+// Phương thức để lưu dữ liệu người dùng
+const saveUserData = async () => {
+  try {
+    isLoading.value = true
+
+    // Chuẩn bị dữ liệu để cập nhật
+    const updateData = {
+      customer_name: userData.value.fullName,
+      date_of_birth: userData.value.dateOfBirth,
+      gender: userData.value.gender === 'Nam' ? 'male' : 'female',
+      phone: userData.value.phone.replace('(+84) ', '0'), // Chuyển lại định dạng số điện thoại
+      email: userData.value.email
+    }
+
+    // Gọi API cập nhật thông tin
+    const response = await axios.put('http://localhost:8000/api/v1/customer', updateData, {
+      withCredentials: true
+    })
+
+    if (response.data && response.data.success) {
+      alert('Cập nhật thông tin thành công!')
+      isEditing.value = false
+    } else {
+      throw new Error('Cập nhật thông tin không thành công')
+    }
+  } catch (err) {
+    console.error('Error updating customer data:', err)
+    alert('Không thể cập nhật thông tin. Vui lòng thử lại sau.')
+  } finally {
+    isLoading.value = false
+  }
+}
+const passwordData = ref({
+  current_password: '',
+  new_password: '',
+  confirm_password: ''
+})
+
+const passwordLoading = ref(false)
+const passwordError = ref(null)
+const passwordSuccess = ref(false)
+const showCurrentPassword = ref(false)
+const showNewPassword = ref(false)
+const showConfirmPassword = ref(false)
+
+// Kiểm tra mật khẩu khớp nhau
+const passwordsMatch = computed(() => {
+  return (
+    !passwordData.value.confirm_password ||
+    passwordData.value.new_password === passwordData.value.confirm_password
+  )
+})
+
+// Kiểm tra form hợp lệ
+const formValid = computed(() => {
+  return (
+    passwordData.value.current_password &&
+    passwordData.value.new_password &&
+    passwordData.value.confirm_password &&
+    passwordsMatch.value &&
+    passwordData.value.new_password.length >= 6
+  )
+})
+
+// Reset form mật khẩu
+const resetPasswordForm = () => {
+  passwordData.value = {
+    current_password: '',
+    new_password: '',
+    confirm_password: ''
+  }
+  passwordError.value = null
+  passwordSuccess.value = false
+  showCurrentPassword.value = false
+  showNewPassword.value = false
+  showConfirmPassword.value = false
+}
+const loadingProductIds = ref([])
+const addToCart = async product => {
+  try {
+    loadingProductIds.value.push(product.id)
+
+    const cartItem = {
+      product_id: product.id,
+      quantity: 1
+    }
+
+    const response = await axios.post('http://localhost:8000/api/v1/cart', cartItem, {
+      withCredentials: true
+    })
+
+    // Xử lý kết quả
+    if (response.data.cart_item_id) {
+      alert('Sản phẩm đã được thêm vào giỏ hàng!')
+    } else {
+      throw new Error(response.data?.message || 'Không thể thêm sản phẩm vào giỏ hàng')
+    }
+  } catch (error) {
+    console.error('Error adding to cart:', error)
+  } finally {
+    // Xóa sản phẩm khỏi danh sách loading
+    loadingProductIds.value = loadingProductIds.value.filter(id => id !== product.id)
+  }
+}
+// Xử lý đổi mật khẩu
+const changePassword = async () => {
+  if (!formValid.value) {
+    return
+  }
+
+  try {
+    passwordLoading.value = true
+    passwordError.value = null
+
+    // Gọi API đổi mật khẩu
+    const response = await axios.post(
+      'http://localhost:8000/api/v1/password/change',
+      passwordData.value,
+      { withCredentials: true }
+    )
+
+    console.log('Password change response:', response)
+
+    if (response.data && response.data.success) {
+      passwordSuccess.value = true
+      // Reset sau 3 giây
+      setTimeout(() => {
+        resetPasswordForm()
+      }, 3000)
+    } else {
+      throw new Error(response.data?.message || 'Đổi mật khẩu không thành công')
+    }
+  } catch (err) {
+    console.error('Error changing password:', err)
+    passwordError.value =
+      err.response?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu. Vui lòng thử lại.'
+  } finally {
+    passwordLoading.value = false
+  }
+}
 </script>
 
 <style scoped>
@@ -1183,7 +1460,6 @@ const calculateAllOrdersTotal = () => {
   color: #fff;
 }
 
-
 .address-edit-form {
   background: #fff;
   border-radius: 10px;
@@ -1263,27 +1539,27 @@ const calculateAllOrdersTotal = () => {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 34px;
 }
 
 .toggle-slider:before {
   position: absolute;
-  content: "";
+  content: '';
   height: 16px;
   width: 16px;
   left: 4px;
   bottom: 4px;
   background-color: white;
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 50%;
 }
 
-input:checked+.toggle-slider {
+input:checked + .toggle-slider {
   background-color: #ff7c00;
 }
 
-input:checked+.toggle-slider:before {
+input:checked + .toggle-slider:before {
   transform: translateX(26px);
 }
 
@@ -1602,7 +1878,6 @@ input:checked+.toggle-slider:before {
   display: none;
 }
 
-
 .password-change-form {
   background: #fff;
   border-radius: 10px;
@@ -1892,5 +2167,115 @@ input:checked+.toggle-slider:before {
   /* Tăng từ 18px lên 22px */
   font-weight: bold;
   color: #ff7c00;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 25px;
+  gap: 10px;
+}
+
+.pagination button {
+  min-width: 35px;
+  height: 35px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.pagination button.active {
+  background: #ff7c00;
+  color: white;
+  border-color: #ff7c00;
+}
+
+.pagination button:hover:not(:disabled) {
+  border-color: #ff7c00;
+  color: #ff7c00;
+}
+
+.pagination button:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  color: #999;
+}
+
+.pagination button.prev-btn,
+.pagination button.next-btn {
+  border-radius: 50%;
+}
+
+.pagination span {
+  color: #666;
+  margin: 0 5px;
+}
+.password-field {
+  position: relative;
+  width: 100%;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  font-size: 16px;
+}
+
+.toggle-password:hover {
+  color: #ff7c00;
+}
+
+.password-hint {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+  display: block;
+}
+
+.error-input {
+  border-color: #e74c3c !important;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+.required {
+  color: #e74c3c;
+}
+
+.success-state {
+  text-align: center;
+  padding: 40px 20px;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.success-message {
+  color: #2eb82e;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.success-message i {
+  font-size: 24px;
+  margin-right: 10px;
 }
 </style>
