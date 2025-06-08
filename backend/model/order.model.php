@@ -209,7 +209,7 @@ class Order
     public function revenueThisMonth()
     {
         $query = "SELECT SUM(total_amount) as revenue FROM `order` 
-                  WHERE status = 'completed' AND MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())";
+                  WHERE status = 'delivered' AND MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['revenue'] ?? 0;
@@ -223,14 +223,14 @@ class Order
     }
     public function countProducts()
     {
-        $query = "SELECT COUNT(*) as total FROM product";
+        $query = "SELECT COUNT(*) as total FROM product WHERE is_active = 1";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
     public function countCustomers()
     {
-        $query = "SELECT COUNT(*) as total FROM user_account WHERE role = 'user'";
+        $query = "SELECT COUNT(*) as total FROM user_account WHERE role = 'user' and is_active = 1";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
