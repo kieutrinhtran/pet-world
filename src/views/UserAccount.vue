@@ -11,6 +11,8 @@
     <div class="main-container">
       <div class="sidebar">
         <div class="joined-info"></div>
+        <!-- Nút Đăng xuất -->
+        <button class="logout-btn" @click="logout">Đăng xuất</button>
       </div>
 
       <div class="content">
@@ -509,6 +511,7 @@ import { orderService } from '@/services/api'
 import { onMounted, watch } from 'vue'
 import { ref, computed } from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 const userData = ref({
   fullName: '',
@@ -1047,6 +1050,17 @@ const changePassword = async () => {
   } finally {
     passwordLoading.value = false
   }
+}
+
+const router = useRouter()
+
+const logout = () => {
+  // Xóa localStorage/sessionStorage/cookie nếu có
+  localStorage.clear()
+  sessionStorage.clear()
+  // Nếu dùng cookie: document.cookie = 'token=; Max-Age=0'
+  // Chuyển hướng về trang đăng nhập hoặc trang chủ
+  router.push('/login')
 }
 </script>
 
@@ -2277,5 +2291,23 @@ input:checked + .toggle-slider:before {
 .success-message i {
   font-size: 24px;
   margin-right: 10px;
+}
+
+.logout-btn {
+  width: 100%;
+  margin-top: 30px;
+  padding: 10px 0;
+  background: #ff7c00;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.logout-btn:hover {
+  background: #e67300;
 }
 </style>
