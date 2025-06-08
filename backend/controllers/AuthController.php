@@ -32,4 +32,8 @@ class AuthController
             ];
         }
     }
+    public function register($data)
+    {
+        return $this->service->register($data);
+    }
 }
