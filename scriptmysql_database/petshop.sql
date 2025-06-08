@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 08, 2025 at 02:54 PM
+-- Generation Time: Jun 08, 2025 at 03:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -244,10 +244,10 @@ CREATE TABLE `order` (
 --
 
 INSERT INTO `order` (`order_id`, `customer_id`, `address_id`, `promotion_id`, `order_date`, `status`, `total_amount`, `payment_method`, `payment_status`) VALUES
-('9F70B532D7', 'CUS2', 'A03', NULL, '2025-06-08 16:18:01', 'pending', 15000.00, 'COD', 'pending'),
-('A3DBC92548', 'CUS2', 'A03', NULL, '2025-06-08 18:31:59', 'pending', 60000.00, 'COD', 'unpaid'),
-('C09E07E799', 'CUS2', 'A03', NULL, '2025-06-08 15:55:19', 'pending', 15000.00, 'COD', 'unpaid'),
-('D7626B27C1', 'CUS2', 'A03', NULL, '2025-06-08 17:18:10', 'pending', 1245000.00, 'COD', 'unpaid'),
+('9F70B532D7', 'CUS2', 'A03', NULL, '2025-06-08 16:18:01', 'pending', 15000.00, 'COD', 'unpaid'),
+('A3DBC92548', 'CUS2', 'A03', NULL, '2025-06-08 18:31:59', 'delivered', 60000.00, 'COD', 'paid'),
+('C09E07E799', 'CUS2', 'A03', NULL, '2025-06-08 15:55:19', 'delivered', 15000.00, 'COD', 'paid'),
+('D7626B27C1', 'CUS2', 'A03', NULL, '2025-06-08 17:18:10', 'processing', 1245000.00, 'COD', 'unpaid'),
 ('DD6EEEA632', 'CUS2', 'A03', NULL, '2025-06-08 17:25:20', 'pending', 250000.00, 'COD', 'unpaid');
 
 -- --------------------------------------------------------
@@ -421,13 +421,13 @@ INSERT INTO `user_account` (`user_id`, `user_name`, `password_hash`, `role`, `st
 ('UA3', 'meocuamos', 'hash_pw3', 'admin', 'inactive', '2024-01-03 10:00:00', '2024-06-01 08:20:00'),
 ('UA4', 'luvmypet', 'hash_pw4', 'user', 'active', '2024-01-04 10:30:00', '2024-06-01 09:00:00'),
 ('UA5', 'nhatran', 'hash_pw1233', 'user', 'active', '2024-01-05 11:00:00', '2024-06-01 09:10:00'),
-('UA6', 'thinhtran123', 'hash_pw6', 'customer', 'active', '2024-01-06 11:30:00', '2024-06-01 09:20:00'),
-('UA7', 'nhunghong52', 'hash_pw7', 'customer', 'active', '2024-01-07 12:00:00', '2024-06-01 09:30:00'),
-('UA8', 'giangtruong322', 'hash_pw8', 'customer', 'active', '2024-01-08 12:30:00', '2024-06-01 09:40:00'),
-('UA9', 'charlie_dath', 'hash_pw9', 'customer', 'inactive', '2024-01-09 13:00:00', '2024-06-01 09:50:00'),
-('UA97', 'giangtrong<3', 'hash_pw8', 'customer', 'active', '2024-01-08 12:30:00', '2024-06-01 09:40:00'),
-('UA98', 'nobita', 'hash_pw9', 'customer', 'inactive', '2024-01-09 13:00:00', '2024-06-01 09:50:00'),
-('UA99', 'doraemon', 'hash_pw10', 'customer', 'active', '2024-01-10 13:30:00', '2024-06-01 10:00:00');
+('UA6', 'thinhtran123', 'hash_pw6', 'user', 'active', '2024-01-06 11:30:00', '2024-06-01 09:20:00'),
+('UA7', 'nhunghong52', 'hash_pw7', 'user', 'active', '2024-01-07 12:00:00', '2024-06-01 09:30:00'),
+('UA8', 'giangtruong322', 'hash_pw8', 'user', 'active', '2024-01-08 12:30:00', '2024-06-01 09:40:00'),
+('UA9', 'charlie_dath', 'hash_pw9', 'user', 'inactive', '2024-01-09 13:00:00', '2024-06-01 09:50:00'),
+('UA97', 'giangtrong<3', 'hash_pw8', 'user', 'active', '2024-01-08 12:30:00', '2024-06-01 09:40:00'),
+('UA98', 'nobita', 'hash_pw9', 'user', 'inactive', '2024-01-09 13:00:00', '2024-06-01 09:50:00'),
+('UA99', 'doraemon', 'hash_pw10', 'user', 'active', '2024-01-10 13:30:00', '2024-06-01 10:00:00');
 
 -- --------------------------------------------------------
 
@@ -503,6 +503,7 @@ INSERT INTO `wishlist_item` (`wishlist_id`, `product_id`) VALUES
 ('WL2', 'PRD2'),
 ('WL3', 'PRD13'),
 ('WL3', 'PRD20'),
+('WL3', 'PRD28'),
 ('WL3', 'PRD8'),
 ('WL4', 'PRD11'),
 ('WL4', 'PRD12'),
