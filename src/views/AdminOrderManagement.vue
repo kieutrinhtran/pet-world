@@ -52,34 +52,10 @@
               <td class="p-4">{{ order.order_id }}</td>
               <td class="p-4">{{ formatDate(order.order_date) }}</td>
               <td class="p-4">{{ order.customer_name || 'Không có thông tin' }}</td>
-              <!-- Hiển thị trạng thái đơn hàng với màu sắc tương ứng -->
-              <td class="p-4">
-                <span
-                  :class="[
-                    'px-2 py-1 rounded text-xs font-semibold',
-                    order.status === '0' && 'bg-red-100 text-red-800',
-                    order.status === '1' && 'bg-yellow-100 text-yellow-800',
-                    order.status === '2' && 'bg-blue-100 text-blue-800',
-                    order.status === '3' && 'bg-green-100 text-green-800'
-                  ]"
-                >
-                  {{ getStatusText(order.status) }}
-                </span>
-              </td>
+              <td class="p-4">{{ getStatusText(order.status) }}</td>
               <td class="p-4">{{ formatPrice(order.total_amount) }}</td>
               <td class="p-4">{{ order.payment_method }}</td>
-              <!-- Hiển thị trạng thái thanh toán với màu sắc tương ứng -->
-              <td class="p-4">
-                <span
-                  :class="[
-                    'px-2 py-1 rounded text-xs font-semibold',
-                    order.payment_status === '0' && 'bg-yellow-100 text-yellow-800',
-                    order.payment_status === '1' && 'bg-green-100 text-green-800'
-                  ]"
-                >
-                  {{ getPaymentStatusText(order.payment_status) }}
-                </span>
-              </td>
+              <td class="p-4">{{ getPaymentStatusText(order.payment_status) }}</td>
               <!-- Nút xem chi tiết đơn hàng -->
               <td class="p-4">
                 <button
@@ -450,8 +426,6 @@ const getPaymentStatusText = status => {
   }
   return statusMap[status] || 'Không xác định'
 }
-
-// ...existing code...
 
 // Xem chi tiết đơn hàng trong popup
 const viewOrderDetail = async order => {
