@@ -29,4 +29,31 @@ function goToPet(petType) {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.quick-category {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  display: block;
+  border: 2px solid transparent; /* đảm bảo không bị lệch layout */
+}
+
+/* Ảnh bên trong */
+.quick-category img {
+  transition: transform 0.3s ease;
+  border-radius: 12px;
+  display: block;
+}
+
+/* Hover toàn khối */
+.quick-category:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  border: 2px solid #ff9000; /* viền cam nổi bật */
+}
+
+/* Ảnh bên trong phóng nhẹ */
+.quick-category:hover img {
+  transform: scale(1.05);
+}
+</style>
