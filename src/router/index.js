@@ -107,12 +107,6 @@ const routes = [
         component: () => import('@/views/AdminEditCustomer.vue'),
         props: true,
       },
-      {
-        path: 'customers/:id/purchase-history',
-        name: 'AdminCustomerPurchaseHistory',
-        component: () => import('@/views/AdminCustomerPurchaseHistory.vue'),
-        props: true,
-      },
     ],
   },
   {

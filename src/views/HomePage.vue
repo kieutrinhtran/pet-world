@@ -35,7 +35,7 @@
 
       <!-- BrandSection -->
       <section class="mt-24">
-        <h2 class="text-3xl font-semibold">1000+ Thương Hiệu Boss Thích</h2>
+        <h2 class="text-3xl font-semibold text-center mb-8">1000+ Thương Hiệu Boss Thích</h2>
         <BrandLists class="mt-11"></BrandLists>
       </section>
 
