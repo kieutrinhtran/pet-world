@@ -1,7 +1,6 @@
 <template>
   <div class="admin-layout">
     <AdminHeader />
-    <AdminHero />
     <main>
       <router-view />
     </main>
@@ -11,7 +10,6 @@
 
 <script setup>
 import AdminHeader from '@/components/AdminHeader.vue';
-import AdminHero from '@/components/AdminHero.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
 </script>
 

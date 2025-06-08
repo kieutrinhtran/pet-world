@@ -4,12 +4,16 @@
     <!-- Container căn giữa, giới hạn chiều rộng -->
     <div class="max-w-7xl mx-auto px-4">
       <!-- Tiêu đề trang, căn giữa, font lớn -->
-      <h2 class="text-center text-3xl font-bold mt-8 mb-8 text-[#5a3a1b] font-quicksand tracking-wide">
+      <h2
+        class="text-center text-3xl font-bold mt-8 mb-8 text-[#5a3a1b] font-quicksand tracking-wide"
+      >
         Thống kê tình hình kinh doanh
       </h2>
       <!-- Hiển thị loading khi đang lấy dữ liệu -->
       <div v-if="loading" class="flex justify-center items-center min-h-[200px]">
-        <span class="animate-spin rounded-full h-12 w-12 border-t-4 border-orange-400 border-solid"></span>
+        <span
+          class="animate-spin rounded-full h-12 w-12 border-t-4 border-orange-400 border-solid"
+        ></span>
       </div>
       <!-- Grid 5 card thống kê, responsive -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 justify-items-center">
@@ -35,7 +39,7 @@
         <div class="stat-card aspect-square h-60">
           <div class="stat-title">DOANH THU TRONG THÁNG</div>
           <div class="stat-icon">💰</div>
-          <div class="stat-value">{{ totalRevenue.toLocaleString() }}đ</div>
+          <div class="stat-value">{{ formatMoneyShort(totalRevenue) }} VND</div>
         </div>
       </div>
     </div>
@@ -65,6 +69,7 @@ onMounted(async () => {
       withCredentials: true // Include cookies if needed for authentication
     })
     const stats = res.data
+    console.log('Statistics data:', stats)
     // Gán số liệu vào biến reactive, có fallback cho các kiểu tên trường khác nhau
     totalOrders.value = stats.total_orders || stats.totalOrders || 0
     totalProducts.value = stats.total_products || stats.totalProducts || 0
@@ -73,9 +78,16 @@ onMounted(async () => {
   } catch (err) {
     error.value = err.message
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-});
+})
+
+function formatMoneyShort(value) {
+  if (value >= 1_000_000_000) return (value / 1_000_000_000).toFixed(2).replace(/\.00$/, '') + 'B';
+  if (value >= 1_000_000) return (value / 1_000_000).toFixed(2).replace(/\.00$/, '') + 'M';
+  if (value >= 1_000) return (value / 1_000).toFixed(2).replace(/\.00$/, '') + 'K';
+  return value.toLocaleString('vi-VN');
+}
 </script>
 
 <style scoped>
@@ -103,5 +115,6 @@ onMounted(async () => {
 .stat-value {
   @apply text-5xl font-extrabold text-gray-900 mt-2;
   letter-spacing: 1px;
+  font-size: 2rem !important;
 }
 </style>

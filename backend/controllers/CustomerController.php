@@ -75,5 +75,28 @@ class CustomerController
             'data' => $result
         ];
     }
+            public function updateProfile($data)
+    {
+        requireLogin(['user', 'admin']);
+        
+        $customer_data = $this->service->getCustomerByCustomerId($_SESSION['user_id']);
+        
+        if (!$customer_data || !isset($customer_data['customer_id'])) {
+            return [
+                'status' => 400,
+                'data' => [
+                    'success' => false,
+                    'message' => 'Không tìm thấy thông tin khách hàng'
+                ]
+            ];
+        }
+        
+        $customer_id = $customer_data['customer_id'];
+        
+        // Sử dụng service để cập nhật thông tin
+        $result = $this->service->updateCustomer($customer_id, $data);
+        
+        return $result;
+    }
 }
 ?>

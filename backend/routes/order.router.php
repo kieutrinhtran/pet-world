@@ -17,6 +17,7 @@ class OrderRouter
         $router->addRoute('POST', '/orders/cart', 'OrderController', 'createOrderFromCart');
         $router->addRoute('POST', '/orders/buynow', 'OrderController', 'buyNow');
         $router->addRoute('GET', '/orders/filter', 'OrderController', 'filterOrders');
+        $router->addRoute('PUT', '/orders/{order_id}/status', 'OrderController', 'changeToProcessing');
         $router->addRoute('GET', '/orders/customer', 'OrderController', 'getAllOrdersByCustomer');
         $router->addRoute('GET', '/orders/{order_id}', 'OrderController', 'getOrderDetail');
         
