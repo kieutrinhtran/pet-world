@@ -35,15 +35,8 @@
 </template>
 
 <script>
-import userStore from '@/store/user'
-
+import Cookies from 'js-cookie'
 export default {
-  setup() {
-    const { getUserFromLocal } = userStore()
-    return {
-      getUserFromLocal
-    }
-  },
   data() {
     return {
       username: '',
@@ -67,6 +60,7 @@ export default {
       try {
         const response = await fetch(url, {
           method: 'POST',
+          credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             user_name: this.username,
@@ -75,25 +69,22 @@ export default {
         })
 
         const result = await response.json()
-        console.log('🚀 ~ login ~ result:', result)
+        console.log(result)
 
-        if (response.status !== 200) {
-          this.errorMessage = result.data?.message || 'Sai tên đăng nhập hoặc mật khẩu'
+        if (result.user.status !== 200) {
+          this.errorMessage = result.message || 'Sai tên đăng nhập hoặc mật khẩu'
           setTimeout(() => (this.errorMessage = ''), 5000)
           return
         }
+        console.log(result)
 
-        const user = result.user
+        const user = result.user.data
         const role = user?.role || 'user'
-        // Lưu session
-        if (user) {
-          const stringifyUser = JSON.stringify(user)
-          localStorage.setItem('user', stringifyUser)
-          this.getUserFromLocal()
-        }
+        console.log(user)
 
-        // localStorage.setItem('user_name', user?.user_name);
-        // localStorage.setItem('role', role);
+        // Lưu session
+        localStorage.setItem('user_name', user?.user)
+        Cookies.set('PHPSESSID', user.session_id)
 
         this.showSuccess = true
         setTimeout(() => {
@@ -130,26 +121,31 @@ export default {
   justify-content: center;
   padding: 2rem;
 }
+
 .logo {
   width: 200px;
   margin-bottom: 2rem;
 }
+
 .title {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 1.5rem;
 }
+
 form {
   width: 100%;
   max-width: 320px;
   display: flex;
   flex-direction: column;
 }
+
 label {
   margin-top: 1rem;
   margin-bottom: 0.25rem;
   font-weight: 500;
 }
+
 input,
 select {
   padding: 10px;
@@ -158,6 +154,7 @@ select {
   border-radius: 5px;
   font-size: 14px;
 }
+
 button {
   margin-top: 1.5rem;
   padding: 10px;
@@ -168,23 +165,28 @@ button {
   border-radius: 6px;
   cursor: pointer;
 }
+
 button:hover {
   background-color: #d88400;
 }
+
 .links {
   margin-top: 1rem;
   text-align: center;
   font-size: 14px;
 }
+
 .links a {
   font-weight: bold;
   color: #f49a00;
   text-decoration: none;
 }
+
 .links a:hover {
   text-decoration: underline;
   color: #d88400;
 }
+
 .modal {
   position: fixed;
   top: 0;
@@ -197,6 +199,7 @@ button:hover {
   justify-content: center;
   z-index: 999;
 }
+
 .modal-content {
   background-color: white;
   padding: 2rem;
@@ -206,11 +209,13 @@ button:hover {
   font-weight: bold;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
+
 .modal-content .icon {
   display: block;
   margin: 0 auto 1rem auto;
   width: 50px;
 }
+
 .error-message {
   color: red;
   margin: 1rem 0;
