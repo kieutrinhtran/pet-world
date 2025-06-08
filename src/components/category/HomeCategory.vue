@@ -24,25 +24,25 @@ const categories = ref([
   {
     id: 1,
     name: 'Thuc an',
-    image: 'https://fagopet.vn/uploads/images/6289daf49487f626bf2d8617/thuc-an-cho-cho-lon-pedigree-vi-bo-tui-3kg.webp',
+    image: '/images/foodcategory.png',
     productCount: 150
   },
   {
     id: 2,
     name: 'Do choi',
-    image: 'https://fagopet.vn/uploads/images/6289daf49487f626bf2d8617/thuc-an-cho-cho-lon-pedigree-vi-bo-tui-3kg.webp',
+    image: '/images/toycategory.png',
     productCount: 80
   },
   {
     id: 3,
     name: 'Phu kien cham soc',
-    image: 'https://fagopet.vn/uploads/images/6289daf49487f626bf2d8617/thuc-an-cho-cho-lon-pedigree-vi-bo-tui-3kg.webp',
+    image: '/images/accessorycategory.png',
     productCount: 120
   },
   {
     id: 4,
     name: 'Vat dung ve sinh',
-    image: 'https://fagopet.vn/uploads/images/6289daf49487f626bf2d8617/thuc-an-cho-cho-lon-pedigree-vi-bo-tui-3kg.webp',
+    image: '/images/cleancategory.png',
     productCount: 90
   }
 ]);
