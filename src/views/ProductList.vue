@@ -340,6 +340,9 @@ export default {
     if (route.query.category) {
       this.selectedCategories = [route.query.category]
     }
+    if (route.query.pet) {
+      this.selectedPets = [route.query.pet]
+    }
   },
 
   mounted() {

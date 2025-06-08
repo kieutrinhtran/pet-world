@@ -16,7 +16,7 @@
         ></span>
       </div>
       <!-- Grid 5 card thống kê, responsive -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 justify-items-center">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-center">
         <!-- Card: Tổng số đơn hàng -->
         <div class="stat-card aspect-square h-60">
           <div class="stat-title">TỔNG SỐ ĐƠN HÀNG</div>
@@ -39,7 +39,7 @@
         <div class="stat-card aspect-square h-60">
           <div class="stat-title">DOANH THU TRONG THÁNG</div>
           <div class="stat-icon">💰</div>
-          <div class="stat-value">{{ formatMoneyShort(totalRevenue) }} VND</div>
+          <div class="stat-value">{{ formatMoneyShort(totalRevenue) }}VND</div>
         </div>
       </div>
     </div>
