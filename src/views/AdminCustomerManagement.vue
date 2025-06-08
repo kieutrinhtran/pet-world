@@ -27,11 +27,10 @@
             <th>Ngày sinh</th>
             <th>Số điện thoại</th>
             <th>Giới tính</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(customer, index) in filteredCustomers" :key="index">
+          <tr v-for="(customer, index) in paginatedCustomers" :key="index">
             <td>{{ customer.customer_id }}</td>
             <td>{{ customer.customer_name }}</td>
             <td>{{ customer.email }}</td>
@@ -41,6 +40,15 @@
           </tr>
         </tbody>
       </table>
+      <div v-if="totalPages > 1" class="flex justify-center items-center gap-4 mt-4">
+        <BasePagination
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          @prev="currentPage > 1 && currentPage--"
+          @next="currentPage < totalPages && currentPage++"
+          @page="currentPage = $event"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -48,13 +56,15 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import AdminSearchBar from '@/components/AdminSearchBar.vue'
-
+import BasePagination from '@/components/BasePagination.vue'
 
 // Trạng thái
 const customers = ref([])
 const loading = ref(true)
 const error = ref('')
 const searchQuery = ref('')
+const currentPage = ref(1)
+const pageSize = 10
 
 // Gọi API lấy danh sách khách hàng
 onMounted(async () => {
@@ -80,6 +90,12 @@ const filteredCustomers = computed(() => {
       c.email?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       c.id?.toString().includes(searchQuery.value)
   )
+})
+
+const totalPages = computed(() => Math.ceil(filteredCustomers.value.length / pageSize))
+const paginatedCustomers = computed(() => {
+  const start = (currentPage.value - 1) * pageSize
+  return filteredCustomers.value.slice(start, start + pageSize)
 })
 
 </script>
