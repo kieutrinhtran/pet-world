@@ -11,10 +11,22 @@
       <div class="filter-section">
         <div class="filter-title">
           <div class="filter-title-group">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" class="icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              class="icon"
+            >
               <g clip-path="url(#clip0_2200_5624)">
-                <path d="M18.3332 2.5H1.6665L8.33317 10.3833V15.8333L11.6665 17.5V10.3833L18.3332 2.5Z" stroke="#FF813F"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                  d="M18.3332 2.5H1.6665L8.33317 10.3833V15.8333L11.6665 17.5V10.3833L18.3332 2.5Z"
+                  stroke="#FF813F"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </g>
               <defs>
                 <clipPath id="clip0_2200_5624">
@@ -117,8 +129,22 @@
           <h3 class="filter-heading">Mức giá</h3>
           <div class="price-filter">
             <div class="slider-container">
-              <input type="range" :min="min" :max="max" v-model.number="minPrice" @input="checkMin" class="range-min" />
-              <input type="range" :min="min" :max="max" v-model.number="maxPrice" @input="checkMax" class="range-max" />
+              <input
+                type="range"
+                :min="min"
+                :max="max"
+                v-model.number="minPrice"
+                @input="checkMin"
+                class="range-min"
+              />
+              <input
+                type="range"
+                :min="min"
+                :max="max"
+                v-model.number="maxPrice"
+                @input="checkMax"
+                class="range-max"
+              />
               <div class="slider-track">
                 <div class="slider-range" :style="trackStyle"></div>
               </div>
@@ -131,9 +157,7 @@
 
         <!-- Clear Filters Button -->
         <div class="filter-actions">
-          <button @click="clearAllFilters" class="clear-filters-btn">
-            Xóa tất cả bộ lọc
-          </button>
+          <button @click="clearAllFilters" class="clear-filters-btn">Xóa tất cả bộ lọc</button>
         </div>
       </div>
 
@@ -141,15 +165,19 @@
       <div class="product-section">
         <!-- Sort dropdown và filter summary -->
         <div class="sort-wrapper">
-
           <div class="sort-dropdown">
             <button @click="toggleDropdown" class="sort-button">
               Sắp xếp
-              <span class="arrow" :class="{ 'rotated': dropdownOpen }">▼</span>
+              <span class="arrow" :class="{ rotated: dropdownOpen }">▼</span>
             </button>
             <div v-if="dropdownOpen" class="dropdown-menu">
-              <div class="dropdown-item" v-for="(option, index) in sortOptions" :key="index"
-                @click="selectOption(option.value)" :class="{ 'selected': sortOption === option.value }">
+              <div
+                class="dropdown-item"
+                v-for="(option, index) in sortOptions"
+                :key="index"
+                @click="selectOption(option.value)"
+                :class="{ selected: sortOption === option.value }"
+              >
                 {{ option.label }}
                 <span v-if="sortOption === option.value" class="checkmark-selected">✔</span>
               </div>
@@ -181,21 +209,31 @@
 
           <!-- Product Grid -->
           <div v-else class="product-grid">
-            <router-link v-for="product in paginatedProducts" :key="product.product_id"
-              :to="{ name: 'ProductDetail', params: { id: product.product_id } }" class="product-card"
-              @mouseenter="setHoverProduct(product.product_id)" @mouseleave="clearHoverProduct">
+            <router-link
+              v-for="product in paginatedProducts"
+              :key="product.product_id"
+              :to="{ name: 'ProductDetail', params: { id: product.product_id } }"
+              class="product-card"
+              @mouseenter="setHoverProduct(product.product_id)"
+              @mouseleave="clearHoverProduct"
+            >
               <div class="product-image-container">
                 <img :src="product.image_url" :alt="product.product_name" class="product-img" />
                 <div class="product-overlay">
-                  <button class="overlay-btn cart-btn">
+                  <button class="overlay-btn cart-btn" @click.prevent="addToCart(product)">
                     <i class="fas fa-shopping-cart"></i>
                     Giỏ hàng
                   </button>
-                  <button class="overlay-btn buy-btn">
+                  <button class="overlay-btn buy-btn" @click.prevent="buyNow(product)">
                     Mua ngay
                   </button>
-                  <button class="overlay-btn favorite-btn" :class="{ 'active': product.isFavorite }">
-                    Yêu thích
+                  <button
+                    class="overlay-btn favorite-btn"
+                    :class="{ active: product.isFavorite }"
+                    @click.prevent="toggleFavorite(product)"
+                  >
+                    <i :class="['fas', product.isFavorite ? 'fa-heart' : 'fa-heart-o']"></i>
+                    {{ product.isFavorite ? 'Đã yêu thích' : 'Yêu thích' }}
                   </button>
                 </div>
                 <!-- Labels overlay -->
@@ -203,6 +241,23 @@
                   <span v-if="product.isHot" class="label hot-label">Hot</span>
                   <span v-if="product.isNew" class="label new-label">New</span>
                   <span v-if="product.isFavorite" class="label favorite-label">♥</span>
+                </div>
+                <div class="product-overlay">
+                  <button class="overlay-btn cart-btn" @click.prevent="addToCart(product)">
+                    <i class="fas fa-shopping-cart"></i>
+                    Giỏ hàng
+                  </button>
+                  <button class="overlay-btn buy-btn" @click.prevent="buyNow(product)">
+                    Mua ngay
+                  </button>
+                  <button
+                    class="overlay-btn favorite-btn"
+                    :class="{ active: product.isFavorite }"
+                    @click.prevent="toggleFavorite(product)"
+                  >
+                    <i :class="['fas', product.isFavorite ? 'fa-heart' : 'fa-heart-o']"></i>
+                    {{ product.isFavorite ? 'Đã yêu thích' : 'Yêu thích' }}
+                  </button>
                 </div>
               </div>
 
@@ -220,8 +275,13 @@
               ◀ Trước
             </button>
 
-            <button v-for="page in visiblePages" :key="page" @click="goToPage(page)"
-              :class="{ 'active': currentPage === page }" class="page-btn">
+            <button
+              v-for="page in visiblePages"
+              :key="page"
+              @click="goToPage(page)"
+              :class="{ active: currentPage === page }"
+              class="page-btn"
+            >
               {{ page }}
             </button>
 
@@ -236,10 +296,19 @@
 </template>
 
 <script>
-import { productService } from '@/services/api';
-
+import { productService } from '@/services/api'
+import { useRoute } from 'vue-router'
+import { useCart } from '@/store/cart'
+import axios from 'axios'
 export default {
   name: 'ProductList',
+  setup() {
+    // Use cart in setup to make it available throughout the component
+    const cart = useCart()
+    return {
+      cart
+    }
+  },
   data() {
     return {
       selectedProductIndex: null,
@@ -260,230 +329,386 @@ export default {
         { label: 'Giá tăng dần', value: 'priceAsc' },
         { label: 'Giá giảm dần', value: 'priceDesc' },
         { label: 'Từ A đến Z', value: 'nameAsc' },
-        { label: 'Từ Z đến A', value: 'nameDesc' },
+        { label: 'Từ Z đến A', value: 'nameDesc' }
       ],
-      products: [],
-    };
+      products: []
+    }
+  },
+
+  created() {
+    const route = useRoute()
+    if (route.query.category) {
+      this.selectedCategories = [route.query.category]
+    }
   },
 
   mounted() {
-    document.addEventListener('click', this.handleClickOutside);
-    this.fetchProducts();
+    document.addEventListener('click', this.handleClickOutside)
+    this.fetchProducts()
+    const route = useRoute()
+    if (this.initialLoad && route.query.category) {
+      this.handleInitialCategory(route.query.categoryName)
+    }
+    this.initialLoad = false
   },
 
   beforeUnmount() {
-    document.removeEventListener('click', this.handleClickOutside);
+    document.removeEventListener('click', this.handleClickOutside)
   },
 
   methods: {
     async fetchProducts() {
       try {
-        this.loading = true;
-        this.error = null;
+        this.loading = true
+        this.error = null
 
-        const data = await productService.getAll();
-        console.log('Fetched products from API:', data);
+        const data = await productService.getAll()
+        console.log('Fetched products from API:', data)
 
         if (Array.isArray(data)) {
-          this.products = data;
+          this.products = data
         } else {
-          console.error('Invalid data format:', data);
-          throw new Error('Dữ liệu không hợp lệ');
+          console.error('Invalid data format:', data)
+          throw new Error('Dữ liệu không hợp lệ')
         }
-
       } catch (error) {
-        this.error = error.message || 'Lỗi khi tải sản phẩm';
-        console.error('Error fetching products:', error);
+        this.error = error.message || 'Lỗi khi tải sản phẩm'
+        console.error('Error fetching products:', error)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
 
+    async addToCart(product) {
+      if (!product) return
+
+      try {
+        this.cartLoading = true
+
+        // Format product data for cart
+        const productForCart = {
+          id: product.product_id,
+          name: product.name || product.product_name,
+          price: product.base_price || product.price,
+          image: product.image,
+          category: product.category
+        }
+
+        // Use the addItem method from the cart store
+        await this.cart.addItem(productForCart)
+
+        // Success message
+        alert(`Đã thêm 1 ${productForCart.name} vào giỏ hàng!`)
+      } catch (error) {
+        console.error('Error adding to cart:', error)
+        alert('Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại sau.')
+      } finally {
+        this.cartLoading = false
+      }
+    },
+
+    async buyNow(product) {
+      if (!product) return
+
+      try {
+        this.cartLoading = true
+
+        let addressId = null
+        try {
+          const addressRes = await axios.get('http://localhost:8000/api/v1/address', {
+            withCredentials: true
+          })
+          console.log('xx', addressRes)
+
+          if (
+            addressRes.data.addresses &&
+            Array.isArray(addressRes.data.addresses) &&
+            addressRes.data.addresses.length > 0
+          ) {
+            const defaultAddress =
+              addressRes.data.addresses.find(addr => addr.is_default) || addressRes.data[0]
+            addressId = defaultAddress.id || defaultAddress.address_id
+          }
+        } catch (error) {
+          console.error('Error fetching address:', error)
+        }
+
+        if (!addressId) {
+          alert('Vui lòng thêm địa chỉ giao hàng trước khi mua hàng')
+          this.$router.push('/profile')
+          return
+        }
+
+        const orderData = {
+          address_id: addressId,
+          payment_method: 'COD',
+          product: {
+            product_id: product.product_id,
+            quantity: 1,
+            unit_price: product.base_price || product.price
+          }
+        }
+
+        // Call BuyNow API
+        const response = await axios.post('http://localhost:8000/api/v1/orders/buynow', orderData, {
+          withCredentials: true
+        })
+        console.log('xx', response)
+        if (response.data && response.data.order_id) {
+          alert('Đặt hàng thành công!')
+        } else {
+          throw new Error(response.data?.message || 'Không thể đặt hàng')
+        }
+      } catch (error) {
+        console.error('Error with buy now:', error)
+        alert(
+          'Không thể mua ngay: ' +
+            (error.response?.data?.message || error.message || 'Lỗi không xác định')
+        )
+      } finally {
+        this.cartLoading = false
+      }
+    },
+
+    async toggleFavorite(product) {
+      if (!product || !product.product_id) {
+        alert('Không thể thêm sản phẩm vào danh sách yêu thích.')
+        return
+      }
+
+      // Store the original favorite state
+      const originalState = product.isFavorite
+
+      // Optimistically update UI for better user experience
+      product.isFavorite = !product.isFavorite
+
+      try {
+        // Determine endpoint based on the new state
+        const endpoint = product.isFavorite ? 'add' : 'remove'
+
+        // Call wishlist API
+        await axios.post(
+          `http://localhost:8000/api/v1/wishlist/${endpoint}`,
+          {
+            product_id: product.product_id
+          },
+          {
+            withCredentials: true
+          }
+        )
+
+        // Show a subtle notification if needed
+        // this.$toast.success(product.isFavorite ? 'Đã thêm vào danh sách yêu thích' : 'Đã xóa khỏi danh sách yêu thích');
+      } catch (error) {
+        console.error('Error updating wishlist:', error)
+
+        // Revert UI state if API call failed
+        product.isFavorite = originalState
+
+        alert('Không thể cập nhật trạng thái yêu thích. Vui lòng thử lại sau.')
+      }
+    },
+
+    handleInitialCategory(categoryName) {
+      if (!this.selectedCategories.includes(categoryName)) {
+        this.selectedCategories = [categoryName]
+      }
+      this.handleFiltersChange()
+    },
+
+    clearAllFilters() {
+      this.selectedCategories = []
+      this.selectedPets = []
+      this.minPrice = this.min
+      this.maxPrice = this.max
+      // Clear query params
+      this.$router.replace({
+        query: {}
+      })
+    },
+
     setHoverProduct(id) {
-      this.hoveredProductId = id;
+      this.hoveredProductId = id
     },
 
     clearHoverProduct() {
-      this.hoveredProductId = null;
+      this.hoveredProductId = null
     },
 
     handleClickOutside(event) {
       if (!event.target.closest('.sort-dropdown')) {
-        this.dropdownOpen = false;
+        this.dropdownOpen = false
       }
     },
 
     toggleDropdown() {
-      this.dropdownOpen = !this.dropdownOpen;
+      this.dropdownOpen = !this.dropdownOpen
     },
 
     selectOption(value) {
-      this.sortOption = value;
-      this.dropdownOpen = false;
-      this.currentPage = 1;
+      this.sortOption = value
+      this.dropdownOpen = false
+      this.currentPage = 1
     },
 
     formatPrice(value) {
-      return new Intl.NumberFormat('vi-VN').format(value);
+      return new Intl.NumberFormat('vi-VN').format(value)
     },
 
     checkMin() {
       if (this.minPrice > this.maxPrice) {
-        this.minPrice = this.maxPrice;
+        this.minPrice = this.maxPrice
       }
     },
 
     checkMax() {
       if (this.maxPrice < this.minPrice) {
-        this.maxPrice = this.minPrice;
+        this.maxPrice = this.minPrice
       }
     },
 
     goToPage(page) {
-      this.currentPage = page;
+      this.currentPage = page
     },
 
     goToPrevPage() {
       if (this.currentPage > 1) {
-        this.currentPage--;
+        this.currentPage--
       }
     },
 
     goToNextPage() {
       if (this.currentPage < this.totalPages) {
-        this.currentPage++;
+        this.currentPage++
       }
     },
 
     handleFiltersChange() {
-      this.currentPage = 1;
-    },
-
-    // New filter management methods
-    clearAllFilters() {
-      this.selectedCategories = [];
-      this.selectedPets = [];
-      this.minPrice = this.min;
-      this.maxPrice = this.max;
+      this.currentPage = 1
     },
 
     removeCategory(category) {
-      const index = this.selectedCategories.indexOf(category);
+      const index = this.selectedCategories.indexOf(category)
       if (index > -1) {
-        this.selectedCategories.splice(index, 1);
+        this.selectedCategories.splice(index, 1)
       }
     },
 
     removePet(pet) {
-      const index = this.selectedPets.indexOf(pet);
+      const index = this.selectedPets.indexOf(pet)
       if (index > -1) {
-        this.selectedPets.splice(index, 1);
+        this.selectedPets.splice(index, 1)
       }
-    },
-
-    clearPriceFilter() {
-      this.minPrice = this.min;
-      this.maxPrice = this.max;
     }
   },
 
   computed: {
     filteredProducts() {
-      return this.products.filter((product) => {
+      return this.products.filter(product => {
         // Category filter - check against category_name from API
         const categoryMatch =
           this.selectedCategories.length === 0 ||
-          this.selectedCategories.includes(product.category_name);
+          this.selectedCategories.includes(product.category_name)
 
-        // Pet filter - check against pet_type from API  
+        // Pet filter - check against pet_type from API
         const petMatch =
-          this.selectedPets.length === 0 ||
-          this.selectedPets.includes(product.pet_type);
+          this.selectedPets.length === 0 || this.selectedPets.includes(product.pet_type)
 
         // Price filter - check against discount_price or price
-        const productPrice = product.base_price || product.price;
-        const priceMatch =
-          productPrice >= this.minPrice && productPrice <= this.maxPrice;
+        const productPrice = product.base_price || product.price
+        const priceMatch = productPrice >= this.minPrice && productPrice <= this.maxPrice
 
-        return categoryMatch && petMatch && priceMatch;
-      });
+        return categoryMatch && petMatch && priceMatch
+      })
     },
 
     paginatedProducts() {
-      const start = (this.currentPage - 1) * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
+      const start = (this.currentPage - 1) * this.itemsPerPage
+      const end = start + this.itemsPerPage
 
-      let sortedProducts = [...this.filteredProducts];
+      let sortedProducts = [...this.filteredProducts]
 
       switch (this.sortOption) {
         case 'priceAsc':
-          sortedProducts.sort((a, b) => (a.discount_price || a.price) - (b.discount_price || b.price));
-          break;
+          sortedProducts.sort(
+            (a, b) => (a.discount_price || a.price) - (b.discount_price || b.price)
+          )
+          break
         case 'priceDesc':
-          sortedProducts.sort((a, b) => (b.discount_price || b.price) - (a.discount_price || a.price));
-          break;
+          sortedProducts.sort(
+            (a, b) => (b.discount_price || b.price) - (a.discount_price || a.price)
+          )
+          break
         case 'nameAsc':
-          sortedProducts.sort((a, b) => a.product_name.localeCompare(b.product_name));
-          break;
+          sortedProducts.sort((a, b) => a.product_name.localeCompare(b.product_name))
+          break
         case 'nameDesc':
-          sortedProducts.sort((a, b) => b.product_name.localeCompare(a.product_name));
-          break;
+          sortedProducts.sort((a, b) => b.product_name.localeCompare(a.product_name))
+          break
       }
 
-      return sortedProducts.slice(start, end);
+      return sortedProducts.slice(start, end)
     },
 
     totalPages() {
-      return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+      return Math.ceil(this.filteredProducts.length / this.itemsPerPage)
     },
 
     trackStyle() {
-      const minPercent = ((this.minPrice - this.min) / (this.max - this.min)) * 100;
-      const maxPercent = ((this.maxPrice - this.min) / (this.max - this.min)) * 100;
+      const minPercent = ((this.minPrice - this.min) / (this.max - this.min)) * 100
+      const maxPercent = ((this.maxPrice - this.min) / (this.max - this.min)) * 100
       return {
         left: `${minPercent}%`,
-        width: `${maxPercent - minPercent}%`,
-      };
+        width: `${maxPercent - minPercent}%`
+      }
     },
 
     hasActiveFilters() {
-      return this.selectedCategories.length > 0 ||
-        this.selectedPets.length > 0 ||
-        this.priceFilterActive;
+      return (
+        this.selectedCategories.length > 0 || this.selectedPets.length > 0 || this.priceFilterActive
+      )
     },
 
     priceFilterActive() {
-      return this.minPrice > this.min || this.maxPrice < this.max;
+      return this.minPrice > this.min || this.maxPrice < this.max
     },
 
     visiblePages() {
-      const pages = [];
-      const start = Math.max(1, this.currentPage - 2);
-      const end = Math.min(this.totalPages, this.currentPage + 2);
+      const pages = []
+      const start = Math.max(1, this.currentPage - 2)
+      const end = Math.min(this.totalPages, this.currentPage + 2)
 
       for (let i = start; i <= end; i++) {
-        pages.push(i);
+        pages.push(i)
       }
 
-      return pages;
+      return pages
     }
   },
 
   watch: {
     selectedCategories() {
-      this.handleFiltersChange();
+      this.handleFiltersChange()
     },
     selectedPets() {
-      this.handleFiltersChange();
+      this.handleFiltersChange()
     },
     minPrice() {
-      this.handleFiltersChange();
+      this.handleFiltersChange()
     },
     maxPrice() {
-      this.handleFiltersChange();
+      this.handleFiltersChange()
+    },
+    '$route.query': {
+      handler(newQuery) {
+        if (newQuery.category && this.initialLoad) {
+          this.handleInitialCategory(newQuery.categoryName)
+        }
+      },
+      immediate: true
     }
-  },
-};
+  }
+}
 </script>
 
 <style scoped>
@@ -599,12 +824,12 @@ export default {
   transition: all 0.2s;
 }
 
-.checkbox-container input:checked+.checkmark {
+.checkbox-container input:checked + .checkmark {
   background-color: #ff813f;
   border-color: #ff813f;
 }
 
-.checkbox-container input:checked+.checkmark::after {
+.checkbox-container input:checked + .checkmark::after {
   content: '✓';
   position: absolute;
   color: white;
@@ -851,12 +1076,12 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .buy-btn {
-  background: #FF5722;
+  background: #ff5722;
   color: white;
 }
 
 .favorite-btn {
-  background: #8B0000;
+  background: #8b0000;
   color: white;
   width: 140px;
 }
@@ -866,11 +1091,11 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .buy-btn:hover {
-  background: #FF7043;
+  background: #ff7043;
 }
 
 .favorite-btn:hover {
-  background: #B71C1C;
+  background: #b71c1c;
 }
 
 /* Animation cho các nút */
@@ -1089,7 +1314,6 @@ input[type='range']::-webkit-slider-thumb {
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
-
   .product-card,
   .product-card:hover .product-img {
     animation: none;
@@ -1107,7 +1331,6 @@ input[type='range']::-webkit-slider-thumb {
 
 /* Print styles */
 @media print {
-
   .filter-section,
   .sort-wrapper,
   .pagination {
