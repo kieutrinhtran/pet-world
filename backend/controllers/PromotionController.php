@@ -32,15 +32,13 @@ class PromotionController
         $result = $this->service->getDetailPromotion($id);
         return [
             'status' => $result ? 200 : 404,
-            'data' => $result ? $result : ['message' => 'Promotion not founds']
+            'data' => $result ? $result : ['message' => 'Promotion not foundsss']
         ];
     }
 
     public function getAll()
     {
-        // Get 'page' from query string
-        $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-        $result = $this->service->getAllPromotions($page);
+        $result = $this->service->getAllPromotions();
         return [
             'status' => 200,
             'data' => $result

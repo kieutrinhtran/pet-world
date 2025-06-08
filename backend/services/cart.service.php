@@ -21,8 +21,6 @@ class CartService
         }
     }
 
-
-    
     public function addToCart($customer_id, $product_id, $quantity)
     {
         $cart_id = $this->getOrCreateCartId($customer_id);
@@ -36,9 +34,4 @@ class CartService
     {
         return $this->cartModel->removeFromCart($cart_item_id, $product_id);
     }
-    public function updateCartItemQuantity($cart_item_id, $quantity)
-{
-    return $this->cartModel->updateCartItemQuantity($cart_item_id, $quantity);
-}
-
 }

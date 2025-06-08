@@ -13,7 +13,7 @@ class PromotionService
         $this->promotionModel = new Promotion($db);
     }
 
-        public function createPromotion($data)
+    public function createPromotion($data)
     {
         return $this->promotionModel->create(
             $data['code'],
@@ -42,16 +42,14 @@ class PromotionService
         );
     }
 
-    
-
     public function getDetailPromotion($id)
     {
         return $this->promotionModel->findOne($id);
     }
 
-    public function getAllPromotions($page)
+    public function getAllPromotions()
     {
-        return $this->promotionModel->findAll($page, 200);
+        return $this->promotionModel->findAll();
     }
 
     public function findByCode($code)
