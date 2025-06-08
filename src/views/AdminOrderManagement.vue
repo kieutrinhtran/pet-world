@@ -6,7 +6,23 @@
     >
       Danh sách đơn hàng
     </div>
-    <div class="max-w-5xl mx-auto px-4">
+    <div class="container-fluid px-4">
+      <!-- Search bar -->
+      <div class="mb-6">
+        <div class="relative">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
+            @input="applyFilters"
+          />
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+            <i class="fas fa-search text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
       <!-- Loading indicator -->
       <div v-if="loading" class="text-center py-10">
         <div

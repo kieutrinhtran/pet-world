@@ -1,23 +1,30 @@
 <template>
   <div class="base-pagination">
     <button
-      class="page-btn"
+      class="page-btn nav-btn"
       :disabled="currentPage <= 1"
       @click="$emit('prev')"
       aria-label="Trang trước"
     >
-      Trước
+      <i class="fa-solid fa-chevron-left"></i>
     </button>
-    <span class="page-info">
-      <slot> Trang {{ currentPage }} / {{ totalPages }} </slot>
-    </span>
     <button
-      class="page-btn"
+      v-for="page in totalPages"
+      :key="page"
+      class="page-btn page-number"
+      :class="{ active: page === currentPage }"
+      @click="$emit('page', page)"
+      :disabled="page === currentPage"
+    >
+      {{ page }}
+    </button>
+    <button
+      class="page-btn nav-btn"
       :disabled="currentPage >= totalPages"
       @click="$emit('next')"
       aria-label="Trang sau"
     >
-      Sau
+      <i class="fa-solid fa-chevron-right"></i>
     </button>
   </div>
 </template>
@@ -40,33 +47,30 @@ defineProps({
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 36px;
+  gap: 8px;
   margin: 32px 0 0 0;
   background: transparent;
 }
 .page-btn {
-  min-width: 90px;
-  height: 48px;
-  padding: 0 24px;
-  border-radius: 12px;
-  border: 1.5px solid #d1d5db;
-  background: transparent;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  background: #fff;
   color: #222;
   font-size: 1rem;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: none;
   cursor: pointer;
-  transition:
-    border 0.2s,
-    color 0.2s,
-    box-shadow 0.2s;
+  transition: border 0.2s, color 0.2s, box-shadow 0.2s, background 0.2s;
   outline: none;
-  margin: 0 4px;
+  margin: 0 2px;
 }
 .page-btn:hover:not(:disabled) {
   border-color: #ff9800;
   color: #ff9800;
-  box-shadow: 0 4px 16px rgba(255, 152, 0, 0.08);
+  background: #fff7ed;
 }
 .page-btn:disabled {
   opacity: 0.5;
@@ -75,27 +79,28 @@ defineProps({
   color: #888;
   border-color: #e5e7eb;
 }
-.page-info {
-  font-size: 1rem;
+.page-number.active {
+  background: #ff9800;
+  color: #fff;
+  border: none;
+  box-shadow: none;
   font-weight: 700;
-  color: #222;
-  min-width: 120px;
-  text-align: center;
-  letter-spacing: 0.5px;
+  z-index: 1;
+}
+.nav-btn {
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 0 10px;
 }
 @media (max-width: 600px) {
   .base-pagination {
-    gap: 12px;
+    gap: 4px;
   }
   .page-btn {
-    min-width: 60px;
-    height: 36px;
+    min-width: 28px;
+    height: 32px;
     font-size: 1rem;
-    padding: 0 10px;
-  }
-  .page-info {
-    font-size: 1rem;
-    min-width: 70px;
+    padding: 0 6px;
   }
 }
 </style>
