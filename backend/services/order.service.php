@@ -81,7 +81,7 @@ class OrderService
     
             // Thiết lập trạng thái thanh toán mặc định
             if (empty($data['payment_status'])) {
-                $data['payment_status'] = 'pending';
+                $data['payment_status'] = 'unpaid';
             }
     
             // Tính tổng tiền của giỏ hàng và kiểm tra tồn kho
@@ -233,7 +233,7 @@ class OrderService
     
             // Thêm payment_status nếu chưa có
             if (!isset($data['payment_status'])) {
-                $data['payment_status'] = 'pending';
+                $data['payment_status'] = 'unpaid';
             }
     
             // Tạo đơn hàng
