@@ -32,14 +32,14 @@
         </thead>
         <tbody>
           <tr v-for="(customer, index) in filteredCustomers" :key="index">
-            <td>{{ customer.id }}</td>
-            <td>{{ customer.name }}</td>
+            <td>{{ customer.customer_id }}</td>
+            <td>{{ customer.customer_name }}</td>
             <td>{{ customer.email }}</td>
-            <td>{{ customer.dob }}</td>
+            <td>{{ customer.date_of_birth }}</td>
             <td>{{ customer.phone }}</td>
             <td>{{ customer.gender }}</td>
             <td class="action-buttons">
-              <button @click="viewHistory(customer.id)">👁️</button>
+              <button @click="viewHistory(customer.customer_id)">👁️</button>
             </td>
           </tr>
         </tbody>
@@ -47,17 +47,15 @@
     </div>
 
     <!-- Footer component -->
-    <Footer />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import Footer from '@/components/FooterComponent.vue'
 import AdminSearchBar from '@/components/AdminSearchBar.vue'
 
-const router = useRouter();
+const router = useRouter()
 
 // Trạng thái
 const customers = ref([])
@@ -68,10 +66,11 @@ const searchQuery = ref('')
 // Gọi API lấy danh sách khách hàng
 onMounted(async () => {
   try {
-    const response = await fetch('http://localhost:8000/customers')
+    const response = await fetch('http://localhost:8000/customers', { credentials: 'include' })
     if (!response.ok) throw new Error('Không thể tải danh sách khách hàng')
     const data = await response.json()
-    customers.value = data
+    customers.value = data.customers
+    console.log(data)
   } catch (err) {
     error.value = err.message || 'Đã xảy ra lỗi khi tải dữ liệu'
   } finally {
@@ -81,7 +80,7 @@ onMounted(async () => {
 
 // Lọc kết quả theo tìm kiếm
 const filteredCustomers = computed(() => {
-  if (!searchQuery.value) return customers.value;
+  if (!searchQuery.value) return customers.value
   return customers.value.filter(
     c =>
       c.name?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
