@@ -118,7 +118,7 @@ class OrderService
                 }
                 
                 $item_total = $price * $item['quantity'];
-                $total_amount += $item_total;
+                $total_amount += $item_total + 30000;
                 
                 // Lưu thông tin sản phẩm đã xác thực
                 $valid_items[] = [
@@ -211,7 +211,7 @@ class OrderService
             $initial_total = $productInfo['base_price'] * $product['quantity'];
             
             // Đảm bảo total_amount luôn có giá trị
-            $data['total_amount'] = $initial_total;
+            $data['total_amount'] = $initial_total + 30000;
     
             // Xử lý khuyến mãi nếu có
             if (!empty($data['promotion_id'])) {
