@@ -18,9 +18,6 @@
           <router-link to="/products" class="cta-btn primary"
             >Mua ngay</router-link
           >
-          <router-link to="/contact" class="cta-btn secondary"
-            >Liên hệ</router-link
-          >
         </div>
       </div>
       <div class="about-hero-img">
