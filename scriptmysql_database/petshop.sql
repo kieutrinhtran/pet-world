@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 08, 2025 at 03:36 PM
+-- Generation Time: Jun 08, 2025 at 08:02 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,21 +41,19 @@ CREATE TABLE `address` (
 --
 
 INSERT INTO `address` (`address_id`, `customer_id`, `address_line`, `ward_id`, `is_default`, `created_at`) VALUES
-('1', 'CUS11', '101 Đường Lê Duẩn', '1', 1, '2025-06-08 19:44:51'),
-('2', 'CUS12', '123', '2', 1, '2025-06-08 19:46:28'),
 ('A01', 'CUS1', '123 Le Loi', 'W01', 1, '2024-06-01 10:00:00'),
-('A02', 'CUS1', '45 Nguyen Hue', 'W02', 1, '2024-06-01 10:10:00'),
+('A02', 'CUS1', '45 Nguyen Hue', 'W02', 0, '2024-06-01 10:10:00'),
 ('A03', 'CUS2', '78 Tran Hung Dao', 'W03', 1, '2024-06-01 10:20:00'),
 ('A04', 'CUS3', '99 Pham Van Dong', 'W04', 1, '2024-06-01 10:30:00'),
 ('A05', 'CUS4', '12 Kim Ma', 'W05', 1, '2024-06-01 10:40:00'),
 ('A06', 'CUS5', '56 Hoang Hoa Tham', 'W06', 1, '2024-06-01 10:50:00'),
 ('A07', 'CUS6', '33 Ly Quoc Su', 'W07', 1, '2024-06-01 11:00:00'),
-('A08', 'CUS6', '90 Dien Bien Phu', 'W01', 1, '2024-06-01 11:10:00'),
+('A08', 'CUS6', '90 Dien Bien Phu', 'W01', 0, '2024-06-01 11:10:00'),
 ('A09', 'CUS7', '111 Phan Chu Trinh', 'W08', 1, '2024-06-01 11:20:00'),
 ('A11', 'CUS6', '33 Ly Quoc Su', 'W07', 0, '2024-06-01 11:00:00'),
-('A12', 'CUS8', '90 Dien Bien Phu', 'W01', 0, '2024-06-01 11:10:00'),
-('A17', 'CUS9', '33 Ly Quoc Su', 'W07', 0, '2024-06-01 11:00:00'),
-('A18', 'CUS10', '90 Dien Bien Phu', 'W01', 0, '2024-06-01 11:10:00'),
+('A12', 'CUS8', '90 Dien Bien Phu', 'W01', 1, '2024-06-01 11:10:00'),
+('A17', 'CUS9', '33 Ly Quoc Su', 'W07', 1, '2024-06-01 11:00:00'),
+('A18', 'CUS10', '90 Dien Bien Phu', 'W01', 1, '2024-06-01 11:10:00'),
 ('A19', 'CUS3', '33 Ly Quoc Su', 'W07', 0, '2024-06-01 11:00:00'),
 ('A20', 'CUS2', '90 Dien Bien Phu', 'W01', 0, '2024-06-01 11:10:00');
 
@@ -102,6 +100,7 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `customer_id`, `created_at`, `updated_at`) VALUES
+('912BB6889E', 'CUS6', '2025-06-09 00:16:51', '0000-00-00 00:00:00'),
 ('CART1', 'CUS1', '2025-06-01 08:00:00', '2025-06-04 10:00:00'),
 ('CART2', 'CUS2', '2025-06-02 09:00:00', '2025-06-04 11:00:00'),
 ('CART3', 'CUS3', '2025-06-02 10:00:00', '2025-06-04 09:30:00'),
@@ -185,9 +184,7 @@ CREATE TABLE `customer` (
 INSERT INTO `customer` (`customer_id`, `user_id`, `customer_name`, `email`, `phone`, `date_of_birth`, `gender`, `created_at`) VALUES
 ('CUS1', 'UA4', 'Minh Nguyen', 'minhnguyen@gmail.com', '0322547805', '1995-01-01', 'male', '2024-03-01 08:00:00'),
 ('CUS10', 'UA99', 'Ken Bui', 'kebuine@gmail.com', '0321456987', '1996-07-07', 'male', '2024-03-07 11:00:00'),
-('CUS11', '1', 'Nguyễn Văn E', 'nguyenvane@example.com', '0987654325', '1995-01-01', 'Male', '2025-06-08 19:44:51'),
-('CUS12', '2', 'trinh', 'nhungdoanne@gmail.com', '0123123123', '2025-05-29', 'Male', '2025-06-08 19:46:28'),
-('CUS2', 'UA5', 'Lan Tran', 'tranthilan78@gmail.com', '0345698574', '1996-02-02', 'female', '2024-03-02 08:30:00'),
+('CUS2', 'UA5', 'Lan Trancccc', 'tranthilan78888@gmail.com', '844345698574', '1996-02-02', 'Nữ', '2024-03-02 08:30:00'),
 ('CUS3', 'UA6', 'Huy Le', 'lehuygialai@gmail.com', '913333333', '1997-03-03', 'male', '2024-03-03 09:00:00'),
 ('CUS4', 'UA7', 'Hoa Pham', 'hoahau_hcm@gmail.com', '032598745', '1998-04-04', 'female', '2024-03-04 09:30:00'),
 ('CUS5', 'UA8', 'Tuan Hoang', 'hoangtuan.dev@gmail.com', '025896545', '1999-05-05', 'male', '2024-03-05 10:00:00'),
@@ -234,7 +231,7 @@ CREATE TABLE `order` (
   `promotion_id` varchar(10) DEFAULT NULL,
   `order_date` datetime NOT NULL,
   `status` varchar(20) NOT NULL,
-  `total_amount` decimal(10,2) NOT NULL,
+  `total_amount` double NOT NULL,
   `payment_method` varchar(20) NOT NULL,
   `payment_status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -244,11 +241,20 @@ CREATE TABLE `order` (
 --
 
 INSERT INTO `order` (`order_id`, `customer_id`, `address_id`, `promotion_id`, `order_date`, `status`, `total_amount`, `payment_method`, `payment_status`) VALUES
-('9F70B532D7', 'CUS2', 'A03', NULL, '2025-06-08 16:18:01', 'pending', 15000.00, 'COD', 'unpaid'),
-('A3DBC92548', 'CUS2', 'A03', NULL, '2025-06-08 18:31:59', 'delivered', 60000.00, 'COD', 'paid'),
-('C09E07E799', 'CUS2', 'A03', NULL, '2025-06-08 15:55:19', 'delivered', 15000.00, 'COD', 'paid'),
-('D7626B27C1', 'CUS2', 'A03', NULL, '2025-06-08 17:18:10', 'processing', 1245000.00, 'COD', 'unpaid'),
-('DD6EEEA632', 'CUS2', 'A03', NULL, '2025-06-08 17:25:20', 'pending', 250000.00, 'COD', 'unpaid');
+('336B20D356', 'CUS2', 'A03', NULL, '2025-06-08 22:44:05', 'processing', 170000, 'COD', 'unpaid'),
+('41FB99E215', 'CUS6', 'A07', NULL, '2025-06-09 00:19:59', 'pending', 125000, 'COD', 'unpaid'),
+('524DB75429', 'CUS2', 'A03', NULL, '2025-06-09 00:10:51', 'pending', 95000, 'COD', 'unpaid'),
+('59CC266A95', 'CUS6', 'A07', NULL, '2025-06-09 00:16:59', 'pending', 70000, 'COD', 'unpaid'),
+('6832B7D6B8', 'CUS2', 'A03', NULL, '2025-06-08 22:02:34', 'pending', 35000, 'COD', 'unpaid'),
+('9525AEA3D0', 'CUS2', 'A03', NULL, '2025-06-08 22:24:24', 'pending', 150000, 'COD', 'unpaid'),
+('9F70B532D7', 'CUS2', 'A03', NULL, '2025-06-08 16:18:01', 'processing', 15000, 'COD', 'unpaid'),
+('A31BBBE294', 'CUS2', 'A03', NULL, '2025-06-08 22:55:44', 'processing', 170000, 'COD', 'unpaid'),
+('A3DBC92548', 'CUS2', 'A03', NULL, '2025-06-08 18:31:59', 'delivered', 60000, 'COD', 'paid'),
+('C09E07E799', 'CUS2', 'A03', NULL, '2025-06-08 15:55:19', 'delivered', 15000, 'COD', 'paid'),
+('D7626B27C1', 'CUS2', 'A03', NULL, '2025-06-08 17:18:10', 'processing', 1245000, 'COD', 'unpaid'),
+('DD6EEEA632', 'CUS2', 'A03', NULL, '2025-06-08 17:25:20', 'processing', 250000, 'COD', 'unpaid'),
+('F12E0FCB2A', 'CUS2', 'A03', NULL, '2025-06-09 00:16:16', 'pending', 60000, 'COD', 'unpaid'),
+('FDAE0D29F5', 'CUS2', 'A03', NULL, '2025-06-08 22:39:59', 'processing', 95000, 'COD', 'paid');
 
 -- --------------------------------------------------------
 
@@ -271,13 +277,32 @@ CREATE TABLE `order_detail` (
 INSERT INTO `order_detail` (`order_detail_id`, `order_id`, `product_id`, `quantity`, `unit_price`) VALUES
 ('0232B89E3B', '9F70B532D7', 'PRD20', 1, 15000.00),
 ('063BB9BB10', 'D7626B27C1', 'PRD20', 3, 15000.00),
+('0C0DD4D61D', '6832B7D6B8', 'PRD12', 1, 20000.00),
 ('0F80788B30', 'D7626B27C1', 'PRD13', 8, 150000.00),
 ('11B0537BE7', 'C09E07E799', 'PRD20', 1, 15000.00),
+('3EDFB145A4', '9525AEA3D0', 'PRD28', 1, 25000.00),
+('4A058069E5', '59CC266A95', 'PRD19', 1, 40000.00),
 ('4D4B61886A', 'A3DBC92548', 'PRD20', 1, 15000.00),
+('57521D015C', 'A31BBBE294', 'PRD28', 1, 25000.00),
+('772FDE8F30', '524DB75429', 'PRD20', 1, 15000.00),
+('7E2CF14C29', 'A31BBBE294', 'PRD12', 1, 20000.00),
+('9DF94BFBFB', '41FB99E215', 'PRD17', 1, 30000.00),
 ('A46D0F58CA', 'A3DBC92548', 'PRD28', 1, 25000.00),
 ('A51DCBC9A3', 'DD6EEEA632', 'PRD1', 1, 50000.00),
+('AB1D67B297', '6832B7D6B8', 'PRD20', 1, 15000.00),
+('AD9E8D8172', 'F12E0FCB2A', 'PRD17', 1, 30000.00),
+('AED7E35550', 'FDAE0D29F5', 'PRD12', 1, 20000.00),
+('B8CAD50A0E', 'A31BBBE294', 'PRD11', 1, 35000.00),
 ('BD4B987F9F', 'DD6EEEA632', 'PRD10', 1, 200000.00),
-('BE6A4E2563', 'A3DBC92548', 'PRD12', 1, 20000.00);
+('BE6A4E2563', 'A3DBC92548', 'PRD12', 1, 20000.00),
+('C2467562A0', '41FB99E215', 'PRD11', 1, 35000.00),
+('C348C1B2C5', '9525AEA3D0', 'PRD20', 1, 15000.00),
+('CD2E0742C8', '9525AEA3D0', 'PRD12', 1, 20000.00),
+('DE67ED7D45', '336B20D356', 'PRD28', 1, 25000.00),
+('E18F20D7B1', '336B20D356', 'PRD11', 1, 35000.00),
+('EF3DCFFA73', '336B20D356', 'PRD12', 1, 20000.00),
+('F73ABCABD5', 'FDAE0D29F5', 'PRD20', 1, 15000.00),
+('F8CDA92EF7', '524DB75429', 'PRD12', 1, 20000.00);
 
 -- --------------------------------------------------------
 
@@ -291,8 +316,8 @@ CREATE TABLE `product` (
   `product_name` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
   `pet_type` varchar(50) DEFAULT NULL,
-  `base_price` decimal(10,2) NOT NULL,
-  `discount_price` decimal(10,2) DEFAULT NULL,
+  `base_price` decimal(10,0) NOT NULL,
+  `discount_price` decimal(10,0) DEFAULT NULL,
   `stock` int(11) NOT NULL,
   `image_url` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
@@ -304,36 +329,36 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_id`, `category_id`, `product_name`, `description`, `pet_type`, `base_price`, `discount_price`, `stock`, `image_url`, `created_at`, `is_active`) VALUES
-('PRD1', 'CAT1', 'Thuc an hat cho cho truong thanh vi gaaaaa', 'Thuc an kho can bang dinh duong cho cho lon, huong vi ga thom ngon.', 'Cho', 50000.00, 45000.00, 149, 'https://bizweb.dktcdn.net/100/091/443/products/ga.jpg?v=1655985149713', '2022-11-15 08:30:00', 1),
-('PRD10', 'CAT5', 'Giuong nem em ai hinh tron', 'Tao khong gian ngu thoai mai va am ap.', 'Meo', 200000.00, 180000.00, 84, 'https://cdn.chiaki.vn/unsafe/0x960/left/top/smart/filters:quality(75)/https://chiaki.vn/upload/product/2022/01/giuong-dem-nam-em-ai-cao-cap-cho-cho-meo-61dbd135eee55-10012022132453.jpg', '2023-02-28 07:40:00', 1),
-('PRD11', 'CAT6', 'Banh xuong canxi', 'Bo sung canxi giup xuong chac khoe.', 'Cho', 35000.00, 30000.00, 170, 'https://bizweb.dktcdn.net/thumb/1024x1024/100/487/588/products/1-1687245718798.jpg?v=1687245723067', '2022-10-08 15:25:00', 1),
-('PRD12', 'CAT6', 'Snack thuong vi ca hoi', 'Banh thuong mem, kich thich vi giac.', 'Meo', 20000.00, 18000.00, 247, 'https://www.petmart.vn/wp-content/uploads/2023/04/snack-banh-thuong-cho-meo-vi-ca-hoi-gimcat-nutri-pockets-salmon-treats.jpg', '2023-06-05 11:15:00', 1),
-('PRD13', 'CAT7', 'Vitamin tong hop dang vien', 'Bo sung cac vitamin va khoang chat can thiet.', 'Ca 2', 150000.00, 135000.00, 56, 'https://cdn.medigoapp.com/product/Agimvita_1_510x510_3e42009aaf.jpg', '2022-08-25 09:50:00', 1),
-('PRD14', 'CAT8', 'Ao thun cotton hoa tiet', 'Chat lieu mem mai, thoang mat.', 'Cho', 100000.00, 95000.00, 100, 'https://product.hstatic.net/200000264739/product/ao_thun_ni_hoa_tiet_cho_cho_meo_4ce28f00bbe14de58804e23edebf61f9_master.jpg', '2023-01-25 18:00:00', 1),
-('PRD15', 'CAT8', 'Vay cong chua co no', 'Thiet ke de thuong, dieu da.', 'Meo', 130000.00, 120000.00, 55, 'https://product.hstatic.net/200000263355/product/z5582607580113_f4cdce1f6854317b080bdae661811b06_bf98e4671c6d4f58b64a49af888d06bc_master.jpg', '2022-11-30 12:30:00', 1),
-('PRD16', 'CAT1', 'Thuc an hat cho cho con', 'Danh cho cho con duoi 1 tuoi, kich thuoc hat nho de an.', 'Cho', 60000.00, 55000.00, 120, 'https://product.hstatic.net/1000104513/product/hat-ganador-puppy---thuc-an-hat-cho-cho-con-milk-with-dha__4__d7e68b77206f4bf1b1e6571ceb4acca5_1024x1024.jpg', '2023-03-10 10:45:00', 1),
-('PRD17', 'CAT1', 'Pate tuoi ngon vi bo', 'Pate tuoi ngon, bo sung dinh duong.', 'Cho', 30000.00, 28000.00, 200, 'https://petnhasen.com/wp-content/uploads/2024/11/900-599x599.jpg', '2022-07-15 16:00:00', 1),
-('PRD18', 'CAT1', 'Thuc an uot cho meo con vi ga', 'De tieu hoa, phu hop cho meo con dang phat trien.', 'Meo', 35000.00, 32000.00, 160, 'https://cdn.onemars.net/sites/whiskas_vn_282Hk_mwh5/image/mockup_wks_pouch_ad_tuna_ckm_new-look_-80g_f_1705679127949_1710836976798.png', '2023-01-05 09:20:00', 1),
-('PRD19', 'CAT2', 'Xuong gam lam sach rang', 'Giup loai bo mang bam va cao rang.', 'Cho', 40000.00, 38000.00, 110, 'https://petcorner.vn/wp-content/uploads/2023/04/xuong-orgo.png', '2022-09-20 14:55:00', 1),
-('PRD2', 'CAT1', 'Thuc an hat cho meo truong thanh vi ca ngu', 'Thuc an kho giup meo duy tri can nang va long bong muot.', 'Meo', 45000.00, 40000.00, 180, 'https://cdn.tgdd.vn/Products/Images/12398/273074/bhx/thuc-an-cho-meo-truong-thanh-me-o-vi-ca-ngu-tui-12kg-202203200115359774.jpg', '2023-03-20 14:45:00', 1),
-('PRD20', 'CAT2', 'Bong len tron nhieu mau', 'Nhe nhang, an toan cho meo von va can.', 'Meo', 15000.00, 12000.00, 291, 'https://down-vn.img.susercontent.com/file/802bb64cd1501e2f31b1e401476c526c', '2023-05-01 11:10:00', 1),
-('PRD21', 'CAT3', 'Day dat du ban rong', 'Chac chan, thoai mai khi dat di dao.', 'Cho', 120000.00, 110000.00, 70, 'https://vn-test-11.slatic.net/p/c13e7461b385b907d7529deeab8ea9a0.jpg', '2022-12-10 17:35:00', 1),
-('PRD22', 'CAT3', 'Ro mom vai thoang khi', 'Giup kiem soat hanh vi khong mong muon.', 'Cho', 90000.00, 85000.00, 60, 'https://lovepetsshop.vn/wp-content/uploads/2023/10/Ro-mom-cho-bang-vai-luoi-thoang-khi-1.png', '2023-04-15 13:05:00', 1),
-('PRD23', 'CAT4', 'Luoc chai long rung', 'Loai bo long chet hieu qua.', 'Ca 2', 120000.00, 110000.00, 80, 'https://www.petmart.vn/wp-content/uploads/2019/10/luoc-chai-long-rung-cho-cho-meo-furminator-edsheddingtool.jpg', '2022-06-25 19:00:00', 1),
-('PRD24', 'CAT4', 'Binh xit khu mui', 'Loai bo mui kho chiu.', 'Ca 2', 80000.00, 75000.00, 95, 'https://bizweb.dktcdn.net/100/422/613/products/binh-xit-khu-mui-giay-ximo-khang-khuan-cong-nghe-nano-nhat-ban.jpg?v=1690626511970', '2023-02-10 07:40:00', 1),
-('PRD25', 'CAT5', 'Nha go mini co mai che', 'Thiet ke dang yeu, bao ve khoi thoi tiet.', 'Cho', 450000.00, 420000.00, 40, 'https://hoangphucwood.vn/wp-content/uploads/2016/10/Chuong-cho-PH05-1-scaled.jpg', '2022-10-20 15:25:00', 1),
-('PRD26', 'CAT5', 'To am mem mai', 'Tao khong gian ngu am ap.', 'Meo', 180000.00, 165000.00, 60, 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lmefyx2we3mn96', '2023-06-15 11:15:00', 1),
-('PRD27', 'CAT6', 'Snack da bo cuon', 'Giup lam sach rang va thoa man nhu cau gam nham.', 'Cho', 60000.00, 58000.00, 105, 'https://www.doggyman.com.vn/uploads/source/uploads/products/san-pham-cho-cho/thuc-an/que-da-bo-nhung-thit-ga-10-cay-81652-doggyman-00.jpg', '2022-08-10 09:50:00', 1),
-('PRD28', 'CAT6', 'Pate thuong dang que', 'Tien loi khi cho an vat.', 'Meo', 25000.00, 20000.00, 209, 'https://product.hstatic.net/1000141988/product/pate_dong_que_pate_royal_dang_nhuyen_hu_180_g_b4e4643f4d064493a40e07253edfabaf_master.png', '2023-01-30 18:00:00', 1),
-('PRD29', 'CAT7', 'Omega 3 & 6', 'Ho tro suc khoe da va long.', 'Meo', 120000.00, 115000.00, 75, 'https://www.hangngoainhap.com.vn/images/202008/goods_img/75-p2-1597661902.jpg', '2022-12-05 12:30:00', 1),
-('PRD3', 'CAT2', 'Bong cao su do choi cho cho co lon', 'Ben bi, thich hop cho cho nang dong gam nham.', 'Cho', 70000.00, 65000.00, 90, 'https://down-vn.img.susercontent.com/file/sg-11134201-7qvec-lgse2lsjbnzj9f', '2022-07-01 10:00:00', 1),
-('PRD30', 'CAT7', 'Men tieu hoa', 'Can bang he vi sinh duong ruot.', 'Ca 2', 90000.00, 80000.00, 90, 'https://emed.bvbnd.vn/media/uploads/2021/01/21/men-vi-sinh.jpg', '2023-03-25 10:45:00', 1),
-('PRD4', 'CAT2', 'Can cau meo do choi co long vu', 'Kich thich ban nang san moi cua meo.', 'Meo', 30000.00, 25000.00, 220, 'https://paddy.vn/cdn/shop/files/can-cau-meo-do-choi-kem-chuong-long-vu.png?v=1704521218', '2023-01-10 16:20:00', 1),
-('PRD5', 'CAT3', 'Vong co da co chuong', 'Thiet ke thoi trang, co chuong bao hieu vi tri.', 'Ca 2', 80000.00, 75000.00, 77, 'https://cunyeushop.vn/cdn/images/202111/goods_img/vong-co-da-lon-co-chuong-cho-meo-G5411-1636984530877.jpg', '2022-09-05 11:55:00', 1),
-('PRD6', 'CAT4', 'Khay ve sinh cho meo co lon co xeng', 'Tien loi, de dang ve sinh.', 'Meo', 150000.00, 140000.00, 100, 'https://down-vn.img.susercontent.com/file/32da94fd623027c75874b8afad6bc2b7', '2023-05-12 09:10:00', 1),
-('PRD7', 'CAT4', 'Cat ve sinh khu mui 5L', 'Khu mui tot, von cuc nhanh.', 'Meo', 70000.00, 68000.00, 140, 'https://iupets.vn/wp-content/uploads/2021/04/cat-ve-sinh-khu-mui-neko-5l-danh-cho-meo.jpg', '2022-12-22 17:35:00', 1),
-('PRD8', 'CAT3', 'Sua tam diu nhe cho cho va meo', 'Giup long sach se va mem muot.', 'Ca 2', 110000.00, 100000.00, 95, 'https://product.hstatic.net/200000264739/product/sua_tam_doggyman_4in1_1_d4655af06b9d4012a2f431e5ef1eced3_master.jpg', '2023-04-03 13:05:00', 1),
-('PRD9', 'CAT5', 'Chuong sat son tinh dien co trung', 'Chac chan, thong thoang, de dang di chuyen.', 'Cho', 350000.00, 320000.00, 50, 'https://cunyeushop.vn/cdn/images/202111/goods_img/chuong-sat-son-tinh-dien-co-tay-cam-lon-45x75cm-G5364-1636686172631.jpg', '2022-06-18 19:00:00', 1);
+('PRD1', 'CAT1', 'Thuc an hat cho cho truong thanh vi gaaaaa', 'Thuc an kho can bang dinh duong cho cho lon, huong vi ga thom ngon.', 'Cho', 50000, 45000, 149, 'https://bizweb.dktcdn.net/100/091/443/products/ga.jpg?v=1655985149713', '2022-11-15 08:30:00', 1),
+('PRD10', 'CAT5', 'Giuong nem em ai hinh tron', 'Tao khong gian ngu thoai mai va am ap.', 'Meo', 200000, 180000, 84, 'https://cdn.chiaki.vn/unsafe/0x960/left/top/smart/filters:quality(75)/https://chiaki.vn/upload/product/2022/01/giuong-dem-nam-em-ai-cao-cap-cho-cho-meo-61dbd135eee55-10012022132453.jpg', '2023-02-28 07:40:00', 1),
+('PRD11', 'CAT6', 'Banh xuong canxi', 'Bo sung canxi giup xuong chac khoe.', 'Cho', 35000, 30000, 167, 'https://bizweb.dktcdn.net/thumb/1024x1024/100/487/588/products/1-1687245718798.jpg?v=1687245723067', '2022-10-08 15:25:00', 1),
+('PRD12', 'CAT6', 'Snack thuong vi ca hoi', 'Banh thuong mem, kich thich vi giac.', 'Meo', 20000, 18000, 241, 'https://www.petmart.vn/wp-content/uploads/2023/04/snack-banh-thuong-cho-meo-vi-ca-hoi-gimcat-nutri-pockets-salmon-treats.jpg', '2023-06-05 11:15:00', 1),
+('PRD13', 'CAT7', 'Vitamin tong hop dang vien', 'Bo sung cac vitamin va khoang chat can thiet.', 'Ca 2', 150000, 135000, 56, 'https://cdn.medigoapp.com/product/Agimvita_1_510x510_3e42009aaf.jpg', '2022-08-25 09:50:00', 1),
+('PRD14', 'CAT8', 'Ao thun cotton hoa tiet', 'Chat lieu mem mai, thoang mat.', 'Cho', 100000, 95000, 100, 'https://product.hstatic.net/200000264739/product/ao_thun_ni_hoa_tiet_cho_cho_meo_4ce28f00bbe14de58804e23edebf61f9_master.jpg', '2023-01-25 18:00:00', 1),
+('PRD15', 'CAT8', 'Vay cong chua co no', 'Thiet ke de thuong, dieu da.', 'Meo', 130000, 120000, 55, 'https://product.hstatic.net/200000263355/product/z5582607580113_f4cdce1f6854317b080bdae661811b06_bf98e4671c6d4f58b64a49af888d06bc_master.jpg', '2022-11-30 12:30:00', 1),
+('PRD16', 'CAT1', 'Thuc an hat cho cho con', 'Danh cho cho con duoi 1 tuoi, kich thuoc hat nho de an.', 'Cho', 60000, 55000, 120, 'https://product.hstatic.net/1000104513/product/hat-ganador-puppy---thuc-an-hat-cho-cho-con-milk-with-dha__4__d7e68b77206f4bf1b1e6571ceb4acca5_1024x1024.jpg', '2023-03-10 10:45:00', 1),
+('PRD17', 'CAT1', 'Pate tuoi ngon vi bo', 'Pate tuoi ngon, bo sung dinh duong.', 'Cho', 30000, 28000, 198, 'https://petnhasen.com/wp-content/uploads/2024/11/900-599x599.jpg', '2022-07-15 16:00:00', 1),
+('PRD18', 'CAT1', 'Thuc an uot cho meo con vi ga', 'De tieu hoa, phu hop cho meo con dang phat trien.', 'Meo', 35000, 32000, 160, 'https://cdn.onemars.net/sites/whiskas_vn_282Hk_mwh5/image/mockup_wks_pouch_ad_tuna_ckm_new-look_-80g_f_1705679127949_1710836976798.png', '2023-01-05 09:20:00', 1),
+('PRD19', 'CAT2', 'Xuong gam lam sach rang', 'Giup loai bo mang bam va cao rang.', 'Cho', 40000, 38000, 109, 'https://petcorner.vn/wp-content/uploads/2023/04/xuong-orgo.png', '2022-09-20 14:55:00', 1),
+('PRD2', 'CAT1', 'Thuc an hat cho meo truong thanh vi ca ngu', 'Thuc an kho giup meo duy tri can nang va long bong muot.', 'Meo', 45000, 40000, 180, 'https://cdn.tgdd.vn/Products/Images/12398/273074/bhx/thuc-an-cho-meo-truong-thanh-me-o-vi-ca-ngu-tui-12kg-202203200115359774.jpg', '2023-03-20 14:45:00', 1),
+('PRD20', 'CAT2', 'Bong len tron nhieu mau', 'Nhe nhang, an toan cho meo von va can.', 'Meo', 15000, 12000, 287, 'https://down-vn.img.susercontent.com/file/802bb64cd1501e2f31b1e401476c526c', '2023-05-01 11:10:00', 1),
+('PRD21', 'CAT3', 'Day dat du ban rong', 'Chac chan, thoai mai khi dat di dao.', 'Cho', 120000, 110000, 70, 'https://vn-test-11.slatic.net/p/c13e7461b385b907d7529deeab8ea9a0.jpg', '2022-12-10 17:35:00', 1),
+('PRD22', 'CAT3', 'Ro mom vai thoang khi', 'Giup kiem soat hanh vi khong mong muon.', 'Cho', 90000, 85000, 60, 'https://lovepetsshop.vn/wp-content/uploads/2023/10/Ro-mom-cho-bang-vai-luoi-thoang-khi-1.png', '2023-04-15 13:05:00', 1),
+('PRD23', 'CAT4', 'Luoc chai long rung', 'Loai bo long chet hieu qua.', 'Ca 2', 120000, 110000, 80, 'https://www.petmart.vn/wp-content/uploads/2019/10/luoc-chai-long-rung-cho-cho-meo-furminator-edsheddingtool.jpg', '2022-06-25 19:00:00', 1),
+('PRD24', 'CAT4', 'Binh xit khu mui', 'Loai bo mui kho chiu.', 'Ca 2', 80000, 75000, 95, 'https://bizweb.dktcdn.net/100/422/613/products/binh-xit-khu-mui-giay-ximo-khang-khuan-cong-nghe-nano-nhat-ban.jpg?v=1690626511970', '2023-02-10 07:40:00', 1),
+('PRD25', 'CAT5', 'Nha go mini co mai che', 'Thiet ke dang yeu, bao ve khoi thoi tiet.', 'Cho', 450000, 420000, 40, 'https://hoangphucwood.vn/wp-content/uploads/2016/10/Chuong-cho-PH05-1-scaled.jpg', '2022-10-20 15:25:00', 1),
+('PRD26', 'CAT5', 'To am mem mai', 'Tao khong gian ngu am ap.', 'Meo', 180000, 165000, 60, 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lmefyx2we3mn96', '2023-06-15 11:15:00', 1),
+('PRD27', 'CAT6', 'Snack da bo cuon', 'Giup lam sach rang va thoa man nhu cau gam nham.', 'Cho', 60000, 58000, 105, 'https://www.doggyman.com.vn/uploads/source/uploads/products/san-pham-cho-cho/thuc-an/que-da-bo-nhung-thit-ga-10-cay-81652-doggyman-00.jpg', '2022-08-10 09:50:00', 1),
+('PRD28', 'CAT6', 'Pate thuong dang que', 'Tien loi khi cho an vat.', 'Meo', 25000, 20000, 206, 'https://product.hstatic.net/1000141988/product/pate_dong_que_pate_royal_dang_nhuyen_hu_180_g_b4e4643f4d064493a40e07253edfabaf_master.png', '2023-01-30 18:00:00', 1),
+('PRD29', 'CAT7', 'Omega 3 & 6', 'Ho tro suc khoe da va long.', 'Meo', 120000, 115000, 75, 'https://www.hangngoainhap.com.vn/images/202008/goods_img/75-p2-1597661902.jpg', '2022-12-05 12:30:00', 1),
+('PRD3', 'CAT2', 'Bong cao su do choi cho cho co lon', 'Ben bi, thich hop cho cho nang dong gam nham.', 'Cho', 70000, 65000, 90, 'https://down-vn.img.susercontent.com/file/sg-11134201-7qvec-lgse2lsjbnzj9f', '2022-07-01 10:00:00', 1),
+('PRD30', 'CAT7', 'Men tieu hoa', 'Can bang he vi sinh duong ruot.', 'Ca 2', 90000, 80000, 90, 'https://emed.bvbnd.vn/media/uploads/2021/01/21/men-vi-sinh.jpg', '2023-03-25 10:45:00', 1),
+('PRD4', 'CAT2', 'Can cau meo do choi co long vu', 'Kich thich ban nang san moi cua meo.', 'Meo', 30000, 25000, 220, 'https://paddy.vn/cdn/shop/files/can-cau-meo-do-choi-kem-chuong-long-vu.png?v=1704521218', '2023-01-10 16:20:00', 1),
+('PRD5', 'CAT3', 'Vong co da co chuong', 'Thiet ke thoi trang, co chuong bao hieu vi tri.', 'Ca 2', 80000, 75000, 77, 'https://cunyeushop.vn/cdn/images/202111/goods_img/vong-co-da-lon-co-chuong-cho-meo-G5411-1636984530877.jpg', '2022-09-05 11:55:00', 1),
+('PRD6', 'CAT4', 'Khay ve sinh cho meo co lon co xeng', 'Tien loi, de dang ve sinh.', 'Meo', 150000, 140000, 100, 'https://down-vn.img.susercontent.com/file/32da94fd623027c75874b8afad6bc2b7', '2023-05-12 09:10:00', 1),
+('PRD7', 'CAT4', 'Cat ve sinh khu mui 5L', 'Khu mui tot, von cuc nhanh.', 'Meo', 70000, 68000, 140, 'https://iupets.vn/wp-content/uploads/2021/04/cat-ve-sinh-khu-mui-neko-5l-danh-cho-meo.jpg', '2022-12-22 17:35:00', 1),
+('PRD8', 'CAT3', 'Sua tam diu nhe cho cho va meo', 'Giup long sach se va mem muot.', 'Ca 2', 110000, 100000, 95, 'https://product.hstatic.net/200000264739/product/sua_tam_doggyman_4in1_1_d4655af06b9d4012a2f431e5ef1eced3_master.jpg', '2023-04-03 13:05:00', 1),
+('PRD9', 'CAT5', 'Chuong sat son tinh dien co trung', 'Chac chan, thong thoang, de dang di chuyen.', 'Cho', 350000, 320000, 50, 'https://cunyeushop.vn/cdn/images/202111/goods_img/chuong-sat-son-tinh-dien-co-tay-cam-lon-45x75cm-G5364-1636686172631.jpg', '2022-06-18 19:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -365,8 +390,8 @@ INSERT INTO `promotion` (`promotion_id`, `code`, `description`, `discount_percen
 ('PR05', 'WELCOME50', 'Giam 50% don dau tien', 50, 10, 10, '2024-12-01', '2025-01-31', 1),
 ('PR06', 'JULYSALE30', 'Giam 30% thang 7', 30, 200, 0, '2025-07-01', '2025-07-31', 1),
 ('PR07', 'SUMMER25', 'Uu dai he toan danh muc', 25, 150, 75, '2025-06-01', '2025-06-10', 1),
-('PR08', 'DUPLICATE', 'Ma test trung A', 10, 10, 1, '2025-06-01', '2025-06-10', 1),
-('PR09', 'DUPLICATE', 'Ma test trung B', 15, 5, 0, '2025-06-05', '2025-06-12', 1),
+('PR08', 'SALE1', 'Sale toàn quốc', 10, 10, 1, '2025-06-01', '2025-06-10', 1),
+('PR09', 'SALE2', 'Sale toàn quốc giảm sốc', 15, 5, 0, '2025-06-05', '2025-06-12', 1),
 ('PR10', 'FLASH40', 'Giam soc 40% trong 24h', 40, 20, 5, '2025-06-03', '2025-06-03', 1),
 ('PR11', 'ADD12', 'Giam soc 10 %', 10, 5, 0, '2025-06-03', '2025-06-03', 1);
 
@@ -413,8 +438,6 @@ CREATE TABLE `user_account` (
 --
 
 INSERT INTO `user_account` (`user_id`, `user_name`, `password_hash`, `role`, `status`, `created_at`, `last_login`) VALUES
-('1', 'testuser6', 'password123', 'user', 'active', '2025-06-08 19:44:51', NULL),
-('2', 'trinh', '12345678', 'user', 'active', '2025-06-08 19:46:28', NULL),
 ('UA1', 'nhungdoanne', 'hash_pw1', 'admin', 'active', '2024-01-01 09:00:00', '2024-06-01 08:00:00'),
 ('UA10', 'jennifer_vo', 'hash_pw10', 'user', 'active', '2024-01-10 13:30:00', '2024-06-01 10:00:00'),
 ('UA2', 'namlovespet', 'hash_pw2', 'admin', 'active', '2024-01-02 09:30:00', '2024-06-01 08:10:00'),
@@ -446,8 +469,6 @@ CREATE TABLE `ward` (
 --
 
 INSERT INTO `ward` (`ward_id`, `ward_name`, `district_id`) VALUES
-('1', 'Phường Bến Thành', '1'),
-('2', '123', '2'),
 ('W01', 'Phuong Ben Nghe', 'D01'),
 ('W02', 'Phuong Ben Thanh', 'D01'),
 ('W03', 'Phuong 10', 'D02'),
