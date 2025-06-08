@@ -32,25 +32,4 @@ class AuthController
             ];
         }
     }
-    public function getCustomer($data)
-    {
-        $user_id = $data['user_id'] ?? '';
-        $customer = $this->service->getCustomer($user_id);
-
-        if ($customer) {
-            return [
-                'status' => 200,
-                'data' => [
-                    'customer' => $customer
-                ]
-            ];
-        } else {
-            return [
-                'status' => 401,
-                'data' => [
-                    'message' => 'Get customer failed'
-                ]
-            ];
-        }
-    }
 }

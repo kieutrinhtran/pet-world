@@ -170,53 +170,7 @@ class Cart
                 ];
             }
         }
-
+    
         return $cart;
     }
-public function clearCartByCustomer($customer_id)
-{
-    // Lấy cart_id theo customer_id
-    $cart_id_query = "SELECT cart_id FROM cart WHERE customer_id = :customer_id";
-    $stmt = $this->conn->prepare($cart_id_query);
-    $stmt->bindParam(':customer_id', $customer_id);
-    $stmt->execute();
-    $cart = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($cart) {
-        $cart_id = $cart['cart_id'];
-
-        // Xóa các cart_item trước
-        $delete_items_query = "DELETE FROM cart_item WHERE cart_id = :cart_id";
-        $stmt_items = $this->conn->prepare($delete_items_query);
-        $stmt_items->bindParam(':cart_id', $cart_id);
-        $stmt_items->execute();
-
-        // Sau đó xóa giỏ hàng
-        $delete_cart_query = "DELETE FROM cart WHERE cart_id = :cart_id";
-        $stmt_cart = $this->conn->prepare($delete_cart_query);
-        $stmt_cart->bindParam(':cart_id', $cart_id);
-        return $stmt_cart->execute();
-    }
-
-    return false;
-}
-public function updateCartItemQuantity($cart_item_id, $quantity)
-{
-    if ($quantity > 0) {
-        $query = "UPDATE cart_item SET quantity = :quantity WHERE cart_item_id = :cart_item_id";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':quantity', $quantity);
-        $stmt->bindParam(':cart_item_id', $cart_item_id);
-        return $stmt->execute();
-    } else {
-        // Xóa luôn nếu số lượng <= 0
-        $deleteQuery = "DELETE FROM cart_item WHERE cart_item_id = :cart_item_id";
-        $deleteStmt = $this->conn->prepare($deleteQuery);
-        $deleteStmt->bindParam(':cart_item_id', $cart_item_id);
-        return $deleteStmt->execute();
-    }
-}
-
-
-
 }

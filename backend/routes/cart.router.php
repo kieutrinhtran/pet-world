@@ -14,11 +14,9 @@ class CartRouter
 
     public function addRoutes($router)
     {
-        $router->addRoute('GET', '/cart/{customer_id}', 'CartController', 'getCart');
-        $router->addRoute('POST', '/cart/{customer_id}', 'CartController', 'addToCart');
+        $router->addRoute('GET', '/cart', 'CartController', 'getCart');
+        $router->addRoute('POST', '/cart', 'CartController', 'addToCart');
         $router->addRoute('DELETE', '/cart/{cart_item_id}/{product_id}', 'CartController', 'removeFromCart');
-        $router->addRoute('PUT', '/cart/{cart_item_id}', 'CartController', 'updateCartItemQuantity');
-
     }
 }
 ?>
