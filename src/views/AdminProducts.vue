@@ -81,42 +81,60 @@
       />
     </div>
 
-    <!-- Table -->
-    <div class="table-responsive mx-auto" style="width: 94%">
-      <table class="table custom-table" style="width: 100%">
+    <!-- Loading indicator -->
+    <div v-if="loading" class="text-center py-10">
+      <div
+        class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-orange-500 border-t-transparent"
+      ></div>
+      <p class="mt-2 text-gray-600">Đang tải dữ liệu...</p>
+    </div>
+
+    <!-- Error message -->
+    <div v-else-if="error" class="bg-red-50 p-4 rounded-lg text-center text-red-600">
+      {{ error }}
+      <button @click="fetchProducts" class="ml-2 underline">Thử lại</button>
+    </div>
+
+    <!-- Empty state -->
+    <div
+      v-else-if="filteredAndSortedProducts.length === 0"
+      class="bg-white rounded-lg shadow p-10 text-center"
+    >
+      <i class="fas fa-box text-4xl text-gray-300 mb-3"></i>
+      <p class="text-gray-500">Không tìm thấy sản phẩm nào phù hợp với bộ lọc</p>
+    </div>
+
+    <!-- Bảng danh sách sản phẩm -->
+    <div v-else class="bg-white rounded-lg shadow overflow-x-auto">
+      <table class="w-full border-collapse">
         <thead>
           <tr>
-            <th @click="sortBy('product_id')" style="cursor: pointer">ID sản phẩm</th>
-            <th @click="sortBy('product_name')" style="cursor: pointer">Tên sản phẩm</th>
-            <th @click="sortBy('pet_type')" style="cursor: pointer">Loại thú nuôi</th>
-            <th @click="sortBy('base_price')" style="cursor: pointer">Giá gốc</th>
-            <th @click="sortBy('discount_price')" style="cursor: pointer">Giá tiền</th>
-            <th @click="sortBy('stock')" style="cursor: pointer">Hàng tồn kho</th>
-            <th class="text-center">Thao tác</th>
+            <th class="bg-gray-100 font-semibold p-4 text-left">ID sản phẩm</th>
+            <th class="bg-gray-100 font-semibold p-4 text-left">Tên sản phẩm</th>
+            <th class="bg-gray-100 font-semibold p-4 text-left">Loại thú nuôi</th>
+            <th class="bg-gray-100 font-semibold p-4 text-left">Giá gốc</th>
+            <th class="bg-gray-100 font-semibold p-4 text-left">Giá tiền</th>
+            <th class="bg-gray-100 font-semibold p-4 text-left">Hàng tồn kho</th>
+            <th class="bg-gray-100 font-semibold p-4 text-left">Thao tác</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in paginatedProducts" :key="item.product_id">
-            <td>
-              <strong>{{ item.product_id }}</strong>
-            </td>
-            <td>
-              <div class="fw-bold">{{ item.product_name }}</div>
-            </td>
-            <td class="text-xl font-semibold">{{ item.pet_type }}</td>
-            <td>{{ formatCurrency(item.base_price) }}</td>
-            <td>{{ formatCurrency(item.discount_price) }}</td>
-            <td>{{ item.stock }}</td>
-            <td class="text-center">
-              <i
-                class="fas fa-edit action-icon me-2"
+          <tr v-for="item in paginatedProducts" :key="item.product_id" class="even:bg-gray-50">
+            <td class="p-4">{{ item.product_id }}</td>
+            <td class="p-4">{{ item.product_name }}</td>
+            <td class="p-4">{{ item.pet_type }}</td>
+            <td class="p-4">{{ formatCurrency(item.base_price) }}</td>
+            <td class="p-4">{{ formatCurrency(item.discount_price) }}</td>
+            <td class="p-4">{{ item.stock }}</td>
+            <td class="p-4">
+              <button
                 @click="openEditPopup(item)"
-                style="cursor: pointer"
-              ></i>
+                class="p-1 text-gray-600 hover:opacity-70"
+                title="Chỉnh sửa"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
             </td>
-          </tr>
-          <tr v-if="filteredAndSortedProducts.length === 0">
-            <td colspan="7" class="text-center text-muted">Không tìm thấy sản phẩm phù hợp.</td>
           </tr>
         </tbody>
       </table>
@@ -366,38 +384,26 @@
         </form>
       </div>
     </div>
-    <div class="flex justify-center items-center gap-3 my-4">
-      <button
-        class="px-3 py-1 border rounded disabled:opacity-50"
-        :disabled="currentPage === 1"
-        @click="currentPage--"
-      >
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        class="px-3 py-1 border rounded"
-        :class="{ 'bg-orange-400 text-white': page === currentPage }"
-        @click="currentPage = page"
-      >
-        {{ page }}
-      </button>
-
-      <button
-        class="px-3 py-1 border rounded disabled:opacity-50"
-        :disabled="currentPage === totalPages"
-        @click="currentPage++"
-      >
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
+    <!-- Phân trang -->
+    <div v-if="filteredAndSortedProducts.length > 0" class="flex justify-center items-center gap-4 mt-4">
+      <BasePagination
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        @prev="currentPage > 1 && currentPage--"
+        @next="currentPage < totalPages && currentPage++"
+        @page="currentPage = $event"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import BasePagination from '@/components/BasePagination.vue'
+
 export default {
+  components: {
+    BasePagination
+  },
   data() {
     return {
       searchTerm: '',

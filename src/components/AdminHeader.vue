@@ -35,11 +35,6 @@
           >
         </li>
         <li>
-          <router-link to="/admin/coupons" active-class="active-menu"
-            >Mã khuyến mãi</router-link
-          >
-        </li>
-        <li>
           <router-link to="/admin/statistics" active-class="active-menu"
             >Thống kê</router-link
           >
