@@ -17,5 +17,7 @@ class CustomerRouter
         $router->addRoute('GET', '/customer', 'CustomerController', 'getCustomer');
         $router->addRoute('GET', '/customers', 'CustomerController', 'getAllCustomers');
          $router->addRoute('POST', '/password/change', 'CustomerController', 'changePassword');
-    }
+                $router->addRoute('PUT', '/customer', 'CustomerController', 'updateProfile');
+
+        }
 }

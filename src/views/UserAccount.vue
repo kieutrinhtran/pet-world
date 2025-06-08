@@ -884,30 +884,31 @@ const cancelEditing = () => {
 const saveUserData = async () => {
   try {
     isLoading.value = true
+    error.value = null
 
-    // Chuẩn bị dữ liệu để cập nhật
-    const updateData = {
+    const userDataToSave = {
       customer_name: userData.value.fullName,
+      email: userData.value.email,
+      phone: userData.value.phone,
       date_of_birth: userData.value.dateOfBirth,
-      gender: userData.value.gender === 'Nam' ? 'male' : 'female',
-      phone: userData.value.phone.replace('(+84) ', '0'), // Chuyển lại định dạng số điện thoại
-      email: userData.value.email
+      gender: userData.value.gender
     }
 
-    // Gọi API cập nhật thông tin
-    const response = await axios.put('http://localhost:8000/api/v1/customer', updateData, {
+    const response = await axios.put('http://localhost:8000/api/v1/customer', userDataToSave, {
       withCredentials: true
     })
 
     if (response.data && response.data.success) {
-      alert('Cập nhật thông tin thành công!')
+      // Cập nhật thành công
       isEditing.value = false
+      // Cập nhật lại dữ liệu hiển thị
+      await fetchCustomerData()
     } else {
-      throw new Error('Cập nhật thông tin không thành công')
+      error.value = response.data?.message || 'Không thể cập nhật thông tin'
     }
   } catch (err) {
-    console.error('Error updating customer data:', err)
-    alert('Không thể cập nhật thông tin. Vui lòng thử lại sau.')
+    console.error('Error saving user data:', err)
+    error.value = err.response?.data?.message || 'Đã xảy ra lỗi khi lưu thông tin'
   } finally {
     isLoading.value = false
   }

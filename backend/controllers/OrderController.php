@@ -297,4 +297,20 @@ class OrderController
             ]
         ];
     }
+    public function changeToProcessing($orderId)
+    {
+        $result = $this->service->changeToProcessing($orderId);
+        
+        if ($result['success']) {
+            return [
+                'status' => 200,
+                'data' => $result
+            ];
+        } else {
+            return [
+                'status' => 400,
+                'data' => $result
+            ];
+        }
+    }
 }

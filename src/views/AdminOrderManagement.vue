@@ -75,6 +75,13 @@
               <!-- Nút xem chi tiết đơn hàng -->
               <td class="p-4">
                 <button
+                  v-if="order.status === 'pending'"
+                  @click="confirmOrder(order)"
+                  class="px-3 py-1 bg-orange-500 text-white rounded hover:bg-orange-600 text-xs font-semibold mr-2"
+                >
+                  Xác nhận
+                </button>
+                <button
                   @click="viewOrderDetail(order)"
                   class="p-1 text-gray-600 hover:opacity-70"
                   title="Xem chi tiết"
@@ -523,4 +530,26 @@ const closeDetailModal = () => {
 onMounted(() => {
   fetchOrders()
 })
+
+const confirmOrder = async order => {
+  if (!order || order.status !== 'pending') return
+  try {
+    // Gọi API cập nhật trạng thái
+    const response = await fetch(`http://localhost:8000/api/v1/orders/${order.order_id}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+    console.log('Response:', response)
+    if (response.status !== 200) {
+      throw new Error('Không thể xác nhận đơn hàng. Vui lòng thử lại sau.')
+    }
+    // Cập nhật lại danh sách đơn hàng
+    await fetchOrders()
+  } catch (err) {
+    alert(err.message || 'Có lỗi xảy ra khi xác nhận đơn hàng')
+  }
+}
 </script>

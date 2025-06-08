@@ -44,38 +44,73 @@ class Customer
             if (empty($data)) {
                 return false;
             }
-
+            
+            // Format lại dữ liệu trước khi cập nhật
+            if (isset($data['date_of_birth'])) {
+                // Chuẩn hóa định dạng ngày tháng
+                $date = $data['date_of_birth'];
+                if (preg_match('/(\d{2}:\d{2})\s+(\d{2})\/(\d{2})\/(\d{4})/', $date, $matches)) {
+                    // Chuyển đổi từ "07:00 08/06/2025" thành "2025-06-08"
+                    $data['date_of_birth'] = $matches[4].'-'.$matches[3].'-'.$matches[2];
+                } else if (strtotime($date)) {
+                    // Thử chuyển đổi từ các định dạng ngày khác
+                    $data['date_of_birth'] = date('Y-m-d', strtotime($date));
+                }
+            }
+            
+            if (isset($data['phone'])) {
+                // Loại bỏ các ký tự đặc biệt trong số điện thoại
+                $data['phone'] = preg_replace('/[^0-9]/', '', $data['phone']);
+            }
+            
+            // Log dữ liệu đang được cập nhật để gỡ lỗi
+            error_log("Updating customer with data: " . json_encode($data));
+    
             // Tạo câu truy vấn cập nhật dựa trên dữ liệu được cung cấp
             $set_parts = [];
             $params = [':customer_id' => $customer_id];
-
+    
             // Các trường được phép cập nhật trong bảng customer
-            $allowed_fields = ['fullname', 'phone', 'email', 'birthday', 'gender', 'avatar'];
-
+            $allowed_fields = ['customer_name', 'phone', 'email', 'date_of_birth', 'gender', 'avatar'];
+    
             foreach ($data as $key => $value) {
                 if (in_array($key, $allowed_fields)) {
                     $set_parts[] = "$key = :$key";
                     $params[":$key"] = $value;
                 }
             }
-
+    
             if (empty($set_parts)) {
+                error_log("No valid fields to update");
                 return false; // Không có trường hợp lệ để cập nhật
             }
-
+    
+            // Đã bỏ phần thêm trường updated_at
+    
             $query = "UPDATE {$this->table_name} 
-                     SET " . implode(', ', $set_parts) . ", 
-                     updated_at = NOW()
+                     SET " . implode(', ', $set_parts) . "
                      WHERE customer_id = :customer_id";
-
+            
+            // Log query để debug
+            error_log("Update query: " . $query);
+            error_log("Parameters: " . json_encode($params));
+    
             $stmt = $this->conn->prepare($query);
-
+    
             // Bind các tham số
             foreach ($params as $param => &$value) {
                 $stmt->bindParam($param, $value);
             }
-
-            return $stmt->execute();
+    
+            if ($stmt->execute()) {
+                return $this->findOne($customer_id);
+            }
+            
+            // Log lỗi SQL nếu có
+            $errorInfo = $stmt->errorInfo();
+            error_log("SQL Error: " . json_encode($errorInfo));
+            
+            return false;
         } catch (Exception $e) {
             error_log("Error updating customer: " . $e->getMessage());
             return false;

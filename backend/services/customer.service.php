@@ -61,4 +61,40 @@ class CustomerService
         // Gọi model để thực hiện đổi mật khẩu
         return $this->customerModel->changePassword($user_id, $current_password, $new_password);
     }
+        public function updateCustomer($customerId, $data)
+    {
+        // Kiểm tra xem khách hàng có tồn tại không
+        $customer = $this->customerModel->findOne($customerId);
+        if (!$customer) {
+            return [
+                'status' => 404,
+                'data' => [
+                    'success' => false,
+                    'message' => 'Không tìm thấy khách hàng'
+                ]
+            ];
+        }
+
+        // Thực hiện cập nhật
+        $result = $this->customerModel->update($customerId, $data);
+        
+        if ($result) {
+            return [
+                'status' => 200,
+                'data' => [
+                    'success' => true,
+                    'message' => 'Cập nhật thành công',
+                    'customer' => $result
+                ]
+            ];
+        }
+        
+        return [
+            'status' => 500,
+            'data' => [
+                'success' => false,
+                'message' => 'Có lỗi xảy ra khi cập nhật thông tin'
+            ]
+        ];
+    }
 }

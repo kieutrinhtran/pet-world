@@ -43,7 +43,6 @@
     </div>
 
     <!-- Địa chỉ nhận hàng -->
-    <!-- Địa chỉ nhận hàng -->
     <div class="flex flex-col items-center my-4">
       <h3 class="flex items-center gap-2 text-orange-500 font-semibold text-lg mb-2">
         <i class="fas fa-map-marker-alt"></i> Địa chỉ nhận hàng
@@ -62,28 +61,17 @@
             >Mặc định</span
           >
         </div>
-        <!-- <button @click="showAddressSelector = true" class="text-orange-500 font-semibold ml-4">
-          Thay đổi
-        </button> -->
       </div>
 
       <div v-else class="text-center py-4">
         <p class="text-gray-500 mb-2">Chưa có địa chỉ giao hàng</p>
         <button
-          @click="showAddressSelector = true"
+          @click="goToUserAccount"
           class="bg-orange-500 text-white px-4 py-2 rounded"
         >
           Thêm địa chỉ mới
         </button>
       </div>
-
-      <!-- Component chọn địa chỉ -->
-      <AddressSelector
-        v-if="showAddressSelector"
-        :visible="showAddressSelector"
-        @close="showAddressSelector = false"
-        @address-selected="onAddressSelected"
-      />
     </div>
 
     <!-- Hiển thị khi giỏ hàng trống -->
@@ -210,7 +198,6 @@
 // Import các thư viện cần thiết từ Vue
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import AddressSelector from '@/components/AddressSelector.vue'
 import { useCart } from '@/store/cart'
 import axios from 'axios'
 
@@ -219,7 +206,6 @@ const router = useRouter()
 const { cartItems, fetchCart, updateQuantity, removeItem } = useCart()
 
 // State
-const showAddressSelector = ref(false)
 const shippingAddress = ref({})
 const shipping = ref(30000)
 // Theo dõi trạng thái loading khi thực hiện API calls
@@ -230,10 +216,11 @@ const processingItems = ref({})
 const paymentMethod = ref('COD')
 
 // Format price helper function
-const formatPrice = price => {
-  // Make sure price is a number and not undefined
-  const safePrice = Number(price) || 0
-  return safePrice.toLocaleString('vi-VN')
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(price)
 }
 
 // Get total for a specific item
@@ -244,70 +231,49 @@ const getItemTotal = item => {
   return price * quantity
 }
 
-// Tải giỏ hàng và địa chỉ khi component được tạo
+// Fetch cart items khi component mounted
 onMounted(async () => {
-  try {
-    isLoading.value = true
-    // Tải giỏ hàng và địa chỉ song song
-    await Promise.all([fetchCart(), fetchAddresses()])
-  } catch (err) {
-    console.error('Error initializing cart page:', err)
-    // Chỉ chuyển hướng đến trang đăng nhập nếu lỗi là unauthorized
-    if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-      alert('Vui lòng đăng nhập để xem giỏ hàng')
-      router.push('/login')
-    }
-  } finally {
-    isLoading.value = false
-  }
+  await fetchCart()
+  await fetchDefaultAddress()
 })
 
-// Lấy địa chỉ giao hàng
-const fetchAddresses = async () => {
+// Lấy địa chỉ mặc định của user
+const fetchDefaultAddress = async () => {
   try {
-    // Lấy địa chỉ từ API sử dụng cookie session
-    const addressRes = await axios.get('http://localhost:8000/api/v1/address', {
+    const response = await axios.get('http://localhost:8000/api/v1/address', {
       withCredentials: true
     })
 
-    // Check if we have the expected response structure
-    if (addressRes.data && addressRes.data.success) {
-      const addresses = addressRes.data.addresses
-
-      if (Array.isArray(addresses) && addresses.length > 0) {
-        // Tìm địa chỉ mặc định hoặc lấy địa chỉ đầu tiên
-        const defaultAddress = addresses.find(addr => addr.is_default == 1) || addresses[0]
-
-        // Enhance address object with additional fields if necessary
+    if (response.data && response.data.success) {
+      const addresses = response.data.addresses
+      const defaultAddress = addresses.find(addr => addr.is_default === 1)
+      if (defaultAddress) {
         shippingAddress.value = {
-          ...defaultAddress,
-          name: defaultAddress.name || 'Người nhận', // Fallback if name isn't in the response
-          phone: defaultAddress.phone || 'Chưa có số điện thoại', // Fallback if phone isn't in the response
-          address_line: defaultAddress.address_line || '',
           address_id: defaultAddress.address_id,
-          is_default: defaultAddress.is_default == 1
+          name: defaultAddress.customer_name || 'Người nhận',
+          phone: defaultAddress.phone || 'Chưa có số điện thoại',
+          address_line: defaultAddress.address_line,
+          is_default: true
         }
-      } else {
-        shippingAddress.value = {}
-        console.warn('No addresses found for the user')
+        localStorage.setItem('shipping_address', JSON.stringify(shippingAddress.value))
       }
-    } else {
-      console.error('Unexpected address response structure:', addressRes.data)
     }
-  } catch (err) {
-    console.error('Error fetching addresses:', err)
+  } catch (error) {
+    console.error('Lỗi khi tải địa chỉ:', error)
   }
 }
 
-// Tính tổng tiền hàng (chưa tính phí vận chuyển)
+// Tính tổng tiền hàng
 const subtotal = computed(() => {
-  if (!cartItems.value || !Array.isArray(cartItems.value)) return 0
-
-  return cartItems.value.reduce((total, item) => total + getItemTotal(item), 0)
+  return cartItems.value.reduce((total, item) => {
+    return total + item.price * item.quantity
+  }, 0)
 })
 
-// Tính tổng tiền phải trả (bao gồm phí vận chuyển)
-const total = computed(() => subtotal.value + shipping.value)
+// Tính tổng tiền phải trả
+const total = computed(() => {
+  return subtotal.value + shipping.value
+})
 
 // Hàm tăng số lượng sản phẩm trong giỏ hàng
 async function increase(item) {
@@ -366,7 +332,6 @@ async function checkout() {
   // Verify we have an address
   if (!shippingAddress.value || !shippingAddress.value.address_id) {
     alert('Vui lòng chọn địa chỉ giao hàng trước khi thanh toán')
-    showAddressSelector.value = true
     return
   }
 
@@ -402,18 +367,9 @@ async function checkout() {
   }
 }
 
-// Khi chọn địa chỉ mới từ AddressSelector
-function onAddressSelected(address) {
-  // Process the address to ensure it has all required fields
-  shippingAddress.value = {
-    ...address,
-    name: address.name || 'Người nhận',
-    phone: address.phone || 'Chưa có số điện thoại',
-    is_default: address.is_default == 1
-  }
-
-  localStorage.setItem('shipping_address', JSON.stringify(shippingAddress.value))
-  showAddressSelector.value = false
+// Chuyển hướng đến trang tài khoản để thêm địa chỉ
+function goToUserAccount() {
+  router.push('/account')
 }
 </script>
 <style scoped>

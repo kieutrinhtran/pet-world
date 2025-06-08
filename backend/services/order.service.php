@@ -301,4 +301,8 @@ class OrderService
     {
         return $this->orderModel->filterOrders($filters);
     }
+     public function changeToProcessing($orderId)
+    {
+        return $this->orderModel->changeToProcessing($orderId);
+    }
 }

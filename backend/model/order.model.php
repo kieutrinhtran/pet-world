@@ -209,7 +209,7 @@ class Order
     public function revenueThisMonth()
     {
         $query = "SELECT SUM(total_amount) as revenue FROM `order` 
-                  WHERE status = 'completed' AND MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())";
+                  WHERE status = 'processing' AND MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['revenue'] ?? 0;
@@ -356,5 +356,30 @@ class Order
         
         return $orders;
     }
-
+public function changeToProcessing($order_id)
+{
+    try {
+        $query = "UPDATE `order` SET status = 'processing' WHERE order_id = :order_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':order_id', $order_id);
+        
+        if ($stmt->execute()) {
+            return [
+                'success' => true,
+                'message' => 'Đã chuyển đơn hàng sang trạng thái xử lý',
+                'order_id' => $order_id
+            ];
+        }
+        
+        return [
+            'success' => false,
+            'message' => 'Không thể cập nhật trạng thái đơn hàng'
+        ];
+    } catch (Exception $e) {
+        return [
+            'success' => false,
+            'message' => 'Lỗi: ' . $e->getMessage()
+        ];
+    }
+}
 }
