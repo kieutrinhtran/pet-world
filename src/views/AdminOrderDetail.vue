@@ -31,9 +31,7 @@
           <div class="info-grid">
             <div class="info-item">
               <label>Trạng thái đơn hàng:</label>
-              <span :class="['status', order.status]">{{
-                getStatusText(order.status)
-              }}</span>
+              <span :class="['status', order.status]">{{ getStatusText(order.status) }}</span>
             </div>
             <div class="info-item">
               <label>Ngày đặt:</label>
@@ -111,11 +109,7 @@
                 <tr v-for="item in order.items" :key="item.id">
                   <td>
                     <div class="product-info">
-                      <img
-                        :src="item.image"
-                        :alt="item.name"
-                        class="product-image"
-                      />
+                      <img :src="item.image" :alt="item.name" class="product-image" />
                       <span>{{ item.name }}</span>
                     </div>
                   </td>
@@ -138,9 +132,7 @@
         <!-- Header của modal -->
         <div class="modal-header">
           <h2>Chỉnh sửa đơn hàng</h2>
-          <button @click="showEditModal = false" class="close-btn">
-            &times;
-          </button>
+          <button @click="showEditModal = false" class="close-btn">&times;</button>
         </div>
         <!-- Body của modal -->
         <div class="modal-body">
@@ -159,9 +151,8 @@
           <div class="form-group">
             <label>Trạng thái thanh toán:</label>
             <select v-model="order.payment_status" class="form-control">
-              <option value="pending">Chờ thanh toán</option>
+              <option value="unpaid">Chờ thanh toán</option>
               <option value="paid">Đã thanh toán</option>
-              <option value="failed">Thanh toán thất bại</option>
             </select>
           </div>
         </div>
@@ -187,7 +178,7 @@ const axiosInstance = axios.create({
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json'
+    Accept: 'application/json'
   }
 })
 
@@ -229,7 +220,7 @@ const handleError = (error, defaultMessage = 'Có lỗi xảy ra') => {
 
 // Order Service
 const orderService = {
-  getById: async (id) => {
+  getById: async id => {
     try {
       const response = await axiosInstance.get(`/orders/${id}`)
       return response.data
@@ -270,68 +261,67 @@ const showEditModal = ref(false)
 // Hàm điều hướng quay lại trang trước
 // =====================
 const goBack = () => {
-  router.back();
-};
+  router.back()
+}
 
 // =====================
 // Các hàm format dữ liệu hiển thị
 // =====================
 // Định dạng ngày theo chuẩn Việt Nam
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('vi-VN');
-};
+const formatDate = date => {
+  return new Date(date).toLocaleDateString('vi-VN')
+}
 
 // Định dạng giá tiền VND
-const formatPrice = (price) => {
+const formatPrice = price => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
-    currency: 'VND',
-  }).format(price);
-};
+    currency: 'VND'
+  }).format(price)
+}
 
 // =====================
 // Hàm mapping trạng thái sang tiếng Việt
 // =====================
 // Chuyển trạng thái đơn hàng sang tiếng Việt
-const getStatusText = (status) => {
+const getStatusText = status => {
   const statusMap = {
     pending: 'Chờ xác nhận',
     processing: 'Đang xử lý',
     shipped: 'Đang giao hàng',
     delivered: 'Đã nhận hàng',
-    cancelled: 'Đã hủy',
-  };
-  return statusMap[status] || status;
-};
+    cancelled: 'Đã hủy'
+  }
+  return statusMap[status] || status
+}
 
 // Chuyển phương thức thanh toán sang tiếng Việt
-const getPaymentMethodText = (method) => {
+const getPaymentMethodText = method => {
   const methodMap = {
     cod: 'Thanh toán khi nhận hàng',
     bank_transfer: 'Chuyển khoản ngân hàng',
-    credit_card: 'Thẻ tín dụng',
-  };
-  return methodMap[method] || method;
-};
+    credit_card: 'Thẻ tín dụng'
+  }
+  return methodMap[method] || method
+}
 
 // Chuyển trạng thái thanh toán sang tiếng Việt
-const getPaymentStatusText = (status) => {
+const getPaymentStatusText = status => {
   const statusMap = {
-    pending: 'Chờ thanh toán',
-    paid: 'Đã thanh toán',
-    failed: 'Thanh toán thất bại',
-  };
-  return statusMap[status] || status;
-};
+    unpaid: 'Chờ thanh toán',
+    paid: 'Đã thanh toán'
+  }
+  return statusMap[status] || status
+}
 
 // Chuyển phương thức vận chuyển sang tiếng Việt
-const getShippingMethodText = (method) => {
+const getShippingMethodText = method => {
   const methodMap = {
     standard: 'Giao hàng tiêu chuẩn',
-    express: 'Giao hàng nhanh',
-  };
-  return methodMap[method] || method;
-};
+    express: 'Giao hàng nhanh'
+  }
+  return methodMap[method] || method
+}
 
 // =====================
 // Hàm lưu thay đổi đơn hàng
@@ -345,16 +335,16 @@ const saveChanges = async () => {
       payment_status: order.value.payment_status
     })
     if (updatedOrder) {
-      order.value = { ...updatedOrder };
-      showEditModal.value = false;
+      order.value = { ...updatedOrder }
+      showEditModal.value = false
     }
   } catch (err) {
-    error.value = err.message;
-    console.error(err);
+    error.value = err.message
+    console.error(err)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 // =====================
 // Lifecycle: Khi component mounted, gọi API lấy chi tiết đơn hàng
@@ -366,12 +356,12 @@ onMounted(async () => {
     const response = await axiosInstance.get(`/orders/${orderId}`)
     order.value = response.data
   } catch (err) {
-    error.value = 'Không thể tải thông tin đơn hàng';
-    console.error(err);
+    error.value = 'Không thể tải thông tin đơn hàng'
+    console.error(err)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-});
+})
 </script>
 
 <style scoped>
@@ -403,6 +393,7 @@ onMounted(async () => {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

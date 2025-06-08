@@ -38,7 +38,9 @@ class PromotionController
 
     public function getAll()
     {
-        $result = $this->service->getAllPromotions();
+        // Get 'page' from query string
+        $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+        $result = $this->service->getAllPromotions($page);
         return [
             'status' => 200,
             'data' => $result

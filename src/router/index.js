@@ -15,6 +15,8 @@ import CustomerLayout from '@/layouts/CustomerLayout.vue'
 import UserLogin from '@/views/userLogin.vue'
 import UserRegister from '@/views/userRegister.vue'
 import UserAccount from '@/views/UserAccount.vue'
+import userStore from '@/store/user'
+import { storeToRefs } from 'pinia'
 
 const routes = [
   {
@@ -24,55 +26,55 @@ const routes = [
       {
         path: '',
         name: 'HomePage',
-        component: HomePage,
+        component: HomePage
       },
       {
         path: 'products',
         name: 'ProductList',
-        component: ProductList,
+        component: ProductList
       },
       {
         path: 'products/:id',
         name: 'ProductDetail',
         component: () => import('../views/ProductDetail.vue'),
-        props: true,
+        props: true
       },
       {
         path: 'cart',
         name: 'CartPage',
-        component: CartPage,
+        component: CartPage
       },
       {
         path: 'checkout',
         name: 'CheckoutPage',
-        component: CheckoutPage,
+        component: CheckoutPage
       },
       {
         path: 'order-success',
         name: 'OrderSuccess',
-        component: OrderSuccess,
+        component: OrderSuccess
       },
       {
         path: 'about',
         name: 'AboutPage',
-        component: AboutPage,
+        component: AboutPage
       },
       {
         path: 'login',
         name: 'UserLogin',
-        component: UserLogin,
+        component: UserLogin
       },
       {
         path: 'register',
         name: 'UserRegister',
-        component: UserRegister,
+        component: UserRegister
       },
       {
         path: 'account',
         name: 'UserAccount',
-        component: UserAccount,
-      },
-    ],
+        component: UserAccount
+      }
+    ]
   },
   {
     path: '/admin',
@@ -80,32 +82,32 @@ const routes = [
     children: [
       {
         path: '',
-        redirect: '/admin/login',
+        redirect: '/admin/login'
       },
       {
         path: 'orders',
         name: 'AdminOrderManagement',
-        component: AdminOrderManagement,
+        component: AdminOrderManagement
       },
       {
         path: 'orders/:id',
         name: 'AdminOrderDetail',
-        component: AdminOrderDetail,
+        component: AdminOrderDetail
       },
       {
         path: 'products',
         name: 'AdminProducts',
-        component: () => import('@/views/AdminProducts.vue'),
+        component: () => import('@/views/AdminProducts.vue')
       },
       {
         path: 'coupons',
         name: 'AdminCoupons',
-        component: () => import('@/views/AdminCoupons.vue'),
+        component: () => import('@/views/AdminCoupons.vue')
       },
       {
         path: 'statistics',
         name: 'AdminStatistics',
-        component: AdminStatistics,
+        component: AdminStatistics
       },
       {
         path: 'customers',
@@ -116,31 +118,40 @@ const routes = [
         path: 'customers/:id/edit',
         name: 'AdminEditCustomer',
         component: () => import('@/views/AdminEditCustomer.vue'),
-        props: true,
+        props: true
       },
       {
         path: 'customers/:id/purchase-history',
         name: 'AdminCustomerPurchaseHistory',
         component: () => import('@/views/AdminCustomerPurchaseHistory.vue'),
-        props: true,
-      },
-    ],
+        props: true
+      }
+    ]
   },
   {
     path: '/admin/login',
     name: 'AdminLogin',
-    component: AdminLogin,
+    component: AdminLogin
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import('../views/NotFound.vue'),
-  },
-];
+    component: () => import('../views/NotFound.vue')
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
-});
+  routes
+})
 
-export default router;
+router.beforeEach(async (to, from, next) => {
+  const { getUserFromLocal } = userStore()
+  const { isLoggedIn } = storeToRefs(userStore())
+  if (!isLoggedIn.value) {
+    await getUserFromLocal()
+  }
+  next()
+})
+
+export default router

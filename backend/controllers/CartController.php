@@ -13,7 +13,7 @@ class CartController
 
     public function getCart($customer_id)
     {
-        requireLogin(['admin','user']);
+        //requireLogin(['admin','user']);
         $result = $this->service->getOrCreateCartId($customer_id);
         return [
             'status' => 200,

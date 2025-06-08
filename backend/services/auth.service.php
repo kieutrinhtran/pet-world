@@ -31,4 +31,20 @@ class AuthService
         }
         return false;
     }
+
+    public function getCustomer($user_id)
+    {
+        if (empty($user_id)) {
+            return [
+                'error' => true,
+                'message' => 'Missing user_id'
+            ];
+        }
+    
+        $customer = $this->authModel->getCustomer($user_id);
+        if ($customer) {
+            return $customer;
+        }
+        return false;
+    }
 }
