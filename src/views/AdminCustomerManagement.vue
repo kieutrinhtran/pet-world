@@ -38,24 +38,17 @@
             <td>{{ customer.date_of_birth }}</td>
             <td>{{ customer.phone }}</td>
             <td>{{ customer.gender }}</td>
-            <td class="action-buttons">
-              <button @click="viewHistory(customer.customer_id)">👁️</button>
-            </td>
           </tr>
         </tbody>
       </table>
     </div>
-
-    <!-- Footer component -->
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import AdminSearchBar from '@/components/AdminSearchBar.vue'
 
-const router = useRouter()
 
 // Trạng thái
 const customers = ref([])
@@ -89,10 +82,6 @@ const filteredCustomers = computed(() => {
   )
 })
 
-// Điều hướng lịch sử
-const viewHistory = id => {
-  router.push({ name: 'AdminCustomerPurchaseHistory', params: { id } })
-}
 </script>
 
 <style scoped>
