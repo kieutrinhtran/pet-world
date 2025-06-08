@@ -266,7 +266,10 @@ const fetchDefaultAddress = async () => {
 // Tính tổng tiền hàng
 const subtotal = computed(() => {
   return cartItems.value.reduce((total, item) => {
-    return total + item.price * item.quantity
+    // Ưu tiên discount_price nếu có, không thì lấy base_price
+    const price = Number(item.product?.discount_price) || Number(item.product?.base_price) || 0
+    const quantity = Number(item.quantity) || 1
+    return total + price * quantity
   }, 0)
 })
 
