@@ -117,7 +117,8 @@ class Order
           WHERE o.customer_id = :customer_id
           GROUP BY o.order_id, o.order_date, o.status, o.total_amount, 
                   o.payment_method, o.payment_status, c.customer_name, 
-                  c.phone, a.address_line, a.ward_id";
+                  c.phone, a.address_line, a.ward_id
+          ORDER BY o.order_date DESC";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':customer_id', $customer_id);
