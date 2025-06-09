@@ -85,20 +85,10 @@ npm run build
 ### Cài Đặt Backend
 ```bash
 npm install js-cookie
-
-#
+```
+```bash
+#Lệnh để khởi động backend
 php -S localhost:8000
-
-# Cấu hình database trong file .env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=pet_world
-DB_USERNAME=root
-DB_PASSWORD=
-
-# Import database
-mysql -u root -p pet_world < scriptmysql_database/pet_world.sql
 ```
 
 ## Cấu Trúc Dự Án
