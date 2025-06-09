@@ -1,4 +1,5 @@
 <template>
+  <!-- Trang thanh toán đơn hàng -->
   <div class="bg-white rounded-2xl p-8 max-w-7xl mx-auto my-8">
     <!-- Breadcrumb điều hướng -->
     <div class="mb-4">
@@ -12,7 +13,7 @@
 
     <!-- Thanh tiến trình các bước mua hàng -->
     <div class="flex items-center justify-center my-8">
-      <!-- Bước 1: Vận chuyển -->
+      <!-- Bước 1: Vận chuyển (đã hoàn thành) -->
       <div class="flex flex-col items-center text-green-500">
         <div
           class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center mb-2 font-bold"
@@ -22,7 +23,7 @@
         <div>Vận chuyển</div>
       </div>
       <div class="w-24 h-0.5 bg-orange-500 mx-4"></div>
-      <!-- Bước 2: Thanh toán -->
+      <!-- Bước 2: Thanh toán (đang thực hiện) -->
       <div class="flex flex-col items-center text-orange-500">
         <div
           class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center mb-2 font-bold"
@@ -32,7 +33,7 @@
         <div>Kiểm tra & Thanh toán</div>
       </div>
       <div class="w-24 h-0.5 bg-gray-200 mx-4"></div>
-      <!-- Bước 3: Thành công -->
+      <!-- Bước 3: Thành công (chưa thực hiện) -->
       <div class="flex flex-col items-center text-gray-400">
         <div
           class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mb-2 font-bold"
@@ -55,20 +56,19 @@
     <div v-else-if="error" class="text-center py-16 text-red-500">
       <i class="fas fa-exclamation-circle text-5xl mb-4"></i>
       <p>{{ error }}</p>
-      <button @click="goBackToCart" class="mt-4 bg-orange-500 text-white px-6 py-2 rounded">
+      <button @click="goBackToAccount" class="mt-4 bg-orange-500 text-white px-6 py-2 rounded">
         Quay lại giỏ hàng
       </button>
     </div>
 
     <!-- Content -->
     <div v-else class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
-      <!-- Checkout information -->
+      <!-- Thông tin thanh toán -->
       <div>
-        <!-- Shipping address -->
+        <!-- Địa chỉ giao hàng -->
         <div class="bg-gray-50 p-6 rounded-xl mb-6">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-semibold">Địa chỉ giao hàng</h3>
-            <button @click="goBackToCart" class="text-orange-500 font-medium">Thay đổi</button>
           </div>
           <div class="bg-white p-4 rounded-lg">
             <p class="font-medium">{{ checkoutData.shippingAddress.name }}</p>
@@ -83,11 +83,10 @@
           </div>
         </div>
 
-        <!-- Payment method -->
+        <!-- Phương thức thanh toán -->
         <div class="bg-gray-50 p-6 rounded-xl mb-6">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-semibold">Phương thức thanh toán</h3>
-            <button @click="goBackToCart" class="text-orange-500 font-medium">Thay đổi</button>
           </div>
           <div class="bg-white p-4 rounded-lg">
             <div class="flex items-center gap-3">
@@ -100,7 +99,7 @@
           </div>
         </div>
 
-        <!-- Order items -->
+        <!-- Danh sách sản phẩm -->
         <div class="bg-gray-50 p-6 rounded-xl">
           <h3 class="text-lg font-semibold mb-4">Đơn hàng của bạn</h3>
           <div class="space-y-4">
@@ -124,17 +123,20 @@
         </div>
       </div>
 
-      <!-- Order summary -->
+      <!-- Tổng kết đơn hàng -->
       <div class="bg-orange-50 rounded-xl p-6 h-fit">
         <h2 class="text-xl font-bold mb-4">Tổng đơn hàng</h2>
+        <!-- Tạm tính -->
         <div class="flex justify-between text-gray-600 mb-3">
           <span>Tạm tính:</span>
           <span class="font-semibold">{{ formatPrice(checkoutData.subtotal) }}đ</span>
         </div>
+        <!-- Phí vận chuyển -->
         <div class="flex justify-between text-gray-600 mb-3">
           <span>Vận chuyển:</span>
           <span class="font-semibold">{{ formatPrice(checkoutData.shipping) }}đ</span>
         </div>
+        <!-- Tổng cộng -->
         <div class="flex justify-between mt-4 pt-4 border-t border-gray-300 mb-6">
           <span>Tổng cộng:</span>
           <span class="font-bold text-xl text-orange-500"
@@ -142,7 +144,7 @@
           >
         </div>
 
-        <!-- Place order button -->
+        <!-- Nút đặt hàng -->
         <button
           @click="placeOrder"
           class="w-full bg-orange-500 text-white py-3 rounded-md font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -154,7 +156,7 @@
           <span v-else>Đặt hàng</span>
         </button>
 
-        <!-- Checkout info -->
+        <!-- Thông tin bảo mật và hỗ trợ -->
         <div class="mt-6 text-sm text-gray-600">
           <p class="flex items-center gap-2">
             <i class="fas fa-shield-alt text-orange-500"></i>
@@ -244,11 +246,6 @@ onMounted(() => {
     loading.value = false
   }
 })
-
-// Navigate back to cart page
-function goBackToCart() {
-  router.push('/cart')
-}
 
 // Place order
 async function placeOrder() {
