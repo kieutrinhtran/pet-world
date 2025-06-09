@@ -1,121 +1,126 @@
-# Pet World - Cửa hàng thú cưng trực tuyến
+# Pet World - Hệ Thống Quản Lý Cửa Hàng Thú Cưng
 
-## Giới thiệu
-Pet World là một ứng dụng web thương mại điện tử chuyên về các sản phẩm và dịch vụ cho thú cưng. Ứng dụng được xây dựng bằng Vue.js và Tailwind CSS, cung cấp trải nghiệm mua sắm trực tuyến thân thiện với người dùng.
+## Giới Thiệu
+Pet World là một ứng dụng web quản lý cửa hàng thú cưng, được xây dựng với Vue.js cho frontend và PHP cho backend. Ứng dụng cung cấp các tính năng quản lý sản phẩm, đơn hàng, khách hàng và thống kê doanh thu.
 
-## Cấu trúc Dự án
+## Tính Năng Chính
 
-```
-pet-world/
-├── backend/                    # (Tùy chọn) Backend API nếu có, phục vụ dữ liệu cho frontend
-├── public/                     # File tĩnh công khai, truy cập trực tiếp không qua webpack
-│   ├── images/                 # Ảnh banner, sản phẩm, thương hiệu... dùng trực tiếp
-│   ├── favicon.ico             # Icon trang web hiển thị trên tab trình duyệt
-│   └── index.html              # File HTML gốc, nơi mount ứng dụng Vue
-├── src/                        # Mã nguồn chính của ứng dụng
-│   ├── api/                    # Cấu hình và endpoint cho các API
-│   │   ├── axios.js            # Thiết lập instance axios cho gọi API
-│   │   └── endpoints.js        # Định nghĩa các endpoint API
-│   ├── assets/                 # Tài nguyên tĩnh (ảnh, css, logo...)
-│   │   ├── images/             # Ảnh nội bộ sử dụng trong app (logo, banner...)
-│   │   ├── Banner.png          # Ảnh banner chính
-│   │   ├── logo.png            # Logo của shop
-│   │   └── main.css            # File CSS toàn cục (nếu có)
-│   ├── components/             # Các component tái sử dụng nhiều nơi
-│   │   ├── AdminHeader.vue     # Header cho giao diện admin
-│   │   ├── AdminHero.vue       # Banner/hero cho trang admin
-│   │   ├── AdminSearchBar.vue  # Thanh tìm kiếm cho admin
-│   │   ├── BasePagination.vue  # Component phân trang dùng lại nhiều nơi
-│   │   ├── BrandLists.vue      # Hiển thị danh sách thương hiệu
-│   │   ├── CustomerHeader.vue  # Header cho giao diện khách hàng
-│   │   ├── FooterComponent.vue # Chân trang dùng toàn site
-│   │   ├── ShoppingCartComponent.vue # Hiển thị giỏ hàng nhỏ (mini cart)
-│   │   ├── StoreLocation.vue   # Hiển thị vị trí cửa hàng
-│   │   ├── AddressSelector.vue # Chọn địa chỉ giao hàng
-│   │   ├── product/            # Component con liên quan đến sản phẩm
-│   │   └── category/           # Component con liên quan đến danh mục
-│   ├── data/                   # Dữ liệu mẫu, hằng số (nếu có)
-│   │   ├── products.js         # Dữ liệu mẫu về sản phẩm
-│   │   └── store.js            # Dữ liệu mẫu về cửa hàng
-│   ├── layouts/                # Layout tổng thể cho từng loại trang
-│   │   ├── AdminLayout.vue     # Layout cho các trang admin (có header, footer riêng)
-│   │   └── CustomerLayout.vue  # Layout cho các trang khách hàng
-│   ├── router/                 # Cấu hình router (điều hướng các trang)
-│   │   └── index.js            # Định nghĩa các route, layout, children route
-│   ├── services/               # Hàm gọi API, xử lý dữ liệu
-│   │   └── api.js              # Hàm gọi API chung cho toàn app
-│   ├── store/                  # Quản lý state toàn cục (Pinia)
-│   │   ├── cart.js             # State và logic cho giỏ hàng
-│   │   └── index.js            # Khởi tạo store chính
-│   ├── utils/                  # Hàm tiện ích dùng chung (nếu có)
-│   ├── views/                  # Các trang chính (page) của ứng dụng
-│   │   ├── AboutPage.vue       # Trang giới thiệu về shop
-│   │   ├── AdminCoupons.vue    # Quản lý mã giảm giá (admin)
-│   │   ├── AdminCustomerManagement.vue # Quản lý khách hàng (admin)
-│   │   ├── AdminCustomerPurchaseHistory.vue # Lịch sử mua hàng của khách (admin)
-│   │   ├── AdminEditCustomer.vue # Sửa thông tin khách hàng (admin)
-│   │   ├── AdminLogin.vue      # Trang đăng nhập dành cho admin
-│   │   ├── AdminOrderDetail.vue # Chi tiết đơn hàng (admin)
-│   │   ├── AdminOrderManagement.vue # Quản lý đơn hàng (admin)
-│   │   ├── AdminProducts.vue   # Quản lý sản phẩm (admin)
-│   │   ├── AdminStatistics.vue # Trang thống kê, dashboard (admin)
-│   │   ├── CartPage.vue        # Trang giỏ hàng
-│   │   ├── CheckoutPage.vue    # Trang thanh toán
-│   │   ├── HomePage.vue        # Trang chủ
-│   │   ├── NotFound.vue        # Trang 404 khi không tìm thấy đường dẫn
-│   │   ├── OrderSuccess.vue    # Trang thông báo đặt hàng thành công
-│   │   ├── ProductDetail.vue   # Trang chi tiết sản phẩm
-│   │   ├── ProductList.vue     # Trang danh sách sản phẩm
-│   │   ├── UserAccount.vue     # Trang tài khoản khách hàng
-│   │   ├── userLogin.vue       # Trang đăng nhập khách hàng
-│   │   ├── userRegister.vue    # Trang đăng ký tài khoản khách hàng
-│   │   └── ... (các trang khác)
-│   ├── App.vue                 # Component gốc, nơi mount toàn bộ ứng dụng
-│   └── main.js                 # File khởi tạo Vue app, khai báo router, store, global style
-├── package.json                # Cấu hình dự án và dependencies
-├── package-lock.json           # Khóa phiên bản dependencies
-├── tailwind.config.js          # Cấu hình Tailwind CSS
-├── postcss.config.js           # Cấu hình PostCSS
-├── vue.config.js               # Cấu hình bổ sung cho Vue CLI (proxy, build, ...)
-├── jsconfig.json               # Cấu hình cho VSCode, IntelliSense
-├── .gitignore                  # Các file/thư mục bị loại trừ khỏi git
-├── .eslintrc.js                # Cấu hình ESLint (quy tắc lint code)
-├── .prettierrc                 # Cấu hình Prettier (format code)
-├── .editorconfig               # Quy tắc định dạng code cho nhiều IDE
-└── README.md                   # Tài liệu hướng dẫn dự án (file này)
+### 1. Tính Năng Dành Cho Admin
+
+#### 1.1. Quản Lý Sản Phẩm
+- Xem danh sách sản phẩm
+- Thêm sản phẩm mới
+- Cập nhật thông tin sản phẩm
+- Inactive sản phẩm
+
+#### 1.2. Quản Lý Đơn Hàng
+- Xem danh sách đơn hàng
+- Xem chi tiết đơn hàng
+- Cập nhật trạng thái đơn hàng
+
+#### 1.3. Quản Lý Khách Hàng
+- Xem danh sách khách hàng
+
+#### 1.4. Thống Kê & Báo Cáo
+- Tổng số đơn hàng
+- Tổng số khách hàng
+- Tổng số sản phẩm
+- Thống kê doanh thu theo tháng
+
+### 2. Tính Năng Dành Cho Người Dùng
+
+#### 2.1. Quản Lý Tài Khoản
+- Đăng ký tài khoản
+- Đăng nhập/Đăng xuất/Đổi mật khẩu
+- Xem thông tin cá nhân
+- Cập nhật thông tin cá nhân
+- Xem danh sách sản phẩm yêu thích
+
+#### 2.2. Mua Sắm
+- Xem danh sách sản phẩm
+- Xem chi tiết sản phẩm
+- Lọc sản phẩm theo danh mục
+
+#### 2.3. Giỏ Hàng
+- Thêm sản phẩm vào giỏ hàng
+- Cập nhật số lượng sản phẩm
+- Xóa sản phẩm khỏi giỏ hàng
+- Xem tổng giá trị giỏ hàng
+
+#### 2.4. Đặt Hàng
+- Xem phí vận chuyển
+- Đặt hàng
+
+#### 2.5. Theo Dõi Đơn Hàng
+- Xem lịch sử mua hàng
+- Xem chi tiết đơn hàng
+- Theo dõi trạng thái đơn hàng
+
+
+## Công Nghệ Sử Dụng
+
+### Frontend
+- Vue.js 3
+- Tailwind CSS
+
+### Backend
+- PHP
+- MySQL
+
+## Cài Đặt
+
+### Cài Đặt Frontend
+```bash
+# Cài đặt dependencies
+npm install
+npm install -g @vue/cli
+
+# Chạy development server
+npm run serve
+
+# Build cho production
+npm run build
 ```
 
-## Tính năng chính
+### Cài Đặt Backend
+```bash
+npm install js-cookie
 
-### Dành cho khách hàng
-- 🛍️ Duyệt và tìm kiếm sản phẩm
-- 🛒 Quản lý giỏ hàng
-- 👤 Đăng ký và đăng nhập tài khoản
-- 📦 Theo dõi đơn hàng
-- 💳 Thanh toán an toàn
-- 📱 Giao diện responsive
+#
+php -S localhost:8000
 
-### Dành cho quản trị viên
-- 📊 Dashboard thống kê
-- 📦 Quản lý đơn hàng
-  - Xem danh sách đơn hàng
-  - Cập nhật trạng thái đơn hàng
-  - Xem chi tiết đơn hàng
-- 🔒 Bảo mật và phân quyền
+# Cấu hình database trong file .env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=pet_world
+DB_USERNAME=root
+DB_PASSWORD=
 
-## Công nghệ sử dụng
+# Import database
+mysql -u root -p pet_world < scriptmysql_database/pet_world.sql
+```
 
-- **Frontend Framework**: Vue.js 3
-- **CSS Framework**: Tailwind CSS
-- **State Management**: Pinia
-- **Router**: Vue Router
-- **HTTP Client**: Axios
-- **UI Components**: Custom components
+## Cấu Trúc Dự Án
 
-## Yêu cầu hệ thống
+### Frontend (`/src`)
+- `/api`: Cấu hình API endpoints
+- `/assets`: Hình ảnh và tài nguyên tĩnh
+- `/components`: Các component Vue.js
+- `/layouts`: Layout templates
+- `/router`: Cấu hình routing
+- `/store`: Vuex store modules
+- `/utils`: Các utility functions
+- `/views`: Các trang chính của ứng dụng
 
-- Node.js (phiên bản 14 trở lên)
-- npm (phiên bản 6 trở lên)
+### Backend (`/backend`)
+- `/config`: Cấu hình database và ứng dụng
+- `/controllers`: Xử lý logic nghiệp vụ
+- `/middleware`: Middleware xác thực và phân quyền
+- `/model`: Database models
+- `/routes`: Định nghĩa API routes
+- `/services`: Business logic services
+
 
 ## Hướng dẫn khởi tạo dự án Vue và kết nối GitHub
 
@@ -203,11 +208,3 @@ git commit -m "initial commit"
    git merge trinh
    ```
 ---
-
-## Cài đặt và chạy dự án
-
-### Cài đặt dependencies
-```bash
-npm install
-npm install -g @vue/cli
-```
