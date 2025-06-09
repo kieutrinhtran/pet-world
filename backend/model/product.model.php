@@ -17,9 +17,10 @@ class Product
     public function create($product_name, $category_id, $description, $pet_type, $base_price, $discount_price, $stock, $image_url, $is_active)
     {
         $product_id = $this->generateID();
+        $created_at = date('Y-m-d H:i:s');
         $query = "INSERT INTO {$this->table_name} 
-            (product_id, product_name, category_id, description, pet_type, base_price, discount_price, stock, image_url, is_active)
-            VALUES (:product_id, :product_name, :category_id, :description, :pet_type, :base_price, :discount_price, :stock, :image_url, :is_active)";
+            (product_id, product_name, category_id, description, pet_type, base_price, discount_price, stock, image_url, is_active, created_at)
+            VALUES (:product_id, :product_name, :category_id, :description, :pet_type, :base_price, :discount_price, :stock, :image_url, :is_active,:created_at)";
 
         $stmt = $this->conn->prepare($query);
 
@@ -33,7 +34,7 @@ class Product
         $stmt->bindParam(':stock', $stock);
         $stmt->bindParam(':image_url', $image_url);
         $stmt->bindParam(':is_active', $is_active);
-
+        $stmt->bindParam(':created_at', $created_at);
         if ($stmt->execute()) {
             return [
                 'product_id' => $product_id,
@@ -46,6 +47,7 @@ class Product
                 'stock' => $stock,
                 'image_url' => $image_url,
                 'is_active' => $is_active,
+                'created_at' => $created_at
             ];
         }
         return false;
