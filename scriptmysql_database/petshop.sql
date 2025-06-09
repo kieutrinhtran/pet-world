@@ -319,7 +319,7 @@ CREATE TABLE `product` (
   `base_price` decimal(10,0) NOT NULL,
   `discount_price` decimal(10,0) DEFAULT NULL,
   `stock` int(11) NOT NULL,
-  `image_url` varchar(255) DEFAULT NULL,
+  `image_url` longtext DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `is_active` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
