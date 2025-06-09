@@ -181,11 +181,16 @@
 
           <div class="mb-3">
             <label class="block mb-1 font-medium text-sm">Loại thú cưng</label>
-            <input
+           
+            <select
               v-model="editingProduct.pet_type"
-              type="text"
               class="w-full border border-gray-300 rounded p-1 text-sm"
-            />
+            >
+              <option disabled value="">-- Chọn loại thú cưng --</option>
+              <option value="Cho">Cho</option>
+              <option value="Meo">Meo</option>
+            </select>
+
           </div>
 
           <div class="mb-3">
@@ -290,11 +295,14 @@
           </div>
           <div class="mb-1">
             <label class="block mb-1 font-medium text-sm">Loại thú cưng</label>
-            <input
+            <select
               v-model="creatingProduct.pet_type"
-              type="text"
-              class="w-full border border-gray-300 rounded text-sm"
-            />
+              class="w-full border border-gray-300 rounded p-1 text-sm"
+            >
+              <option disabled value="">-- Chọn loại thú cưng --</option>
+              <option value="Cho">Cho</option>
+              <option value="Meo">Meo</option>
+            </select>
           </div>
 
           <div class="mb-1">
@@ -556,6 +564,8 @@ export default {
     },
     async createProduct() {
       try {
+        
+        
         this.loading = true
         const res = await fetch('http://localhost:8000/api/v1/products', {
           method: 'POST',
@@ -600,6 +610,7 @@ export default {
 
         this.closeCreatePopup()
       } catch (error) {
+        console.log('Creating product:', this.creatingProduct);
         alert(error.message)
         console.error(error)
       } finally {
