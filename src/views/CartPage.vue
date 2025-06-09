@@ -106,7 +106,7 @@
               </h3>
             </div>
           </div>
-          <div class="text-gray-800">{{ formatPrice(item.product.base_price) }}đ</div>
+          <div class="text-gray-800">{{ formatPrice(item.product.base_price) }}</div>
           <div class="flex items-center gap-2">
             <!-- Nút giảm số lượng -->
             <button
@@ -125,7 +125,7 @@
               +
             </button>
           </div>
-          <div class="text-gray-800">{{ formatPrice(getItemTotal(item)) }}đ</div>
+          <div class="text-gray-800">{{ formatPrice(getItemTotal(item)) }}</div>
           <!-- Nút xóa sản phẩm -->
           <button
             @click="remove(item)"
@@ -142,15 +142,15 @@
         <h2 class="text-xl font-bold mb-4">Tổng đơn hàng</h2>
         <div class="flex justify-between text-gray-600 mb-3">
           <span>Tạm tính:</span>
-          <span class="font-semibold">{{ formatPrice(subtotal) }}đ</span>
+          <span class="font-semibold">{{ formatPrice(subtotal) }}</span>
         </div>
         <div class="flex justify-between text-gray-600 mb-3">
           <span>Vận chuyển:</span>
-          <span class="font-semibold">{{ formatPrice(shipping) }}đ</span>
+          <span class="font-semibold">{{ formatPrice(shipping) }}</span>
         </div>
         <div class="flex justify-between mt-4 pt-4 border-t border-gray-300 mb-6">
           <span>Tổng cộng:</span>
-          <span class="font-bold text-xl text-orange-500">{{ formatPrice(total) }}đ</span>
+          <span class="font-bold text-xl text-orange-500">{{ formatPrice(total) }}</span>
         </div>
 
         <!-- Add checkout button -->
@@ -201,21 +201,33 @@ import { useRouter } from 'vue-router'
 import { useCart } from '@/store/cart'
 import axios from 'axios'
 
+// =====================
+// Router & Store Setup
+// =====================
 const router = useRouter()
 // Sử dụng store giỏ hàng đã được cập nhật với xác thực token
 const { cartItems, fetchCart, updateQuantity, removeItem } = useCart()
 
-// State
+// =====================
+// State Management
+// =====================
+// State cho địa chỉ giao hàng
 const shippingAddress = ref({})
+// Phí vận chuyển cố định
 const shipping = ref(30000)
 // Theo dõi trạng thái loading khi thực hiện API calls
 const isLoading = ref(false)
-// Theo dõi các item đang được xử lý
+// Theo dõi các item đang được xử lý để tránh double click
 const processingItems = ref({})
-// Payment method selection
+// Phương thức thanh toán mặc định là COD
 const paymentMethod = ref('COD')
 
-// Format price helper function
+// =====================
+// Helper Functions
+// =====================
+/**
+ * Format giá tiền theo định dạng tiền tệ Việt Nam
+ */
 const formatPrice = (price) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -223,7 +235,9 @@ const formatPrice = (price) => {
   }).format(price)
 }
 
-// Get total for a specific item
+/**
+ * Tính tổng tiền cho một sản phẩm (giá * số lượng)
+ */
 const getItemTotal = item => {
   if (!item || !item.product) return 0
   const price = Number(item.product.base_price) || 0
@@ -231,13 +245,22 @@ const getItemTotal = item => {
   return price * quantity
 }
 
-// Fetch cart items khi component mounted
+// =====================
+// Lifecycle Hooks
+// =====================
+// Fetch cart items và địa chỉ mặc định khi component mounted
 onMounted(async () => {
   await fetchCart()
   await fetchDefaultAddress()
 })
 
-// Lấy địa chỉ mặc định của user
+// =====================
+// API Calls
+// =====================
+/**
+ * Lấy địa chỉ mặc định của user từ API
+ * Lưu vào state và localStorage để sử dụng sau này
+ */
 const fetchDefaultAddress = async () => {
   try {
     const response = await axios.get('http://localhost:8000/api/v1/address', {
@@ -246,8 +269,10 @@ const fetchDefaultAddress = async () => {
 
     if (response.data && response.data.success) {
       const addresses = response.data.addresses
+      // Tìm địa chỉ mặc định trong danh sách
       const defaultAddress = addresses.find(addr => addr.is_default === 1)
       if (defaultAddress) {
+        // Format địa chỉ để hiển thị
         shippingAddress.value = {
           address_id: defaultAddress.address_id,
           name: defaultAddress.customer_name || 'Người nhận',
@@ -255,6 +280,7 @@ const fetchDefaultAddress = async () => {
           address_line: defaultAddress.address_line,
           is_default: true
         }
+        // Lưu vào localStorage để sử dụng ở các trang khác
         localStorage.setItem('shipping_address', JSON.stringify(shippingAddress.value))
       }
     }
@@ -263,39 +289,56 @@ const fetchDefaultAddress = async () => {
   }
 }
 
-// Tính tổng tiền hàng
+// =====================
+// Computed Properties
+// =====================
+/**
+ * Tính tổng tiền hàng (chưa tính phí ship)
+ */
 const subtotal = computed(() => {
   return cartItems.value.reduce((total, item) => {
-    // Ưu tiên discount_price nếu có, không thì lấy base_price
-    const price = Number(item.product?.discount_price) || Number(item.product?.base_price) || 0
+    const price = Number(item.product?.base_price) || 0
     const quantity = Number(item.quantity) || 1
     return total + price * quantity
   }, 0)
 })
 
-// Tính tổng tiền phải trả
+/**
+ * Tính tổng tiền phải trả (bao gồm phí ship)
+ */
 const total = computed(() => {
   return subtotal.value + shipping.value
 })
 
-// Hàm tăng số lượng sản phẩm trong giỏ hàng
+// =====================
+// Cart Item Actions
+// =====================
+/**
+ * Tăng số lượng sản phẩm trong giỏ hàng
+ */
 async function increase(item) {
   try {
+    // Kiểm tra item đang được xử lý
     if (processingItems.value[item.cart_item_id]) return
     processingItems.value[item.cart_item_id] = true
 
     // Tạo quantity mới
     const newQuantity = item.quantity + 1
 
+    // Gọi API cập nhật số lượng
     await updateQuantity(item, newQuantity)
   } catch (error) {
     console.error('Error increasing item quantity:', error)
   } finally {
+    // Reset trạng thái xử lý
     processingItems.value[item.cart_item_id] = false
   }
 }
 
-// Hàm giảm số lượng sản phẩm (chỉ giảm khi số lượng > 1)
+/**
+ * Giảm số lượng sản phẩm trong giỏ hàng
+ * Chỉ giảm khi số lượng > 1
+ */
 async function decrease(item) {
   if (item.quantity <= 1 || processingItems.value[item.cart_item_id]) return
 
@@ -305,19 +348,24 @@ async function decrease(item) {
     // Tạo quantity mới
     const newQuantity = item.quantity - 1
 
+    // Gọi API cập nhật số lượng
     await updateQuantity(item, newQuantity)
   } catch (error) {
     console.error('Error decreasing item quantity:', error)
   } finally {
+    // Reset trạng thái xử lý
     processingItems.value[item.cart_item_id] = false
   }
 }
 
-// Hàm xóa sản phẩm khỏi giỏ hàng
+/**
+ * Xóa sản phẩm khỏi giỏ hàng
+ */
 async function remove(item) {
   if (processingItems.value[item.cart_item_id]) return
 
   try {
+    // Xác nhận trước khi xóa
     if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
       processingItems.value[item.cart_item_id] = true
       await removeItem(item)
@@ -326,19 +374,26 @@ async function remove(item) {
     console.error('Error removing item from cart:', error)
     alert('Không thể xóa sản phẩm khỏi giỏ hàng')
   } finally {
+    // Reset trạng thái xử lý
     processingItems.value[item.cart_item_id] = false
   }
 }
 
-// Add this function to your script to handle checkout
+// =====================
+// Checkout Process
+// =====================
+/**
+ * Xử lý quá trình thanh toán
+ * Kiểm tra các điều kiện cần thiết trước khi chuyển sang trang checkout
+ */
 async function checkout() {
-  // Verify we have an address
+  // Kiểm tra địa chỉ giao hàng
   if (!shippingAddress.value || !shippingAddress.value.address_id) {
     alert('Vui lòng chọn địa chỉ giao hàng trước khi thanh toán')
     return
   }
 
-  // Verify we have items in cart
+  // Kiểm tra giỏ hàng
   if (!cartItems.value || cartItems.value.length === 0) {
     alert('Giỏ hàng của bạn đang trống')
     return
@@ -375,6 +430,7 @@ function goToUserAccount() {
   router.push('/account')
 }
 </script>
+
 <style scoped>
 /* Style cho hiệu ứng xóa sản phẩm */
 .cart-item.removing {

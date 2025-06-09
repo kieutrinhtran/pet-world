@@ -43,118 +43,49 @@
 </template>
 
 <script setup>
-// Không cần import và xử lý API nữa
+// Không cần import và xử lý API vì đây là trang thông báo thành công đơn giản
 </script>
 
 <style scoped>
-/* Style cho trang thông báo đặt hàng thành công */
-.order-success {
-  background: #fff;
-  border-radius: 16px;
-  padding: 32px;
-  max-width: 800px;
-  margin: 32px auto;
-}
-
+/* Breadcrumb styles */
 .breadcrumb {
-  margin-bottom: 32px;
+  @apply flex items-center gap-2 text-sm text-gray-500 ml-8 mt-8;
 }
 
+/* Success content styles */
 .success-content {
-  text-align: center;
+  @apply max-w-2xl mx-auto text-center;
 }
 
 .success-header {
-  margin-bottom: 48px;
+  @apply mb-8;
 }
 
 .success-icon {
-  font-size: 64px;
-  color: #22c55e;
-  margin-bottom: 24px;
+  @apply w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4;
 }
 
+/* Button styles */
 .order-actions {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin-bottom: 48px;
+  @apply flex flex-col sm:flex-row gap-4 justify-center;
 }
 
-.home-btn,
-.order-btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 500;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  transition: all 0.2s;
+.home-btn, .order-btn {
+  @apply px-6 py-3 rounded-lg font-semibold transition-colors duration-200;
 }
 
 .home-btn {
-  background: #f90;
-  color: white;
-}
-
-.home-btn:hover {
-  background: #f80;
-  transform: translateY(-2px);
+  @apply bg-orange-500 text-white hover:bg-orange-600;
 }
 
 .order-btn {
-  background: #333;
-  color: white;
+  @apply bg-gray-100 text-gray-700 hover:bg-gray-200;
 }
 
-.order-btn:hover {
-  background: #444;
-  transform: translateY(-2px);
-}
-
-.support-info {
-  border-top: 1px solid #eee;
-  padding-top: 32px;
-}
-
-.support-options {
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-  margin-top: 16px;
-}
-
-.support-option {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: #666;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-
-.support-option:hover {
-  color: #f90;
-  transform: translateY(-2px);
-}
-
-.support-option i {
-  font-size: 24px;
-}
-
-@media (max-width: 768px) {
-  .order-success {
-    padding: 16px;
-    margin: 16px;
-  }
-
-  .order-actions {
-    flex-direction: column;
-  }
-
-  .support-options {
-    flex-wrap: wrap;
+/* Responsive styles */
+@media (max-width: 640px) {
+  .success-content {
+    @apply px-4;
   }
 }
 </style>
