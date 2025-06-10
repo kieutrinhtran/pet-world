@@ -62,7 +62,7 @@ class OrderController
         }
         
         if (empty($data['payment_status'])) {
-            $data['payment_status'] = 'pending';
+            $data['payment_status'] = 'unpaid';
         }
         
         if (empty($data['status'])) {
