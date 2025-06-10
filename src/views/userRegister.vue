@@ -232,7 +232,7 @@ export default {
       if (!this.password) {
         this.errors.password = 'Mật khẩu không được để trống'
       } else if (this.password.length < 6) {
-        this.errors.password = 'Mật khẩu phải có ít nhất 6 ký tự'
+        this.errors.password = 'Mật khẩu phải có ít nhất 8 ký tự'
       } else if (this.password.length > 100) {
         this.errors.password = 'Mật khẩu không được vượt quá 100 ký tự'
       }
