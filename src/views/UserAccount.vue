@@ -426,7 +426,7 @@
                   v-model="passwordData.new_password"
                   required
                   pattern=".{6,}"
-                  title="Mật khẩu phải có ít nhất 6 ký tự"
+                  title="Mật khẩu phải có ít nhất 8 ký tự"
                 />
                 <button
                   type="button"
@@ -436,7 +436,7 @@
                   <i :class="showNewPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                 </button>
               </div>
-              <span class="password-hint">Mật khẩu phải có ít nhất 6 ký tự</span>
+              <span class="password-hint">Mật khẩu phải có ít nhất 8 ký tự</span>
             </div>
 
             <div class="form-group">
@@ -812,7 +812,7 @@ const formatDate = dateString => {
   return date.toLocaleDateString('vi-VN', {
     year: 'numeric',
     month: '2-digit',
-    day: '2-digit',
+    day: '2-digit'
   })
 }
 
