@@ -75,7 +75,7 @@ onMounted(async () => {
     })
     const stats = res.data
     console.log('Statistics data:', stats)
-    
+
     // Gán số liệu vào biến reactive, có fallback cho các kiểu tên trường khác nhau
     // Sử dụng toán tử || để handle các trường hợp API trả về tên field khác nhau
     totalOrders.value = stats.total_orders || stats.totalOrders || 0
@@ -95,7 +95,7 @@ onMounted(async () => {
 // =====================
 /**
  * Format số tiền thành dạng ngắn gọn (K, M, B)
- * 
+ *
  * Ví dụ:
  * - 1,500,000 -> 1.5M
  * - 2,000,000,000 -> 2B
@@ -103,11 +103,11 @@ onMounted(async () => {
  */
 function formatMoneyShort(value) {
   // Xử lý các trường hợp số lớn
-  if (value >= 1_000_000_000) return (value / 1_000_000_000).toFixed(2).replace(/\.00$/, '') + 'B';
-  if (value >= 1_000_000) return (value / 1_000_000).toFixed(2).replace(/\.00$/, '') + 'M';
-  if (value >= 1_000) return (value / 1_000).toFixed(2).replace(/\.00$/, '') + 'K';
+  if (value >= 1_000_000_000) return (value / 1_000_000_000).toFixed(2).replace(/\.00$/, '') + 'B'
+  if (value >= 1_000_000) return (value / 1_000_000).toFixed(2).replace(/\.00$/, '') + 'M'
+  if (value >= 1_000) return (value / 1_000).toFixed(2).replace(/\.00$/, '') + 'K'
   // Nếu số nhỏ, format theo locale Việt Nam
-  return value.toLocaleString('vi-VN');
+  return value.toLocaleString('vi-VN')
 }
 </script>
 
