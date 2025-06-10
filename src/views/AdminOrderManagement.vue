@@ -2,11 +2,7 @@
   <!-- Trang quản lý đơn hàng cho admin -->
   <div class="min-h-screen bg-gray-50 pt-8">
     <!-- Tiêu đề trang -->
-    <div
-      class="text-center text-3xl font-bold mb-8 text-[#5a3a1b]"
-    >
-      Danh sách đơn hàng
-    </div>
+    <div class="text-center text-3xl font-bold mb-8 text-[#5a3a1b]">Danh sách đơn hàng</div>
     <div class="container-fluid px-4">
       <!-- Thanh tìm kiếm với input và icon search -->
       <div class="mb-6">
@@ -54,13 +50,42 @@
           <!-- Header của bảng với các cột có thể click để sắp xếp -->
           <thead>
             <tr>
-              <th class="bg-gray-100 p-4 text-left cursor-pointer" @click="handleSort('order_id')">ID đơn hàng</th>
-              <th class="bg-gray-100 p-4 text-left cursor-pointer" @click="handleSort('order_date')">Ngày đặt</th>
-              <th class="bg-gray-100 p-4 text-left cursor-pointer" @click="handleSort('customer_name')">Khách hàng</th>
-              <th class="bg-gray-100 p-4 text-left cursor-pointer" @click="handleSort('status')">Trạng thái đơn hàng</th>
-              <th class="bg-gray-100 p-4 text-left cursor-pointer" @click="handleSort('total_amount')">Tổng giá trị</th>
-              <th class="bg-gray-100 p-4 text-left cursor-pointer" @click="handleSort('payment_method')">Phương thức thanh toán</th>
-              <th class="bg-gray-100 p-4 text-left cursor-pointer" @click="handleSort('payment_status')">Trạng thái thanh toán</th>
+              <th class="bg-gray-100 p-4 text-left cursor-pointer" @click="handleSort('order_id')">
+                ID đơn hàng
+              </th>
+              <th
+                class="bg-gray-100 p-4 text-left cursor-pointer"
+                @click="handleSort('order_date')"
+              >
+                Ngày đặt
+              </th>
+              <th
+                class="bg-gray-100 p-4 text-left cursor-pointer"
+                @click="handleSort('customer_name')"
+              >
+                Khách hàng
+              </th>
+              <th class="bg-gray-100 p-4 text-left cursor-pointer" @click="handleSort('status')">
+                Trạng thái đơn hàng
+              </th>
+              <th
+                class="bg-gray-100 p-4 text-left cursor-pointer"
+                @click="handleSort('total_amount')"
+              >
+                Tổng giá trị
+              </th>
+              <th
+                class="bg-gray-100 p-4 text-left cursor-pointer"
+                @click="handleSort('payment_method')"
+              >
+                Phương thức thanh toán
+              </th>
+              <th
+                class="bg-gray-100 p-4 text-left cursor-pointer"
+                @click="handleSort('payment_status')"
+              >
+                Trạng thái thanh toán
+              </th>
               <th class="bg-gray-100 p-4 text-left cursor-pointer">Thao tác</th>
             </tr>
           </thead>
@@ -102,8 +127,8 @@
           :current-page="currentPage"
           :total-pages="totalPages"
           @page="handlePageChange"
-          @prev="currentPage > 1 && (currentPage--)"
-          @next="currentPage < totalPages && (currentPage++)"
+          @prev="currentPage > 1 && currentPage--"
+          @next="currentPage < totalPages && currentPage++"
         />
       </div>
     </div>
@@ -294,6 +319,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import BasePagination from '@/components/BasePagination.vue'
+import axios from 'axios'
 
 // =====================
 // Biến trạng thái reactive
@@ -309,6 +335,14 @@ const selectedOrder = ref(null) // Đơn hàng được chọn để xem chi ti�
 const showDetailModal = ref(false) // Trạng thái hiển thị modal chi tiết
 const sortField = ref('order_date') // Trường đang sắp xếp (mặc định là ngày đặt)
 const sortDirection = ref('desc') // Hướng sắp xếp (mặc định là giảm dần)
+
+const api = axios.create({
+  baseURL: 'http://localhost:8000/api/v1',
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
 
 // =====================
 // Các computed property
@@ -332,22 +366,13 @@ const fetchOrders = async () => {
 
   try {
     // Gọi API lấy danh sách đơn hàng
-    const url = 'http://localhost:8000/api/v1/orders/filter'
-    const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    const response = await api.get('/orders/filter')
 
-    const data = await response.json()
-
-    if (data.success) {
-      orders.value = data.orders || []
+    if (response.data.success) {
+      orders.value = response.data.orders || []
       applyFilters() // Áp dụng bộ lọc và sắp xếp
     } else {
-      error.value = data.message || 'Không thể tải danh sách đơn hàng'
+      error.value = response.data.message || 'Không thể tải danh sách đơn hàng'
     }
   } catch (err) {
     console.error('Error fetching orders:', err)
@@ -461,15 +486,9 @@ const viewOrderDetail = async order => {
     selectedOrder.value = order
 
     // Fetch chi tiết đầy đủ từ API
-    const response = await fetch(`http://localhost:8000/api/v1/orders/${order.order_id}`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    const response = await api.get(`/orders/${order.order_id}`)
 
-    const data = await response.json()
+    const data = response.data
 
     if (data) {
       // Xử lý chi tiết đơn hàng
@@ -539,13 +558,7 @@ const confirmOrder = async order => {
   if (!order || order.status !== 'pending') return
   try {
     // Gọi API cập nhật trạng thái
-    const response = await fetch(`http://localhost:8000/api/v1/orders/${order.order_id}/status`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    })
+    const response = await api.put(`/orders/${order.order_id}/status`)
     console.log('Response:', response)
     if (response.status !== 200) {
       throw new Error('Không thể xác nhận đơn hàng. Vui lòng thử lại sau.')
@@ -558,12 +571,12 @@ const confirmOrder = async order => {
 }
 
 // Hàm xử lý chuyển trang
-const handlePageChange = (page) => {
+const handlePageChange = page => {
   currentPage.value = page
 }
 
 // Hàm xử lý sắp xếp khi click vào header
-const handleSort = (field) => {
+const handleSort = field => {
   if (sortField.value === field) {
     // Nếu đang sắp xếp theo trường này, đảo chiều sắp xếp
     sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
